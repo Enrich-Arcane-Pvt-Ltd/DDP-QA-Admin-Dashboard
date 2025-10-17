@@ -7,15 +7,6 @@ import { useRouter } from "next/navigation";
 import CustomInput from "../components/CustomInput";
 import { toast } from "../components/ToastContainer";
 
-interface CustomInputProps {
-  type: string;
-  placeholder: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  icon: React.ReactNode;
-  showPasswordToggle?: boolean;
-}
-
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("admin@example.com");

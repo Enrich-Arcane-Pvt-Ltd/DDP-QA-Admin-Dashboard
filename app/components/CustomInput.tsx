@@ -31,7 +31,7 @@ function CustomInput({
                 placeholder={placeholder}
                 value={value}
                 onChange={onChange}
-                className="w-full pl-11 pr-12 py-3 border-2 border-light-200 rounded-lg focus:outline-none focus:border-primary-600 focus:ring-2 focus:ring-primary-100 transition-all text-primary-700 placeholder:text-primary-600 bg-light-200"
+                className="w-full pl-11 pr-12 py-3 border-2 border-light-200 rounded-lg focus:outline-none focus:border-primary-600 focus:ring-2 focus:ring-primary-100 transition-all text-primary-700 font-semibold placeholder:text-primary-500 bg-light-200"
             />
             {showPasswordToggle && (
                 <button
