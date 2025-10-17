@@ -8,7 +8,7 @@ type TableProps = {
   onEdit?: (row: any) => void;
   onDelete?: (row: any) => void;
   onView?: (row: any) => void;
-  rowsPerPage?: number; // 👈 optional prop for custom row count
+  rowsPerPage?: number;
 };
 
 export default function Table({
@@ -17,7 +17,7 @@ export default function Table({
   onEdit,
   onDelete,
   onView,
-  rowsPerPage = 10, // 👈 default 10 if not passed
+  rowsPerPage = 10,
 }: TableProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = Math.ceil(data.length / rowsPerPage);
@@ -34,15 +34,16 @@ export default function Table({
 
   return (
     <div className="bg-gradient-to-br from-white to-primary-100 rounded-2xl shadow-xl border border-primary-200 overflow-hidden">
-      {/* Table */}
       <div className="overflow-x-auto">
         <table className="min-w-full">
           <thead>
             <tr className="bg-gradient-to-r from-primary-700 to-primary-600">
-              {columns.map((col) => (
+              {columns.map((col, idx) => (
                 <th
                   key={col}
-                  className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider"
+                  className={`px-6 py-4 text-xs font-bold text-white uppercase tracking-wider ${
+                    idx === 0 ? "text-left" : "text-center"
+                  }`}
                 >
                   {col}
                 </th>
@@ -61,10 +62,12 @@ export default function Table({
                 key={idx}
                 className="hover:bg-accent-100 transition-all duration-200 hover:shadow-sm"
               >
-                {columns.map((col) => (
+                {columns.map((col, colIdx) => (
                   <td
                     key={col}
-                    className="px-6 py-4 text-sm font-medium text-primary-800"
+                    className={`px-6 py-4 text-sm font-medium text-primary-800 ${
+                      colIdx === 0 ? "text-left" : "text-center"
+                    }`}
                   >
                     {row[col]}
                   </td>
@@ -108,7 +111,6 @@ export default function Table({
         </table>
       </div>
 
-      {/* Pagination */}
       <div className="flex items-center justify-between px-6 py-4 border-t border-primary-200 bg-gradient-to-r from-primary-100 to-white">
         <div className="flex items-center gap-2">
           <span className="text-sm text-primary-700">
