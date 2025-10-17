@@ -4,7 +4,7 @@ import { useState } from "react";
 import {
   LayoutDashboard,
   Users, Menu, ChevronRight,
-  LogOut, ShoppingCart, Settings, CheckCircle
+  LogOut, ShoppingCart, Settings, CheckCircle, UserPlus
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -19,6 +19,7 @@ export default function Sidebar() {
     { href: "/dashboard/orders", label: "Orders", icon: ShoppingCart },
     { href: "/dashboard/settings", label: "Settings", icon: Settings },
     { href: "/dashboard/quality", label: "Q/A", icon: CheckCircle },
+    { href: "/dashboard/roles", label: "User Roles", icon: UserPlus },
   ];
 
   const toggleSidebar = () => setIsOpen(!isOpen);

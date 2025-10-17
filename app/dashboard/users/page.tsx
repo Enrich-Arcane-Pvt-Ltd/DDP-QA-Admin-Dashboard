@@ -1,3 +1,5 @@
+"use client";
+
 import SearchBar from "@/app/components/SearchBar";
 import CreateButton from "@/app/components/CreateButton";
 import Table from "@/app/components/Table";
@@ -30,6 +32,9 @@ export default function UsersPage() {
           { Name: "Jane Smith", Email: "jane@example.com", Role: "User", Contact: "+94 1234567", Status: "Inactive" },
           { Name: "Jane Smith", Email: "jane@example.com", Role: "User", Contact: "+94 1234567", Status: "Inactive" },
         ]}
+        onView={(row) => console.log("View", row)}
+        onEdit={(row) => console.log("Edit", row)}
+        onDelete={(row) => console.log("Delete", row)}
       />
     </div>
   );

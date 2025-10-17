@@ -5,6 +5,7 @@ import { Mail, Lock } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import CustomInput from "../components/CustomInput";
+import { toast } from "../components/ToastContainer";
 
 interface CustomInputProps {
   type: string;
@@ -26,10 +27,10 @@ export default function LoginPage() {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     if (email === "admin@example.com" && password === "admin123") {
-      alert("Login successful! Redirecting to dashboard...");
+      toast.success("Login successful! Redirecting to dashboard...");
       router.push("/dashboard");
     } else {
-      alert("Invalid credentials. Please try again.");
+      toast.error("Invalid credentials. Please try again.");
     }
   };
 

@@ -1,87 +1,170 @@
 "use client";
 import { useState } from "react";
+import { Eye, Pencil, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
+
+type TableProps = {
+  columns: string[];
+  data: Record<string, any>[];
+  onEdit?: (row: any) => void;
+  onDelete?: (row: any) => void;
+  onView?: (row: any) => void;
+  rowsPerPage?: number; // 👈 optional prop for custom row count
+};
 
 export default function Table({
   columns,
   data,
-}: {
-  columns: string[];
-  data: Record<string, any>[];
-}) {
+  onEdit,
+  onDelete,
+  onView,
+  rowsPerPage = 10, // 👈 default 10 if not passed
+}: TableProps) {
   const [currentPage, setCurrentPage] = useState(1);
-  const rowsPerPage = 10;
-
   const totalPages = Math.ceil(data.length / rowsPerPage);
 
   const indexOfLastRow = currentPage * rowsPerPage;
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
   const currentRows = data.slice(indexOfFirstRow, indexOfLastRow);
 
-  const handlePrevPage = () => {
-    if (currentPage > 1) setCurrentPage(currentPage - 1);
-  };
+  const handlePrevPage = () => currentPage > 1 && setCurrentPage(currentPage - 1);
+  const handleNextPage = () =>
+    currentPage < totalPages && setCurrentPage(currentPage + 1);
 
-  const handleNextPage = () => {
-    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
-  };
+  const showActions = onEdit || onDelete || onView;
 
   return (
-    <div className="overflow-x-auto rounded-xl border-2 border-primary-200 bg-white shadow-lg">
-      <table className="min-w-full">
-        <thead className="bg-primary-800">
-          <tr>
-            {columns.map((col) => (
-              <th
-                key={col}
-                className="px-6 py-4 text-left text-sm font-semibold text-white"
-              >
-                {col}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-primary-100">
-          {currentRows.map((row, idx) => (
-            <tr key={idx} className="hover:bg-accent-100 transition-colors">
+    <div className="bg-gradient-to-br from-white to-primary-100 rounded-2xl shadow-xl border border-primary-200 overflow-hidden">
+      {/* Table */}
+      <div className="overflow-x-auto">
+        <table className="min-w-full">
+          <thead>
+            <tr className="bg-gradient-to-r from-primary-700 to-primary-600">
               {columns.map((col) => (
-                <td key={col} className="px-6 py-4 text-sm text-primary-800">
-                  {row[col]}
-                </td>
+                <th
+                  key={col}
+                  className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider"
+                >
+                  {col}
+                </th>
               ))}
+              {showActions && (
+                <th className="px-6 py-4 text-xs font-bold text-white uppercase tracking-wider text-center">
+                  Actions
+                </th>
+              )}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
 
-      {/* Pagination controls */}
-      <div className="flex justify-between items-center p-4 text-sm text-primary-700">
-        <button
-          onClick={handlePrevPage}
-          disabled={currentPage === 1}
-          className={`px-4 py-2 rounded-lg ${
-            currentPage === 1
-              ? "bg-primary-100 text-primary-400 cursor-not-allowed"
-              : "bg-primary-700 text-white hover:bg-primary-600"
-          }`}
-        >
-          Previous
-        </button>
+          <tbody className="divide-y divide-primary-100">
+            {currentRows.map((row, idx) => (
+              <tr
+                key={idx}
+                className="hover:bg-accent-100 transition-all duration-200 hover:shadow-sm"
+              >
+                {columns.map((col) => (
+                  <td
+                    key={col}
+                    className="px-6 py-4 text-sm font-medium text-primary-800"
+                  >
+                    {row[col]}
+                  </td>
+                ))}
+                {showActions && (
+                  <td className="p-4 flex justify-center">
+                    <div className="flex items-center gap-4">
+                      {onView && (
+                        <button
+                          onClick={() => onView(row)}
+                          title="View"
+                          className="p-2 rounded-lg bg-gradient-to-r from-light-800 to-light-700 text-white hover:from-light-900 hover:to-light-800 transition-all duration-200 hover:scale-110 shadow-md hover:shadow-lg"
+                        >
+                          <Eye size={16} />
+                        </button>
+                      )}
+                      {onEdit && (
+                        <button
+                          onClick={() => onEdit(row)}
+                          title="Edit"
+                          className="p-2 rounded-lg bg-gradient-to-r from-accent-600 to-accent-500 text-white hover:from-accent-700 hover:to-accent-600 transition-all duration-200 hover:scale-110 shadow-md hover:shadow-lg"
+                        >
+                          <Pencil size={16} />
+                        </button>
+                      )}
+                      {onDelete && (
+                        <button
+                          onClick={() => onDelete(row)}
+                          title="Delete"
+                          className="p-2 rounded-lg bg-gradient-to-r from-error-800 to-error-700 text-white hover:from-error-900 hover:to-error-800 transition-all duration-200 hover:scale-110 shadow-md hover:shadow-lg"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      )}
+                    </div>
+                  </td>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
-        <span className="font-medium">
-          Page {currentPage} of {totalPages}
-        </span>
+      {/* Pagination */}
+      <div className="flex items-center justify-between px-6 py-4 border-t border-primary-200 bg-gradient-to-r from-primary-100 to-white">
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-primary-700">
+            Showing{" "}
+            <span className="font-bold text-accent-600">{indexOfFirstRow + 1}</span>{" "}
+            to{" "}
+            <span className="font-bold text-accent-600">
+              {Math.min(indexOfLastRow, data.length)}
+            </span>{" "}
+            of <span className="font-bold text-accent-600">{data.length}</span> results
+          </span>
+        </div>
 
-        <button
-          onClick={handleNextPage}
-          disabled={currentPage === totalPages}
-          className={`px-4 py-2 rounded-lg ${
-            currentPage === totalPages
-              ? "bg-primary-100 text-primary-400 cursor-not-allowed"
-              : "bg-primary-700 text-white hover:bg-primary-600"
-          }`}
-        >
-          Next
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handlePrevPage}
+            disabled={currentPage === 1}
+            className={`inline-flex items-center gap-1 px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-200 ${
+              currentPage === 1
+                ? "text-primary-400 bg-primary-100 cursor-not-allowed"
+                : "text-white bg-gradient-to-r from-primary-700 to-primary-600 hover:from-primary-800 hover:to-primary-700 shadow-md hover:shadow-lg hover:scale-105"
+            }`}
+          >
+            <ChevronLeft size={16} />
+            Previous
+          </button>
+
+          <div className="flex items-center gap-1">
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <button
+                key={page}
+                onClick={() => setCurrentPage(page)}
+                className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-200 ${
+                  currentPage === page
+                    ? "bg-gradient-to-r from-primary-700 to-primary-600 text-white shadow-lg scale-110"
+                    : "text-primary-700 hover:bg-primary-100 hover:scale-105"
+                }`}
+              >
+                {page}
+              </button>
+            ))}
+          </div>
+
+          <button
+            onClick={handleNextPage}
+            disabled={currentPage === totalPages}
+            className={`inline-flex items-center gap-1 px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-200 ${
+              currentPage === totalPages
+                ? "text-primary-400 bg-primary-100 cursor-not-allowed"
+                : "text-white bg-gradient-to-r from-primary-700 to-primary-600 hover:from-primary-800 hover:to-primary-700 shadow-md hover:shadow-lg hover:scale-105"
+            }`}
+          >
+            Next
+            <ChevronRight size={16} />
+          </button>
+        </div>
       </div>
     </div>
   );

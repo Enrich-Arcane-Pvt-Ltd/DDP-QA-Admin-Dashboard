@@ -7,7 +7,7 @@ import PieChartComponent from "../components/PieChart"
 export default function DashboardPage() {
   return (
     <div className="w-full h-full">
-      <div className="grid grid-cols-1 py-2 md:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-1 py-1 md:grid-cols-2 xl:grid-cols-4">
         <Card 
           title="Total Users"
           subTitle="200"
@@ -48,7 +48,10 @@ export default function DashboardPage() {
             data={[
               { Name: "John Doe", Email: "john@example.com", Role: "Admin", Contact: "+94 1234567", Status: "Active" },
               { Name: "Jane Smith", Email: "jane@example.com", Role: "User", Contact: "+94 1234567", Status: "Inactive" },
+              { Name: "Jane Smith", Email: "jane@example.com", Role: "User", Contact: "+94 1234567", Status: "Inactive" },
+              { Name: "Jane Smith", Email: "jane@example.com", Role: "User", Contact: "+94 1234567", Status: "Inactive" },
             ]}
+            rowsPerPage={2}
           />
         </div>
       </div>
@@ -57,7 +60,7 @@ export default function DashboardPage() {
         <div className="px-4">
           <PieChartComponent />
         </div>
-        <div className="px-4">
+        <div className="px-4 pt-6 xl:pt-0">
           <BarChartComponent />
         </div>
       </div>

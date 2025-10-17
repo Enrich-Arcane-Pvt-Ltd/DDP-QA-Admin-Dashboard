@@ -10,7 +10,7 @@ interface ButtonProps {
 export default function CreateButton({ label, icon} : ButtonProps) {
   return (
     <button 
-      className="bg-primary-700 text-white px-4 py-2 rounded hover:bg-accent-600 flex flex-row justify-center items-center font-semibold text-sm md:text-base"
+      className="bg-gradient-to-r from-accent-600 to-accent-500 text-white px-4 py-2 rounded hover:from-accent-700 hover:to-accent-600 transition-all duration-200 hover:scale-110 flex flex-row justify-center items-center font-semibold text-sm md:text-base"
     >
       {icon}
       {label}
