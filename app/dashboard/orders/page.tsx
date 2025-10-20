@@ -11,8 +11,8 @@ import { toast } from "@/app/components/ToastContainer";
 import { PlusIcon } from "lucide-react";
 
 export default function OrdersPage() {
-    return (
-        <div>
+  return (
+    <div>
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-4 my-2">
         <SearchBar placeholder="Search orders..." />
       </div>
@@ -28,9 +28,6 @@ export default function OrdersPage() {
           
         ]}
       />
-      
-      
-
     </div>
-    )
+  )
 }
