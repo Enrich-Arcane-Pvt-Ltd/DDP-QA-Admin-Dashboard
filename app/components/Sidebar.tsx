@@ -9,9 +9,12 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 
+import LogoutModal from "./LogoutModal";
+
 export default function Sidebar() {
   const [pathname, setPathname] = useState("/dashboard");
   const [isOpen, setIsOpen] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const links = [
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -23,6 +26,10 @@ export default function Sidebar() {
   ];
 
   const toggleSidebar = () => setIsOpen(!isOpen);
+
+  const handleLogout = () => {
+    setShowModal(false);
+  };
 
   return (
     <>
@@ -113,12 +120,19 @@ export default function Sidebar() {
             </div>
           </div>
           
-          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-primary-200 hover:bg-error-800 hover:text-white transition-all duration-200">
+          <button onClick={() => setShowModal(true)} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-primary-200 hover:bg-error-800 hover:text-white transition-all duration-200">
             <LogOut size={20} />
             <span className="font-medium">Logout</span>
           </button>
         </div>
       </aside>
+
+      {showModal && (
+        <LogoutModal 
+          onConfirm={handleLogout}
+          onCancel={() => setShowModal(false)}
+        />
+      )}
     </>
   );
 }

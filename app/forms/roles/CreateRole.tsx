@@ -8,8 +8,13 @@ import { toast } from "@/app/components/ToastContainer";
 
 import { Shield, User, X, Sparkles } from "lucide-react";
 
+interface UserData { 
+    role: string; 
+    status: string 
+}
+
 interface ModalProps {
-    onSubmit?: (data: { role: string; status: string }) => void;
+    onSubmit?: (data: UserData) => void;
     onCancel?: () => void,
 }
 

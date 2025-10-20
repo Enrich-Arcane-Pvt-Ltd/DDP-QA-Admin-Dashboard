@@ -45,7 +45,7 @@ export default function Table({
                     idx === 0 ? "text-left" : "text-center"
                   }`}
                 >
-                  {col}
+                  {String(col).replace(/_/g, ' ')}
                 </th>
               ))}
               {showActions && (

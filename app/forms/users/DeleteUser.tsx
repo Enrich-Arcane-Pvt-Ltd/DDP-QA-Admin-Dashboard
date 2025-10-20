@@ -3,9 +3,12 @@
 import { Trash2, X } from "lucide-react";
 import { useState } from "react";
 
-interface UserData { 
-    role: string; 
-    status: string 
+interface UserData {
+    name: string; 
+    email: string;
+    contact: string;
+    role: string;
+    status: string;
 }
 
 interface ModalProps {
@@ -14,12 +17,15 @@ interface ModalProps {
     onCancel?: () => void;
 }
 
-function DeleteRole({ row, onConfirm, onCancel }: ModalProps) {
+function DeleteUser({ row, onConfirm, onCancel }: ModalProps) {
     const [role, setRole] = useState(row.role);
     const [status, setStatus] = useState(row.status);
+    const [name, setName] = useState(row.name);
+    const [email, setEmail] = useState(row.email);
+    const [contact, setContact] = useState(row.contact);
     
     const handleClick = () => {
-        onConfirm?.({ role, status });
+        onConfirm?.({ role, status, name, email, contact });
     }
 
     return (
@@ -41,7 +47,7 @@ function DeleteRole({ row, onConfirm, onCancel }: ModalProps) {
                                 <Trash2 className="text-white" size={24} />
                             </div>
                             <div>
-                                <h2 className="text-2xl font-bold text-white">Delete Role</h2>
+                                <h2 className="text-2xl font-bold text-white">Delete User</h2>
                                 <p className="text-error-100 text-sm">This action cannot be undone</p>
                             </div>
                         </div>
@@ -56,7 +62,7 @@ function DeleteRole({ row, onConfirm, onCancel }: ModalProps) {
 
                 <div className="p-6">
                     <p className="text-white text-center font-bold">
-                        Are you sure you want to delete the role <span className="font-bold text-error-900">"{row.role}"</span>?
+                        Are you sure you want to delete the user <span className="font-bold text-error-900">"{row.name}"</span>?
                     </p>
                 </div>
 
@@ -79,4 +85,4 @@ function DeleteRole({ row, onConfirm, onCancel }: ModalProps) {
     );
 }
 
-export default DeleteRole;
+export default DeleteUser;

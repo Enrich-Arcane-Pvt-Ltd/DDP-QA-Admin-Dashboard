@@ -13,30 +13,35 @@ import { toast } from "@/app/components/ToastContainer";
 
 import { PlusIcon } from "lucide-react";
 
+interface UserData {
+    role: string,
+    status: string
+}
+
 export default function UserRolesPage() {
     const [modalVisible, setModalVisible] = useState(false);
     const [editModalVisible, setEditModalVisible] = useState(false);
     const [deleteModalVisible, setDeleteModalVisible] = useState(false);
 
-    const [selectedRow, setSelectedRow] = useState<{ role: string; status: string } | null>(null);
+    const [selectedRow, setSelectedRow] = useState<UserData | null>(null);
 
     const openModal = () => setModalVisible(true);
     const closeModal = () => setModalVisible(false);
 
-    const openDeleteModal = (row: { role: string; status: string }) => {
+    const openDeleteModal = (row: UserData) => {
         setSelectedRow(row);
         setDeleteModalVisible(true)
     };
     const closeDeleteModal = () => setDeleteModalVisible(false);
 
-    const handleEdit = (row: { role: string; status: string }) => {        
+    const handleEdit = (row: UserData) => {        
         setSelectedRow(row);
         setEditModalVisible(true);
     };
 
     const closeEditModal = () => setEditModalVisible(false);
 
-    const handleCreateRole = async (data: { role: string; status: string }) => {
+    const handleCreateRole = async (data: UserData) => {
         if (!data.role) {
             toast.error('Role is required');
             return;
@@ -47,6 +52,7 @@ export default function UserRolesPage() {
             closeModal();
         } catch (error) {
             toast.error('Failed to create role');
+            closeModal();
         }
     };
 
@@ -56,6 +62,7 @@ export default function UserRolesPage() {
             closeEditModal();
         } catch (error) {
             toast.error('Failed to edit role');
+            closeEditModal();
         }
     }
 
