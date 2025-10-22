@@ -6,23 +6,49 @@ import CustomSelect from "@/app/components/CustomSelect";
 
 import { toast } from "@/app/components/ToastContainer";
 
-import { Shield, User, X, Sparkles, Users, Mail, Phone } from "lucide-react";
+import { Shield, User, X, Sparkles, Users, Mail, Phone, Lock, LockKeyhole } from "lucide-react";
+
+import { UserInput, UserMeta } from "@/app/types/Users";
 
 interface ModalProps {
-    onSubmit?: (data: { role: string; status: string, name: string, email: string, contact: string }) => void;
-    onCancel?: () => void,
+    onSubmit?: (data: UserInput) => Promise<boolean>;
+    onCancel?: () => void;
+    data: UserMeta;
+    isSubmitting: boolean;
 }
 
-function CreateUser({ onSubmit, onCancel} : ModalProps) {
+function CreateUser({ onSubmit, onCancel, data, isSubmitting} : ModalProps) {
     const [role, setRole] = useState('');
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
-    const [contact, setContact] = useState('');
-    const [status, setStatus] = useState("Active");
+    const [status, setStatus] = useState("");
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');    
 
-    const handleClick = () => {
-        onSubmit?.({ role, status, name, email, contact });
-    }
+    const handleClick = async () => {
+        if (!name) return toast.error("Name is required");
+
+        if (!email) return toast.error("Email is required");
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) return toast.error("Please enter a valid email");
+
+        if (!role) return toast.error("Role is required");
+
+        if (!status) return toast.error("Status is required");
+
+        if (!password) return toast.error("Password is required");
+
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
+        if (!passwordRegex.test(password)) return toast.error("Password must be at least 8 characters long and include uppercase, lowercase, number, and special character");
+
+        if (!confirmPassword) return toast.error("Confirm Password is required");
+
+        if (confirmPassword !== password) return toast.error("Passwords do not match");
+
+        const success = await onSubmit?.({ role, status, name, email, password, confirmPassword });
+        if (success) onCancel?.();
+    };
 
     return (
         <div onClick={onCancel} className="fixed inset-0 z-50 flex items-center justify-center bg-primary-900/40 backdrop-blur-sm p-4 animate-fadeIn">
@@ -81,30 +107,13 @@ function CreateUser({ onSubmit, onCancel} : ModalProps) {
 
                     <div className="space-y-2">
                         <label className="flex items-center gap-2 text-sm font-semibold text-primary-800">
-                            <Phone size={16} className="text-accent-600" />
-                            Contact 
-                        </label>
-                        <CustomInput 
-                            type='text'
-                            placeholder="Enter the Contact Number"
-                            icon={<Phone />}
-                            value={contact}
-                            onChange={(e) => setContact(e.target.value)}
-                        />
-                    </div>
-
-                    <div className="space-y-2">
-                        <label className="flex items-center gap-2 text-sm font-semibold text-primary-800">
                             <Users size={16} className="text-accent-600" />
                             Role
                         </label>
                         <CustomSelect
                             value={role}
                             onChange={(e) => setRole(e.target.value)}
-                            options={[
-                                { value: "Active", label: "Admin" },
-                                { value: "Inactive", label: "Designer" },
-                            ]}
+                            options={data.roles}
                             icon={<Users />}
                             placeholder="Select the User Role"
                         />
@@ -118,12 +127,39 @@ function CreateUser({ onSubmit, onCancel} : ModalProps) {
                         <CustomSelect
                             value={status}
                             onChange={(e) => setStatus(e.target.value)}
-                            options={[
-                                { value: "Active", label: "Active" },
-                                { value: "Inactive", label: "Inactive" },
-                            ]}
+                            options={data.userStatus}
                             icon={<Shield />}
                             placeholder="Select Status"
+                        />
+                    </div>
+
+                    <div className="space-y-2">
+                        <label className="flex items-center gap-2 text-sm font-semibold text-primary-800">
+                            <Lock size={16} className="text-accent-600" />
+                            Password 
+                        </label>
+                        <CustomInput 
+                            type='password'
+                            placeholder="Enter the Password"
+                            icon={<Lock />}
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            showPasswordToggle
+                        />
+                    </div>
+
+                    <div className="space-y-2">
+                        <label className="flex items-center gap-2 text-sm font-semibold text-primary-800">
+                            <LockKeyhole size={16} className="text-accent-600" />
+                            Confirm Password 
+                        </label>
+                        <CustomInput 
+                            type='password'
+                            placeholder="Enter the Confirm Password"
+                            icon={<LockKeyhole />}
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            showPasswordToggle
                         />
                     </div>
                 </div>
@@ -139,7 +175,7 @@ function CreateUser({ onSubmit, onCancel} : ModalProps) {
                         className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-accent-600 to-accent-500 text-white font-semibold hover:from-accent-700 hover:to-accent-600 transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl"
                         onClick={handleClick}
                     >
-                        Create Role
+                        {isSubmitting ? 'Creating User...' : 'Create User'}
                     </button>
                 </div>
             </div>

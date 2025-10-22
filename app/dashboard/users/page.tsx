@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 import SearchBar from "@/app/components/SearchBar";
 import CreateButton from "@/app/components/CreateButton";
@@ -12,33 +12,31 @@ import DeleteUser from "@/app/forms/users/DeleteUser";
 import EditUser from "@/app/forms/users/EditUser";
 
 import { useAccessToken } from "@/app/hooks/useAccessToken";
+import { useUsers } from "@/app/hooks/useUsers";
 
-import { toast } from "@/app/components/ToastContainer";
 
 import { PlusIcon } from "lucide-react";
 import ViewUser from "@/app/forms/users/ViewUser";
 import APP_URL from "@/app/constants/Config";
 
-interface UserData {
-  id?: number,
-  name: string,
-  email: string,
-  role: string,
-  contact: string,
-  status: string
-}
+import { UserData } from "@/app/types/Users";
 
 export default function UsersPage() {
   const [modalVisible, setModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [viewModalVisible, setViewModalVisible] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-
   const [selectedRow, setSelectedRow] = useState<UserData | null>(null);
-  const [users, setUsers] = useState<UserData[]>([]);
 
   const token = useAccessToken();
+  const { users, isLoading, fetchUsers, createUser, editUser, setUsers, fetchUsersData, data, setData, isSubmitting, deleteUsers } = useUsers(APP_URL);
+
+  useEffect(() => {
+    if (token){
+      fetchUsers(token);
+      fetchUsersData(token);
+    };
+  }, [token, fetchUsers, fetchUsersData]);
 
   const openModal = () => setModalVisible(true);
   const closeModal = () => setModalVisible(false);
@@ -63,99 +61,6 @@ export default function UsersPage() {
 
   const closeViewModal = () => setViewModalVisible(false);
 
-  const handleCreateUser = async (data: UserData) => {
-    if (!data.name) {
-      toast.error("Name is required");
-      return;
-    }
-
-    if (!data.email) {
-      toast.error("Email is required");
-      return;
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(data.email)) {
-      toast.error("Please enter a valid email address");
-      return;
-    }
-
-    if (!data.contact) {
-      toast.error("Contact is required");
-      return;
-    }
-
-    if (!data.role) {
-      toast.error("Role is required");
-      return;
-    }
-
-    try {
-      toast.success('User created successfully');
-      closeModal();
-    } catch (error) {
-      toast.error('Failed to create user');
-      closeModal();
-    }
-  };
-
-  const handleEditUser = async () => {
-    try {
-      toast.success('User updated successfully');
-      closeEditModal();
-    } catch (error) {
-      toast.error('Failed to edit user');
-      closeEditModal();
-    }
-  }
-
-  const fetchUsers = useCallback(async (token: string | null) => {
-    setIsLoading(true);
-    if (!token) {
-      console.log('Token Not Found');
-      return;
-    }
-
-    try {
-      const response = await fetch(APP_URL + 'users', {
-        method: 'GET',
-        headers: {
-          'Content-Type' :'application/json',
-          'Accept': 'application/json',
-          'Authorization': `Bearer ${token}`
-        }
-      })
-
-      const responseJson = await response.json();
-
-      if (!response.ok) {
-        console.log('Response Error in fetching users : ', responseJson.message);
-        return;
-      }
-
-      const filteredUsers = responseJson.filter(
-        (user: any) => user.role_id !== "1"
-      );
-
-      console.log('filteredUsers : ', filteredUsers);
-      
-
-      setUsers(filteredUsers);
-    } catch (error: any) {
-      console.log('Error fetching users : ', error.message);      
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (token) {
-      fetchUsers(token);
-    } else {
-      console.log('Token Not Found');
-    }
-  }, [token, fetchUsers]);
-
   if (isLoading) {
     return (
       <Loader />
@@ -170,25 +75,34 @@ export default function UsersPage() {
       </div>
 
       <Table
-        columns={["name", "email", "role", "contact", "status"]}
+        columns={["name", "email", "role", "status"]}
         data={users}
         onView={handleView}
         onEdit={handleEdit}
         onDelete={openDeleteModal}
       />
       
-      {modalVisible && (
+      {modalVisible && data && token &&(
         <CreateUser 
           onCancel={closeModal}
-          onSubmit={handleCreateUser}
+          onSubmit={(formData) => createUser(formData, token)}
+          data={data}
+          isSubmitting={isSubmitting}
         />
       )}
 
-      {deleteModalVisible && selectedRow && (
-        <DeleteUser 
+      {deleteModalVisible && selectedRow && token && (
+        <DeleteUser
           row={selectedRow}
           onCancel={closeDeleteModal}
-          onConfirm={openDeleteModal}
+          isSubmitting={isSubmitting}
+          onConfirm={async () => {      
+            const success = await deleteUsers(selectedRow.id, token);
+            if (success) {
+              closeDeleteModal();
+              fetchUsers(token);
+            }
+          }}
         />
       )}
 
@@ -196,7 +110,7 @@ export default function UsersPage() {
         <EditUser
             row={selectedRow} 
             onCancel={closeEditModal}
-            onSubmit={handleEditUser}
+            onSubmit={() => editUser(closeEditModal)}
         />
       )}
 

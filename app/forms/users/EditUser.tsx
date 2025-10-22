@@ -13,7 +13,6 @@ interface UserData {
     status: string;
     email: string;
     name: string;
-    contact: string;
 }
 
 interface ModalProps {
@@ -27,10 +26,9 @@ function EditUser({ onSubmit, onCancel, row } : ModalProps) {
     const [status, setStatus] = useState(row.status);   
     const [name, setName] = useState(row.name);
     const [email, setEmail] = useState(row.email);
-    const [contact, setContact] = useState(row.contact); 
 
     const handleClick = () => {
-        onSubmit?.({ role, status, name, contact, email });
+        onSubmit?.({ role, status, name, email });
     }
 
     return (
@@ -85,20 +83,6 @@ function EditUser({ onSubmit, onCancel, row } : ModalProps) {
                             icon={<Mail />}
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                        />
-                    </div>
-
-                    <div className="space-y-2">
-                        <label className="flex items-center gap-2 text-sm font-semibold text-primary-800">
-                            <Phone size={16} className="text-accent-600" />
-                            Contact
-                        </label>
-                        <CustomInput 
-                            type='text'
-                            placeholder="Enter the Email"
-                            icon={<Phone />}
-                            value={contact}
-                            onChange={(e) => setContact(e.target.value)}
                         />
                     </div>
 

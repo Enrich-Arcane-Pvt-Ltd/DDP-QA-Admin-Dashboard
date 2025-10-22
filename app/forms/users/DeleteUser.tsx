@@ -6,7 +6,6 @@ import { useState } from "react";
 interface UserData {
     name: string; 
     email: string;
-    contact: string;
     role: string;
     status: string;
 }
@@ -15,17 +14,17 @@ interface ModalProps {
     row: UserData;
     onConfirm?: (data: UserData) => void;
     onCancel?: () => void;
+    isSubmitting: boolean;
 }
 
-function DeleteUser({ row, onConfirm, onCancel }: ModalProps) {
+function DeleteUser({ row, onConfirm, onCancel, isSubmitting }: ModalProps) {
     const [role, setRole] = useState(row.role);
     const [status, setStatus] = useState(row.status);
     const [name, setName] = useState(row.name);
     const [email, setEmail] = useState(row.email);
-    const [contact, setContact] = useState(row.contact);
     
     const handleClick = () => {
-        onConfirm?.({ role, status, name, email, contact });
+        onConfirm?.({ role, status, name, email });
     }
 
     return (
@@ -77,7 +76,7 @@ function DeleteUser({ row, onConfirm, onCancel }: ModalProps) {
                         onClick={handleClick}
                         className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-error-800 to-error-700 text-white font-semibold hover:from-error-900 hover:to-error-800 transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl"
                     >
-                        Delete
+                        {isSubmitting ? 'Deleting...' : 'Delete'}
                     </button>
                 </div>
             </div>

@@ -8,7 +8,6 @@ interface UserData {
     status: string;
     email: string;
     name: string;
-    contact: string;
 }
 
 interface ModalProps {
@@ -65,7 +64,7 @@ export default function ViewUser({ onCancel, row } : ModalProps) {
                         <h3 className="text-2xl font-bold text-gray-800 mb-1">{row.name}</h3>
                         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-primary-100 to-primary-200 border border-primary-300">
                             <div className="w-2 h-2 rounded-full bg-primary-600 animate-pulse"></div>
-                            <span className="text-primary-700 font-semibold text-sm">{row.status}</span>
+                            <span className="text-primary-700 font-semibold text-sm capitalize">{row.status}</span>
                         </div>
                     </div>
 
@@ -92,19 +91,6 @@ export default function ViewUser({ onCancel, row } : ModalProps) {
                                 <div className="flex-1 min-w-0">
                                     <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Email Address</p>
                                     <p className="text-base font-bold text-gray-800 truncate">{row.email}</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 p-5 hover:shadow-lg transition-all duration-300 border border-gray-200">
-                            <div className="absolute top-0 right-0 w-24 h-24 bg-primary-500/5 rounded-full -mr-12 -mt-12 group-hover:scale-150 transition-transform duration-500"></div>
-                            <div className="relative flex items-center gap-4">
-                                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center shadow-md">
-                                    <Phone className="text-white" size={20} />
-                                </div>
-                                <div className="flex-1">
-                                    <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Contact Number</p>
-                                    <p className="text-base font-bold text-gray-800">{row.contact}</p>
                                 </div>
                             </div>
                         </div>
