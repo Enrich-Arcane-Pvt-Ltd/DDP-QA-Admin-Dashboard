@@ -65,11 +65,13 @@ export default function Table({
                 {columns.map((col, colIdx) => (
                   <td
                     key={col}
-                    className={`px-6 py-4 text-sm font-medium text-primary-800 ${
-                      colIdx === 0 ? "text-left" : "text-center"
-                    }`}
+                    className={
+                      `px-6 py-4 text-sm font-medium text-primary-800 
+                      ${colIdx === 0 ? "text-left" : "text-center"}
+                      ${col == 'status'? 'capitalize' : ''}
+                      `}
                   >
-                    {row[col]}
+                    {row[col] ? row[col] : 'N/A'}
                   </td>
                 ))}
                 {showActions && (

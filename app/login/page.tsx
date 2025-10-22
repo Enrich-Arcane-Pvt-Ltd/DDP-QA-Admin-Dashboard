@@ -10,24 +10,55 @@ import APP_URL from "../constants/Config";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("admin@example.com");
-  const [password, setPassword] = useState("admin123");
+  const [email, setEmail] = useState("admin@enricharcane.com");
+  const [password, setPassword] = useState("Enrich@1qaz");
   const [rememberMe, setRememberMe] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const date = new Date();  
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
+
     if (!email || !password) {
       toast.error('Both Email & Password are required');
+      setIsSubmitting(false);
       return;
     }
     
-    if (email === "admin@example.com" && password === "admin123") {
-      toast.success("Login successful! Redirecting to dashboard...");
-      router.push("/dashboard");
-    } else {
-      toast.error("Invalid credentials. Please try again.");
+    try {
+      const response = await fetch(APP_URL + 'login', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password
+        })
+      });
+
+      const responseJson = await response.json();
+
+      if (!response.ok) {
+        console.log('Admin Login Response Error : ', responseJson.message);
+        toast.error(responseJson.message);
+        return;
+      }
+
+      localStorage.setItem('accessToken', responseJson.accessToken);
+      toast.success(responseJson.message);
+
+      setTimeout(() => {
+        router.push("/dashboard");
+      }, 1000);
+    } catch (error: any) {
+      console.log('Admin Login Error : ', error.message);
+      toast.error(error.message);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -87,7 +118,7 @@ export default function LoginPage() {
             type="submit"
             className="bg-gradient-to-r from-primary-700 to-primary-800 w-full rounded-lg py-2.5 text-white font-bold hover:from-primary-600 hover:to-primary-700 transition-all transform hover:scale-[1.02] active:scale-[0.98] animate-[fadeIn_1.6s_ease-out]"
           >
-            Sign In
+            {isSubmitting ? 'Signing In...' : 'Sign In'}
           </button>
 
           <p className="text-center mt-6 text-primary-700 font-semibold text-sm animate-[fadeIn_1.8s_ease-out]">
