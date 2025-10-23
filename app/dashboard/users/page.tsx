@@ -29,6 +29,7 @@ export default function UsersPage() {
   const [viewModalVisible, setViewModalVisible] = useState(false);
   const [statusModalVisible, setStatusModalVisible] = useState(false);
   const [selectedRow, setSelectedRow] = useState<UserData | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const token = useAccessToken();
   const { users, isLoading, fetchUsers, createUser, editUser, setUsers, fetchUsersData, data, setData, isSubmitting, deleteUsers, activateUsers } = useUsers(APP_URL);
@@ -39,6 +40,15 @@ export default function UsersPage() {
       fetchUsersData(token);
     };
   }, [token, fetchUsers, fetchUsersData]);
+
+  const filteredUsers = users?.filter((user: UserData) => {
+    const term = searchTerm.toLowerCase();
+    return (
+      user.name.toLowerCase().includes(term) ||
+      user.email.toLowerCase().includes(term)
+    );
+  });
+
 
   const openModal = () => setModalVisible(true);
   const closeModal = () => setModalVisible(false);
@@ -79,13 +89,13 @@ export default function UsersPage() {
   return (
     <div>
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-4 my-2">
-        <SearchBar placeholder="Search users..." />
+        <SearchBar placeholder="Search by name or email..." onChange={setSearchTerm} />
         <CreateButton icon={<PlusIcon />} label="Create User" onClick={openModal} />
       </div>
 
       <Table
         columns={["name", "email", "role", "status"]}
-        data={users}
+        data={filteredUsers}
         onView={handleView}
         onEdit={handleEdit}
         onDelete={openDeleteModal}
