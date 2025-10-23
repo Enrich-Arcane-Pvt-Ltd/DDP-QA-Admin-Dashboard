@@ -1,34 +1,34 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import CustomInput from "@/app/components/CustomInput";
 import CustomSelect from "@/app/components/CustomSelect";
 
-import { toast } from "@/app/components/ToastContainer";
 
-import { Shield, User, X, Sparkles, Users, Mail, Phone } from "lucide-react";
-
-interface UserData { 
-    role: string; 
-    status: string;
-    email: string;
-    name: string;
-}
+import { Shield, User, X, Users } from "lucide-react";
+import { UserData, UserMeta, UserInput } from "@/app/types/Users";
 
 interface ModalProps {
     row: UserData;
-    onSubmit?: (data: UserData) => void;
+    onSubmit?: (data: UserInput) => Promise<boolean>;
     onCancel?: () => void,
+    data: UserMeta;
+    isSubmitting: boolean;
 }
 
-function EditUser({ onSubmit, onCancel, row } : ModalProps) {
+function EditUser({ onSubmit, onCancel, row, data, isSubmitting } : ModalProps) {
     const [role, setRole] = useState(row.role);
     const [status, setStatus] = useState(row.status);   
     const [name, setName] = useState(row.name);
-    const [email, setEmail] = useState(row.email);
+    const [id, setId] = useState(row.id);    
 
-    const handleClick = () => {
-        onSubmit?.({ role, status, name, email });
+    const initialRoleId = data.roles.find(r => r.label === row.role)?.value || "";
+    const [roleId, setRoleId] = useState<string>(initialRoleId);
+
+
+    const handleClick = async () => {
+        const success = await onSubmit?.({ role: roleId, status, name, id });
+        if (success) onCancel?.();
     }
 
     return (
@@ -74,29 +74,15 @@ function EditUser({ onSubmit, onCancel, row } : ModalProps) {
 
                     <div className="space-y-2">
                         <label className="flex items-center gap-2 text-sm font-semibold text-primary-800">
-                            <Mail size={16} className="text-accent-600" />
-                            Email
-                        </label>
-                        <CustomInput 
-                            type='text'
-                            placeholder="Enter the Email"
-                            icon={<Mail />}
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
-                    </div>
-
-                    <div className="space-y-2">
-                        <label className="flex items-center gap-2 text-sm font-semibold text-primary-800">
-                            <User size={16} className="text-accent-600" />
+                            <Users size={16} className="text-accent-600" />
                             Role
                         </label>
-                        <CustomInput 
-                            type='text'
-                            placeholder="Enter the User Role"
-                            icon={<User />}
-                            value={role}
-                            onChange={(e) => setRole(e.target.value)}
+                        <CustomSelect
+                            value={roleId}
+                            onChange={(e) => setRoleId(e.target.value)}
+                            options={data.roles.map(r => ({ value: r.value.toString(), label: r.label }))}
+                            placeholder="Select Role"
+                            icon={<Users />}
                         />
                     </div>
 
@@ -108,10 +94,7 @@ function EditUser({ onSubmit, onCancel, row } : ModalProps) {
                         <CustomSelect
                             value={status}
                             onChange={(e) => setStatus(e.target.value)}
-                            options={[
-                                { value: "Active", label: "Active" },
-                                { value: "Inactive", label: "Inactive" },
-                            ]}
+                            options={data.userStatus}
                             icon={<Shield />}
                             placeholder="Select Status"
                         />
@@ -129,7 +112,7 @@ function EditUser({ onSubmit, onCancel, row } : ModalProps) {
                         className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-accent-600 to-accent-500 text-white font-semibold hover:from-accent-700 hover:to-accent-600 transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl"
                         onClick={handleClick}
                     >
-                        Edit Role
+                        {isSubmitting ? 'Updating...' : 'Update User'}
                     </button>
                 </div>
             </div>

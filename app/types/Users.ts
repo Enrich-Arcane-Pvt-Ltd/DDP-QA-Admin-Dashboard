@@ -39,10 +39,11 @@ export interface UserMeta {
 }
 
 export interface UserInput {
+    id?: number;
     name: string;
-    email: string;
-    password: string;
-    confirmPassword: string;
+    email?: string;
+    password?: string;
+    confirmPassword?: string;
     role: string;
     status: string;
 }

@@ -46,6 +46,7 @@ export function useUsers(APP_URL: string) {
             }));
 
             setUsers(formattedUsers);
+            
         } catch (error: any) {
             console.log("Error fetching users : ", error.message);
         } finally {
@@ -113,7 +114,7 @@ export function useUsers(APP_URL: string) {
 
             if (!response.ok) {
                 console.log('Response Error in creating users : ', responseJson.message);
-                toast.error('Failed to create user');
+                toast.error(responseJson.message);
                 return false;
             }
 
@@ -129,13 +130,43 @@ export function useUsers(APP_URL: string) {
     };
 
     // API Call to Edit Users
-    const editUser = async (closeModal: () => void) => {
+    const editUser = async (data: UserInput, token: string | null, id: number) => {        
+        const payLoad = {
+            _method: 'PATCH',
+            name: data.name,
+            role_id: Number(data.role),
+            status: data.status
+        }        
+
+        setIsSubmitting(true);
+
         try {
+            const response = await fetch(APP_URL + `users/${id}`, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify(payLoad)
+            });
+
+            const responseJson = await response.json();            
+
+            if (!response.ok) {
+                console.log('Response Error in updating user : ', responseJson.message);
+                toast.error(responseJson.message);
+                return false;
+            }
+
             toast.success("User updated successfully");
-            closeModal();
+            await fetchUsers(token);
+            return true;
         } catch (error) {
             toast.error("Failed to update user");
-            closeModal();
+            return false;
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -175,6 +206,44 @@ export function useUsers(APP_URL: string) {
         }
     }, []);
 
+    // API Call to Activate/Deactivate Users
+    const activateUsers = useCallback(async (id: number, token: string | null, status: string) => {
+        if (!token) {
+            console.log("Token Not Found");
+            return;
+        }        
+
+        setIsSubmitting(true);
+        try {
+            const currentStatus = status === 'active' ? 'block' : 'unblock';
+
+            const response = await fetch(`${APP_URL}users/${id}/${currentStatus}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            const responseJson = await response.json();
+            if (!response.ok) {
+                console.log("Response Error in activating users : ", responseJson.message);
+                toast.error(responseJson.message);
+                return false;
+            }
+
+            toast.success(responseJson.message);
+            return true;
+        } catch (error: any) {
+            console.log("Error activating user : ", error.message);
+            toast.error(error.message);
+            return false;
+        } finally {
+            setIsSubmitting(false);
+        }
+    }, []);
+
     return {
         users,
         isLoading,
@@ -186,6 +255,7 @@ export function useUsers(APP_URL: string) {
         data,
         setData,
         isSubmitting,
-        deleteUsers
+        deleteUsers,
+        activateUsers,
     };
 }

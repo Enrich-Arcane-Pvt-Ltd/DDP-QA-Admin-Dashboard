@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Eye, Pencil, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
+import { Eye, Pencil, Trash2, ChevronLeft, ChevronRight, XCircle, CheckCircle } from "lucide-react";
 
 type TableProps = {
   columns: string[];
@@ -8,6 +8,7 @@ type TableProps = {
   onEdit?: (row: any) => void;
   onDelete?: (row: any) => void;
   onView?: (row: any) => void;
+  onStatusChange?: (row: any) => void;
   rowsPerPage?: number;
 };
 
@@ -17,6 +18,7 @@ export default function Table({
   onEdit,
   onDelete,
   onView,
+  onStatusChange,
   rowsPerPage = 10,
 }: TableProps) {
   const [currentPage, setCurrentPage] = useState(1);
@@ -30,7 +32,7 @@ export default function Table({
   const handleNextPage = () =>
     currentPage < totalPages && setCurrentPage(currentPage + 1);
 
-  const showActions = onEdit || onDelete || onView;
+  const showActions = onEdit || onDelete || onView || onStatusChange;
 
   return (
     <div className="bg-gradient-to-br from-white to-primary-100 rounded-2xl shadow-xl border border-primary-200 overflow-hidden">
@@ -104,6 +106,21 @@ export default function Table({
                           <Trash2 size={16} />
                         </button>
                       )}
+
+                      {onStatusChange && (
+                        <button
+                          onClick={() => onStatusChange(row)}
+                          className={`p-2 rounded-lg text-white transition-all duration-200 hover:scale-110 shadow-md hover:shadow-lg bg-gradient-to-r from-primary-700 to-primary-600 hover:from-primary-700 hover:to-primary-500`}
+                          title={row.status === 'active' ? 'Deactivate' : 'Activate'}
+                        >
+                          {row.status === 'active' ? (
+                            <XCircle size={16} />
+                          ) : (
+                            <CheckCircle size={16} />
+                          )}
+                        </button>
+                      )}
+
                     </div>
                   </td>
                 )}

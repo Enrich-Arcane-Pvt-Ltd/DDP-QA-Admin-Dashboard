@@ -1,10 +1,28 @@
+"use client";
+
 import { Users, CheckCircle, ShoppingCart, Shirt } from "lucide-react"
 import Card from "../components/Card"
 import Table from "../components/Table"
 import BarChartComponent from "../components/BarChart"
 import PieChartComponent from "../components/PieChart"
 
+import { useEffect } from "react"
+import { useRouter } from 'next/navigation';
+import { useAccessToken } from '@/app/hooks/useAccessToken';
+
 export default function DashboardPage() {
+  const token = useAccessToken();
+  const router = useRouter();  
+
+  useEffect(() => {
+    if (token === undefined || token === null) return;
+
+    if (!token) {
+      router.replace('/');
+    }
+  }, [token, router]);
+
+
   return (
     <div className="w-full h-full">
       <div className="grid grid-cols-1 py-1 md:grid-cols-2 xl:grid-cols-4">

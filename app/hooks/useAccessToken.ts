@@ -8,7 +8,7 @@ export function useAccessToken() {
             const storedToken = localStorage.getItem("accessToken");
             setToken(storedToken);
         }
-    }, []);
+    }, []);    
 
     return token;
 }

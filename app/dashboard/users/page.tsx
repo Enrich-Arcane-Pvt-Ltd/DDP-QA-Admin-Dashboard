@@ -20,16 +20,18 @@ import ViewUser from "@/app/forms/users/ViewUser";
 import APP_URL from "@/app/constants/Config";
 
 import { UserData } from "@/app/types/Users";
+import ActivateUser from "@/app/forms/users/ActivateUser";
 
 export default function UsersPage() {
   const [modalVisible, setModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [viewModalVisible, setViewModalVisible] = useState(false);
+  const [statusModalVisible, setStatusModalVisible] = useState(false);
   const [selectedRow, setSelectedRow] = useState<UserData | null>(null);
 
   const token = useAccessToken();
-  const { users, isLoading, fetchUsers, createUser, editUser, setUsers, fetchUsersData, data, setData, isSubmitting, deleteUsers } = useUsers(APP_URL);
+  const { users, isLoading, fetchUsers, createUser, editUser, setUsers, fetchUsersData, data, setData, isSubmitting, deleteUsers, activateUsers } = useUsers(APP_URL);
 
   useEffect(() => {
     if (token){
@@ -46,6 +48,13 @@ export default function UsersPage() {
     setDeleteModalVisible(true)
   };
   const closeDeleteModal = () => setDeleteModalVisible(false);
+
+  const openStatusModal = (row: UserData) => {
+    setSelectedRow(row);
+    setStatusModalVisible(true);
+  }
+
+  const closeStatusModal = () => setStatusModalVisible(false);
 
   const handleEdit = (row: UserData) => {        
     setSelectedRow(row);
@@ -80,6 +89,7 @@ export default function UsersPage() {
         onView={handleView}
         onEdit={handleEdit}
         onDelete={openDeleteModal}
+        onStatusChange={openStatusModal}
       />
       
       {modalVisible && data && token &&(
@@ -88,6 +98,16 @@ export default function UsersPage() {
           onSubmit={(formData) => createUser(formData, token)}
           data={data}
           isSubmitting={isSubmitting}
+        />
+      )}
+
+      {editModalVisible && data && selectedRow && token && (
+        <EditUser
+            row={selectedRow} 
+            onCancel={closeEditModal}
+            onSubmit={(formData) => editUser(formData, token, selectedRow.id)}
+            data={data}
+            isSubmitting={isSubmitting}
         />
       )}
 
@@ -106,11 +126,19 @@ export default function UsersPage() {
         />
       )}
 
-      {editModalVisible && selectedRow && (
-        <EditUser
-            row={selectedRow} 
-            onCancel={closeEditModal}
-            onSubmit={() => editUser(closeEditModal)}
+      {statusModalVisible && selectedRow && token && (
+        <ActivateUser
+          row={selectedRow}
+          onCancel={closeStatusModal}
+          isSubmitting={isSubmitting}
+          onConfirm={async () => {      
+            const success = await activateUsers(selectedRow.id, token, selectedRow.status);
+            if (success) {
+              closeStatusModal();
+              fetchUsers(token);
+              
+            }
+          }}
         />
       )}
 
