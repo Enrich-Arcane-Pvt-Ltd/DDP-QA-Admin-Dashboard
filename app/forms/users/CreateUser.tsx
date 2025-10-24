@@ -80,7 +80,7 @@ function CreateUser({ onSubmit, onCancel, data, isSubmitting} : ModalProps) {
                     <div className="space-y-2">
                         <label className="flex items-center gap-2 text-sm font-semibold text-primary-800">
                             <User size={16} className="text-accent-600" />
-                            Name 
+                            Name <span className="text-error-600">*</span>
                         </label>
                         <CustomInput 
                             type='text'
@@ -94,7 +94,7 @@ function CreateUser({ onSubmit, onCancel, data, isSubmitting} : ModalProps) {
                     <div className="space-y-2">
                         <label className="flex items-center gap-2 text-sm font-semibold text-primary-800">
                             <Mail size={16} className="text-accent-600" />
-                            Email 
+                            Email <span className="text-error-600">*</span>
                         </label>
                         <CustomInput 
                             type='email'
@@ -108,7 +108,7 @@ function CreateUser({ onSubmit, onCancel, data, isSubmitting} : ModalProps) {
                     <div className="space-y-2">
                         <label className="flex items-center gap-2 text-sm font-semibold text-primary-800">
                             <Users size={16} className="text-accent-600" />
-                            Role
+                            Role <span className="text-error-600">*</span>
                         </label>
                         <CustomSelect
                             value={role}
@@ -122,7 +122,7 @@ function CreateUser({ onSubmit, onCancel, data, isSubmitting} : ModalProps) {
                     <div className="space-y-2">
                         <label className="flex items-center gap-2 text-sm font-semibold text-primary-800">
                             <Shield size={16} className="text-accent-600" />
-                            Status
+                            Status <span className="text-error-600">*</span>
                         </label>
                         <CustomSelect
                             value={status}
@@ -136,7 +136,7 @@ function CreateUser({ onSubmit, onCancel, data, isSubmitting} : ModalProps) {
                     <div className="space-y-2">
                         <label className="flex items-center gap-2 text-sm font-semibold text-primary-800">
                             <Lock size={16} className="text-accent-600" />
-                            Password 
+                            Password <span className="text-error-600">*</span>
                         </label>
                         <CustomInput 
                             type='password'
@@ -151,7 +151,7 @@ function CreateUser({ onSubmit, onCancel, data, isSubmitting} : ModalProps) {
                     <div className="space-y-2">
                         <label className="flex items-center gap-2 text-sm font-semibold text-primary-800">
                             <LockKeyhole size={16} className="text-accent-600" />
-                            Confirm Password 
+                            Confirm Password <span className="text-error-600">*</span>
                         </label>
                         <CustomInput 
                             type='password'

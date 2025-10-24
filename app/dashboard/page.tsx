@@ -1,27 +1,27 @@
 "use client";
 
-import { Users, CheckCircle, ShoppingCart, Shirt } from "lucide-react"
-import Card from "../components/Card"
-import Table from "../components/Table"
-import BarChartComponent from "../components/BarChart"
-import PieChartComponent from "../components/PieChart"
+import { Users, CheckCircle, ShoppingCart, Shirt } from "lucide-react";
+import Card from "../components/Card";
+import Table from "../components/Table";
+import BarChartComponent from "../components/BarChart";
+import PieChartComponent from "../components/PieChart";
 
-import { useEffect } from "react"
+import { useEffect } from "react";
 import { useRouter } from 'next/navigation';
 import { useAccessToken } from '@/app/hooks/useAccessToken';
 
 export default function DashboardPage() {
-  const token = useAccessToken();
   const router = useRouter();  
 
+  const { token, loaded } = useAccessToken();
+
   useEffect(() => {
-    if (token === undefined || token === null) return;
+    if (!loaded) return;
 
-    if (!token) {
-      router.replace('/');
+    if (!token || token.trim() === "") {
+      router.replace("/");
     }
-  }, [token, router]);
-
+  }, [token, loaded, router]);
 
   return (
     <div className="w-full h-full">

@@ -48,7 +48,7 @@ export default function LoginPage() {
         return;
       }
 
-      localStorage.setItem('accessToken', responseJson.accessToken);
+      localStorage.setItem('accessToken', String(responseJson.accessToken));
       toast.success(responseJson.message);
 
       setTimeout(() => {

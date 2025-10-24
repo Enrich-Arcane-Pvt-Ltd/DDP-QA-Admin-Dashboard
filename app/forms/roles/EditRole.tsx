@@ -57,7 +57,7 @@ function EditRole({ onSubmit, onCancel, row } : ModalProps) {
                     <div className="space-y-2">
                         <label className="flex items-center gap-2 text-sm font-semibold text-primary-800">
                             <User size={16} className="text-accent-600" />
-                            Role Name
+                            Role Name <span className="text-error-600">*</span>
                         </label>
                         <CustomInput 
                             type='text'
@@ -71,7 +71,7 @@ function EditRole({ onSubmit, onCancel, row } : ModalProps) {
                     <div className="space-y-2">
                         <label className="flex items-center gap-2 text-sm font-semibold text-primary-800">
                             <Shield size={16} className="text-accent-600" />
-                            Status
+                            Status <span className="text-error-600">*</span>
                         </label>
                         <CustomSelect
                             value={status}

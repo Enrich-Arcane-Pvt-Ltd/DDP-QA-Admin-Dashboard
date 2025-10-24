@@ -47,3 +47,23 @@ export interface UserInput {
     role: string;
     status: string;
 }
+
+export interface UserProfile {
+    id?: number;
+    name: string;
+    email?: string;
+    profile_picture?: string | null;
+    profile_picture_url?: string | null;
+    has_role?: HasRole;
+    status: string;
+}
+
+export interface UpdateEmail {
+    email: string;
+    password: string;
+}
+export interface UpdatePassword {
+    password: string;
+    newPassword: string;
+    confirmNewPassword: string;
+}

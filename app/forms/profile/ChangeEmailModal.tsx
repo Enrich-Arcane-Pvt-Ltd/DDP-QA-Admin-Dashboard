@@ -1,33 +1,31 @@
-"use client";
-
-import { useState } from "react";
 import CustomInput from "@/app/components/CustomInput";
-import CustomSelect from "@/app/components/CustomSelect";
+import { Lock, Mail, X } from "lucide-react";
+import { useState } from "react";
 
+import { toast } from "@/app/components/ToastContainer";
 
-import { Shield, User, X, Users } from "lucide-react";
-import { UserData, UserMeta, UserInput } from "@/app/types/Users";
+import { UpdateEmail } from "@/app/types/Users";
 
 interface ModalProps {
-    row: UserData;
-    onSubmit?: (data: UserInput) => Promise<boolean>;
-    onCancel?: () => void,
-    data: UserMeta;
+    onSubmit?: (data: UpdateEmail) => Promise<boolean>;
+    onCancel?: () => void;
     isSubmitting: boolean;
 }
 
-function EditUser({ onSubmit, onCancel, row, data, isSubmitting } : ModalProps) {
-    const [role, setRole] = useState(row.role);
-    const [status, setStatus] = useState(row.status);   
-    const [name, setName] = useState(row.name);
-    const [id, setId] = useState(row.id);    
-
-    const initialRoleId = data.roles.find(r => r.label === row.role)?.value || "";
-    const [roleId, setRoleId] = useState<string>(initialRoleId);
-
+function ChangeEmailModal ({ onSubmit, onCancel, isSubmitting} : ModalProps) {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
     const handleClick = async () => {
-        const success = await onSubmit?.({ role: roleId, status, name, id });
+        if (!email || !password) {
+            toast.error('Please Enter both email & password');
+            return;
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) return toast.error("Please enter a valid email");
+
+        const success = await onSubmit?.({ email, password });
         if (success) onCancel?.();
     }
 
@@ -41,11 +39,11 @@ function EditUser({ onSubmit, onCancel, row, data, isSubmitting } : ModalProps) 
                     <div className="relative flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-lg">
-                                <Shield className="text-white" size={24} />
+                                <Mail className="text-white" size={24} />
                             </div>
                             <div>
-                                <h2 className="text-2xl font-bold text-white">Edit User</h2>
-                                <p className="text-primary-100 text-sm">Edit user data</p>
+                                <h2 className="text-2xl font-bold text-white">Change Email</h2>
+                                <p className="text-primary-100 text-sm">Enter email & password to change email</p>
                             </div>
                         </div>
                         <button
@@ -60,43 +58,30 @@ function EditUser({ onSubmit, onCancel, row, data, isSubmitting } : ModalProps) 
                 <div className="p-6 space-y-5">
                     <div className="space-y-2">
                         <label className="flex items-center gap-2 text-sm font-semibold text-primary-800">
-                            <User size={16} className="text-accent-600" />
-                            Name <span className="text-error-600">*</span>
+                            <Mail size={16} className="text-accent-600" />
+                            Email <span className="text-error-600">*</span>
                         </label>
                         <CustomInput 
-                            type='text'
-                            placeholder="Enter the Name"
-                            icon={<User />}
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
+                            type='email'
+                            placeholder="Enter the Email"
+                            icon={<Mail />}
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                         />
                     </div>
 
                     <div className="space-y-2">
                         <label className="flex items-center gap-2 text-sm font-semibold text-primary-800">
-                            <Users size={16} className="text-accent-600" />
-                            Role <span className="text-error-600">*</span>
+                            <Lock size={16} className="text-accent-600" />
+                            Password <span className="text-error-600">*</span>
                         </label>
-                        <CustomSelect
-                            value={roleId}
-                            onChange={(e) => setRoleId(e.target.value)}
-                            options={data.roles.map(r => ({ value: r.value.toString(), label: r.label }))}
-                            placeholder="Select Role"
-                            icon={<Users />}
-                        />
-                    </div>
-
-                    <div className="space-y-2">
-                        <label className="flex items-center gap-2 text-sm font-semibold text-primary-800">
-                            <Shield size={16} className="text-accent-600" />
-                            Status <span className="text-error-600">*</span>
-                        </label>
-                        <CustomSelect
-                            value={status}
-                            onChange={(e) => setStatus(e.target.value)}
-                            options={data.userStatus}
-                            icon={<Shield />}
-                            placeholder="Select Status"
+                        <CustomInput 
+                            type='password'
+                            placeholder="Enter the Password"
+                            icon={<Lock />}
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            showPasswordToggle
                         />
                     </div>
                 </div>
@@ -112,7 +97,7 @@ function EditUser({ onSubmit, onCancel, row, data, isSubmitting } : ModalProps) 
                         className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-accent-600 to-accent-500 text-white font-semibold hover:from-accent-700 hover:to-accent-600 transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl"
                         onClick={handleClick}
                     >
-                        {isSubmitting ? 'Updating...' : 'Update User'}
+                        {isSubmitting ? 'Changing...' : 'Change Email'}
                     </button>
                 </div>
             </div>
@@ -120,4 +105,4 @@ function EditUser({ onSubmit, onCancel, row, data, isSubmitting } : ModalProps) 
     )
 }
 
-export default EditUser
+export default ChangeEmailModal;

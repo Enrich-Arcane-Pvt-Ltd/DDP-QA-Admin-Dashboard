@@ -14,7 +14,6 @@ import EditUser from "@/app/forms/users/EditUser";
 import { useAccessToken } from "@/app/hooks/useAccessToken";
 import { useUsers } from "@/app/hooks/useUsers";
 
-
 import { PlusIcon } from "lucide-react";
 import ViewUser from "@/app/forms/users/ViewUser";
 import APP_URL from "@/app/constants/Config";
@@ -31,7 +30,7 @@ export default function UsersPage() {
   const [selectedRow, setSelectedRow] = useState<UserData | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const token = useAccessToken();
+  const { token } = useAccessToken();
   const { users, isLoading, fetchUsers, createUser, editUser, setUsers, fetchUsersData, data, setData, isSubmitting, deleteUsers, activateUsers } = useUsers(APP_URL);
 
   useEffect(() => {

@@ -136,7 +136,10 @@ export function useUsers(APP_URL: string) {
             name: data.name,
             role_id: Number(data.role),
             status: data.status
-        }        
+        }     
+        
+        console.log('payLoad : ', payLoad);
+        
 
         setIsSubmitting(true);
 
@@ -158,6 +161,9 @@ export function useUsers(APP_URL: string) {
                 toast.error(responseJson.message);
                 return false;
             }
+
+            console.log('responseJson : ', responseJson);
+            
 
             toast.success("User updated successfully");
             await fetchUsers(token);

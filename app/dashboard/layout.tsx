@@ -15,6 +15,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     "/dashboard/settings": "Settings",
     "/dashboard/quality": "Quality Assurance",
     "/dashboard/roles": "User Roles",
+    "/dashboard/profile": "Profile",
   };
 
   const currentPage = pageNameMap[pathName] || "Page";
