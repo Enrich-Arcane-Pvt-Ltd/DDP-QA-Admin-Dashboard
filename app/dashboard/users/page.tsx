@@ -73,7 +73,7 @@ export default function UsersPage() {
   const closeEditModal = () => setEditModalVisible(false);
 
   const handleView = (row: UserData) => {        
-    setSelectedRow(row);
+    setSelectedRow(row);    
     setViewModalVisible(true);
   };
 

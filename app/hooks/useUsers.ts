@@ -31,11 +31,11 @@ export function useUsers(APP_URL: string) {
             if (!response.ok) {
                 console.log("Response Error in fetching users : ", responseJson.message);
                 return;
-            }
+            }            
 
             const filteredUsers = responseJson.filter(
                 (user: any) => user.role_id !== "1"
-            );
+            );            
 
             const formattedUsers = filteredUsers.map((user: any) => ({
                 id: user.id,
@@ -43,6 +43,7 @@ export function useUsers(APP_URL: string) {
                 email: user.email,
                 role: user.has_role?.name || "N/A",
                 status: user.status,
+                profile_picture_url: user?.profile_picture_url
             }));
 
             setUsers(formattedUsers);
@@ -88,32 +89,34 @@ export function useUsers(APP_URL: string) {
 
     // API Call to Create Users
     const createUser = async (data: UserInput, token: string | null) => {
-        const payLoad = {
-            name: data.name,
-            email: data.email,
-            password: data.password,
-            password_confirmation: data.confirmPassword,
-            role_id: Number(data.role),
-            status: data.status
+        const formData = new FormData();
+
+        formData.append('name', data.name ?? '');
+        formData.append('email', data.email ?? '');
+        formData.append('password', data.password ?? '');
+        formData.append('password_confirmation', data.confirmPassword ?? '');
+        formData.append('role_id', String(data.role ?? ''));
+        formData.append('status', data.status ?? '');
+
+        if (data.file instanceof File) {
+            formData.append('profile_picture', data.file);
         }
 
-        setIsSubmitting(true);
-        
+        setIsSubmitting(true);    
+
         try {
             const response = await fetch(APP_URL + 'users', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
-                    'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
                 },
-                body: JSON.stringify(payLoad)
+                body: formData
             });
 
-            const responseJson = await response.json();            
+            const responseJson = await response.json();
 
             if (!response.ok) {
-                console.log('Response Error in creating users : ', responseJson.message);
                 toast.error(responseJson.message);
                 return false;
             }
@@ -121,25 +124,28 @@ export function useUsers(APP_URL: string) {
             toast.success("User created successfully");
             await fetchUsers(token);
             return true;
+
         } catch (error) {
             toast.error("Failed to create user");
             return false;
+
         } finally {
             setIsSubmitting(false);
         }
     };
 
     // API Call to Edit Users
-    const editUser = async (data: UserInput, token: string | null, id: number) => {        
-        const payLoad = {
-            _method: 'PATCH',
-            name: data.name,
-            role_id: Number(data.role),
-            status: data.status
-        }     
+    const editUser = async (data: UserInput, token: string | null, id: number) => {                
+        const formData = new FormData();
         
-        console.log('payLoad : ', payLoad);
-        
+        formData.append('_method', 'PATCH');
+        formData.append('name', data.name);
+        formData.append('role_id', String(data.role));
+        formData.append('status', data.status);
+
+        if (data.file instanceof File) {
+            formData.append('profile_picture', data.file);
+        }
 
         setIsSubmitting(true);
 
@@ -148,10 +154,9 @@ export function useUsers(APP_URL: string) {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
-                    'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
                 },
-                body: JSON.stringify(payLoad)
+                body: formData
             });
 
             const responseJson = await response.json();            
@@ -160,10 +165,7 @@ export function useUsers(APP_URL: string) {
                 console.log('Response Error in updating user : ', responseJson.message);
                 toast.error(responseJson.message);
                 return false;
-            }
-
-            console.log('responseJson : ', responseJson);
-            
+            }            
 
             toast.success("User updated successfully");
             await fetchUsers(token);

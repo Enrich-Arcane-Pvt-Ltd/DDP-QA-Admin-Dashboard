@@ -20,16 +20,19 @@ function EditUser({ onSubmit, onCancel, row, data, isSubmitting } : ModalProps) 
     const [role, setRole] = useState(row.role);
     const [status, setStatus] = useState(row.status);   
     const [name, setName] = useState(row.name);
-    const [id, setId] = useState(row.id);    
+    const [id, setId] = useState(row.id);
+    const [file, setFile] = useState<File | null>(null);
 
     const initialRoleId = data.roles.find(r => r.label === row.role)?.value || "";
     const [roleId, setRoleId] = useState<string>(initialRoleId);
 
-
     const handleClick = async () => {
-        const success = await onSubmit?.({ role: roleId, status, name, id });
+        const success = await onSubmit?.({ role: roleId, status, name, id, file });
         if (success) onCancel?.();
     }
+
+    console.log('row : ', row);
+    
 
     return (
         <div onClick={onCancel} className="fixed inset-0 z-50 flex items-center justify-center bg-primary-900/40 backdrop-blur-sm p-4 animate-fadeIn">
@@ -55,6 +58,35 @@ function EditUser({ onSubmit, onCancel, row, data, isSubmitting } : ModalProps) 
                             <X className="text-white" size={20} />
                         </button>
                     </div>
+                </div>
+
+                <div className="flex flex-col items-center gap-3 py-3">
+                    <label className="relative w-32 h-32 cursor-pointer rounded-3xl bg-gradient-to-br from-primary-500 to-primary-700 shadow-2xl border-4 border-white overflow-hidden">
+                        {file ? (
+                            <img
+                                src={URL.createObjectURL(file)}
+                                alt="Preview"
+                                className="w-full h-full object-cover"
+                            />
+                        ) : row.profile_picture_url?.trim() ? (
+                            <img
+                                src={row.profile_picture_url}
+                                alt={row.name}
+                                className="w-full h-full object-cover"
+                            />
+                        ) : (
+                            <div className="flex justify-center items-center h-full w-full">
+                                <User className="text-white" size={56} strokeWidth={2} />
+                            </div>
+                        )}
+
+                        <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={(e) => setFile(e.target.files?.[0] || null)}
+                        />
+                    </label>
                 </div>
 
                 <div className="p-6 space-y-5">

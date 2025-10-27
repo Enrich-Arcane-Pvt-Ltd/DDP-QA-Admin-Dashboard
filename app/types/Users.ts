@@ -23,6 +23,7 @@ export interface UserData {
     email: string;
     role: string;
     status: string;
+    profile_picture_url?: string
 }
 
 export interface Users {
@@ -46,6 +47,7 @@ export interface UserInput {
     confirmPassword?: string;
     role: string;
     status: string;
+    file?: File | null
 }
 
 export interface UserProfile {

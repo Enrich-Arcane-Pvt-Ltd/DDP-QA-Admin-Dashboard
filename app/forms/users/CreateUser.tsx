@@ -3,10 +3,11 @@
 import React, { useState } from "react";
 import CustomInput from "@/app/components/CustomInput";
 import CustomSelect from "@/app/components/CustomSelect";
+import CustomFileInput from "@/app/components/CustomFileInput";
 
 import { toast } from "@/app/components/ToastContainer";
 
-import { Shield, User, X, Sparkles, Users, Mail, Phone, Lock, LockKeyhole } from "lucide-react";
+import { Shield, User, X, Sparkles, Users, Mail, Phone, Lock, LockKeyhole, UserCircle } from "lucide-react";
 
 import { UserInput, UserMeta } from "@/app/types/Users";
 
@@ -19,11 +20,12 @@ interface ModalProps {
 
 function CreateUser({ onSubmit, onCancel, data, isSubmitting} : ModalProps) {
     const [role, setRole] = useState('');
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
+    const [name, setName] = useState('Tester');
+    const [email, setEmail] = useState('testing+1@gmail.com');
     const [status, setStatus] = useState("");
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');    
+    const [password, setPassword] = useState('Test@1234');
+    const [confirmPassword, setConfirmPassword] = useState('Test@1234');
+    const [file, setFile] = useState<File | null>(null);  
 
     const handleClick = async () => {
         if (!name) return toast.error("Name is required");
@@ -46,7 +48,7 @@ function CreateUser({ onSubmit, onCancel, data, isSubmitting} : ModalProps) {
 
         if (confirmPassword !== password) return toast.error("Passwords do not match");
 
-        const success = await onSubmit?.({ role, status, name, email, password, confirmPassword });
+        const success = await onSubmit?.({ role, status, name, email, password, confirmPassword, file });
         if (success) onCancel?.();
     };
 
@@ -130,6 +132,19 @@ function CreateUser({ onSubmit, onCancel, data, isSubmitting} : ModalProps) {
                             options={data.userStatus}
                             icon={<Shield />}
                             placeholder="Select Status"
+                        />
+                    </div>
+
+                    <div className="space-y-2">
+                        <label className="flex items-center gap-2 text-sm font-semibold text-primary-800">
+                            <UserCircle size={16} className="text-accent-600" />
+                            Profile Image
+                        </label>
+                        <CustomFileInput
+                            placeholder="Choose a document"
+                            value={file}
+                            onChange={(selected) => setFile(selected)}
+                            accept=".pdf,.jpg,.png"
                         />
                     </div>
 

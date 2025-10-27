@@ -3,19 +3,14 @@
 import React, { useState } from "react";
 import { Shield, User, X, Sparkles, Users, Mail, Phone, CheckCircle2, XCircle } from "lucide-react";
 
-interface UserData { 
-    role: string; 
-    status: string;
-    email: string;
-    name: string;
-}
+import { UserData } from "@/app/types/Users";
 
 interface ModalProps {
     row: UserData;
     onCancel?: () => void,
 }
 
-export default function ViewUser({ onCancel, row } : ModalProps) {
+export default function ViewUser({ onCancel, row } : ModalProps) {    
     return (
         <div onClick={onCancel} className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-md p-4 animate-fadeIn">
             <div onClick={(e) => e.stopPropagation()} className="relative bg-white rounded-3xl shadow-2xl w-full max-w-lg transform transition-all duration-300 animate-slideUp overflow-hidden">
@@ -52,8 +47,16 @@ export default function ViewUser({ onCancel, row } : ModalProps) {
                     <div className="absolute left-1/2 -translate-x-1/2 -bottom-16">
                         <div className="relative">
                             <div className="absolute inset-0 bg-gradient-to-br from-primary-400 to-primary-600 rounded-3xl blur-xl opacity-60 animate-pulse"></div>
-                            <div className="relative w-32 h-32 rounded-3xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-2xl border-4 border-white">
-                                <User className="text-white" size={56} strokeWidth={2} />
+                            <div className="relative w-32 h-32 rounded-3xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-2xl border-4 border-white overflow-hidden">
+                                {row.profile_picture_url ? (
+                                    <img
+                                        src={row.profile_picture_url}
+                                        alt={row.name}
+                                        className="w-full h-full object-cover rounded-3xl"
+                                    />
+                                ) : (
+                                    <User className="text-white" size={56} strokeWidth={2} />
+                                )}
                             </div>
                         </div>
                     </div>
