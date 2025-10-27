@@ -5,29 +5,22 @@ import { useState } from "react";
 
 import { toast } from "@/app/components/ToastContainer";
 
-import { UpdateEmail } from "@/app/types/Users";
+import { UpdateEmail, UpdateProfile } from "@/app/types/Users";
 
 interface ModalProps {
-    onSubmit?: (data: UpdateEmail) => Promise<boolean>;
+    onSubmit?: (data: UpdateProfile) => Promise<boolean>;
     onCancel?: () => void;
     isSubmitting: boolean;
+    name: string,
+    image?: string | null | undefined
 }
 
-function EditProfileModal ({ onSubmit, onCancel, isSubmitting} : ModalProps) {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+function EditProfileModal ({ onSubmit, onCancel, isSubmitting, name, image} : ModalProps) {
     const [file, setFile] = useState<File | null>(null);
+    const [username, setUsername] = useState(name);
 
     const handleClick = async () => {
-        if (!email || !password) {
-            toast.error('Please Enter both email & password');
-            return;
-        }
-
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) return toast.error("Please enter a valid email");
-
-        const success = await onSubmit?.({ email, password });
+        const success = await onSubmit?.({ username, file });
         if (success) onCancel?.();
     }
 
@@ -57,6 +50,35 @@ function EditProfileModal ({ onSubmit, onCancel, isSubmitting} : ModalProps) {
                     </div>
                 </div>
 
+                <div className="flex flex-col items-center gap-3 py-3">
+                    <label className="relative w-32 h-32 cursor-pointer rounded-3xl bg-gradient-to-br from-primary-500 to-primary-700 shadow-2xl border-4 border-white overflow-hidden">
+                        {file ? (
+                            <img
+                                src={URL.createObjectURL(file)}
+                                alt="Preview"
+                                className="w-full h-full object-cover"
+                            />
+                        ) : image?.trim() ? (
+                            <img
+                                src={image}
+                                alt={image}
+                                className="w-full h-full object-cover"
+                            />
+                        ) : (
+                            <div className="flex justify-center items-center h-full w-full">
+                                <User className="text-white" size={56} strokeWidth={2} />
+                            </div>
+                        )}
+
+                        <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={(e) => setFile(e.target.files?.[0] || null)}
+                        />
+                    </label>
+                </div>
+
                 <div className="p-6 space-y-5">
                     <div className="space-y-2">
                         <label className="flex items-center gap-2 text-sm font-semibold text-primary-800">
@@ -67,21 +89,8 @@ function EditProfileModal ({ onSubmit, onCancel, isSubmitting} : ModalProps) {
                             type='text'
                             placeholder="Enter the Name"
                             icon={<User />}
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
-                    </div>
-
-                    <div className="space-y-2">
-                        <label className="flex items-center gap-2 text-sm font-semibold text-primary-800">
-                            <UserCircle size={16} className="text-accent-600" />
-                            Profile Image <span className="text-error-600">*</span>
-                        </label>
-                        <CustomFileInput
-                            placeholder="Choose a document"
-                            value={file}
-                            onChange={(selected) => setFile(selected)}
-                            accept=".pdf,.jpg,.png"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
                         />
                     </div>
                 </div>

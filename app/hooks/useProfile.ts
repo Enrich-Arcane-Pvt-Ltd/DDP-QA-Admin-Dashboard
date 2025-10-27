@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { toast } from "@/app/components/ToastContainer";
 
-import { UserProfile, UpdateEmail, UpdatePassword } from "../types/Users";
+import { UserProfile, UpdateEmail, UpdatePassword, UpdateProfile } from "../types/Users";
 
 import APP_URL from "../constants/Config";
 
@@ -43,6 +43,50 @@ export function useProfile() {
     }, []);
 
     // API Call to Update User Profile
+    const editProfile = useCallback(async (data: UpdateProfile, token: string | null) => {
+        if (!token) {
+            console.log("Token Not Found");
+            return false;
+        }
+
+        const formData = new FormData();
+        formData.append('_method', 'PATCH');
+        formData.append('name', data.username);
+
+        if (data.file instanceof File) {
+            formData.append('profile_picture', data.file);
+        }
+
+        setIsSubmitting(true);
+
+        try {
+            const response = await fetch(`${APP_URL}profile/update`, {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: formData
+            });
+
+            const responseJson = await response.json();            
+            
+            if (!response.ok) {
+                console.log("Response Error in updating user profile : ", responseJson.message);
+                toast.error(responseJson.message)
+                return false;
+            }
+
+            toast.success(responseJson.message);
+            return true; 
+        } catch (error: any) {
+            console.log("Error updating user profile : ", error.message);
+            toast.error(error.message);
+            return false;
+        } finally {
+            setIsSubmitting(false);
+        }
+    }, []);
 
     // API Call to Update Password
     const changePassword = useCallback(async (data: UpdatePassword, token: string | null) => {
@@ -167,6 +211,7 @@ export function useProfile() {
     return {
         profile, setProfile, fetchUserProfile, isLoading, 
         isSubmitting, deleteUserProfile,
-        changeEmail, changePassword
+        changeEmail, changePassword,
+        editProfile
     }
 }

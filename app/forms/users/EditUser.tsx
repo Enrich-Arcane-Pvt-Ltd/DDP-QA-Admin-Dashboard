@@ -29,10 +29,7 @@ function EditUser({ onSubmit, onCancel, row, data, isSubmitting } : ModalProps) 
     const handleClick = async () => {
         const success = await onSubmit?.({ role: roleId, status, name, id, file });
         if (success) onCancel?.();
-    }
-
-    console.log('row : ', row);
-    
+    }    
 
     return (
         <div onClick={onCancel} className="fixed inset-0 z-50 flex items-center justify-center bg-primary-900/40 backdrop-blur-sm p-4 animate-fadeIn">
@@ -60,7 +57,7 @@ function EditUser({ onSubmit, onCancel, row, data, isSubmitting } : ModalProps) 
                     </div>
                 </div>
 
-                <div className="flex flex-col items-center gap-3 py-3">
+                <div className="flex flex-col items-center gap-1 py-3">
                     <label className="relative w-32 h-32 cursor-pointer rounded-3xl bg-gradient-to-br from-primary-500 to-primary-700 shadow-2xl border-4 border-white overflow-hidden">
                         {file ? (
                             <img

@@ -26,7 +26,7 @@ export default function ProfilePage() {
     const [deleteModalVisible, setDeleteModalVisible] = useState(false);
     const [editModalVisible, setEditModalVisible] = useState(false);
 
-    const { profile, setProfile, fetchUserProfile, isLoading, isSubmitting, deleteUserProfile, changeEmail, changePassword } = useProfile();
+    const { profile, setProfile, fetchUserProfile, isLoading, isSubmitting, deleteUserProfile, changeEmail, changePassword, editProfile } = useProfile();
     
     const openEmailModal = () => setEmailModalVisible(true);
     const closeEmailModal = () => setEmailModalVisible(false);
@@ -49,11 +49,11 @@ export default function ProfilePage() {
         }
     }, [token, fetchUserProfile]);
 
-    // if (isLoading) {
-    //     return (
-    //         <Loader />
-    //     )
-    // }
+    if (isLoading) {
+        return (
+            <Loader />
+        )
+    }
 
     return (
         <div>
@@ -63,13 +63,22 @@ export default function ProfilePage() {
                         <Sparkles size={24} className="text-primary-400 animate-pulse" />
                     </div>
                     
-                    <div className="relative mb-6 group">
+                    <div className="relative mb-6 group flex justify-center items-center">
                         <div className="absolute inset-0 bg-primary-600 rounded-full blur-xl opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
-                        <div className="relative bg-white p-4 rounded-full shadow-xl">
-                            <CircleUserRound size={80} className="text-primary-600" strokeWidth={1.5} />
+
+                        <div className="relative w-24 h-24 rounded-full bg-white shadow-xl flex items-center justify-center overflow-hidden">
+                            {profile?.profile_picture_url?.trim() ? (
+                                <img
+                                    src={profile.profile_picture_url}
+                                    alt={profile.name}
+                                    className="w-full h-full object-cover"
+                                />
+                            ) : (
+                                <CircleUserRound size={48} className="text-primary-600" strokeWidth={1.5} />
+                            )}
                         </div>
                     </div>
-                    
+
                     <div className="text-center mb-6">
                         <h2 className="text-2xl font-bold text-primary-700 mb-1">{profile?.name || 'N/A'}</h2>
                         <div className="flex items-center justify-center gap-2 text-primary-500">
@@ -154,7 +163,15 @@ export default function ProfilePage() {
                 <EditProfileModal 
                     isSubmitting={isSubmitting}
                     onCancel={closeEditModal}
-                    onSubmit={(formData) => changeEmail(formData, token)}
+                    onSubmit={async (formData) => {
+                        const success = await editProfile(formData, token);
+                        if (success) {
+                            await fetchUserProfile(token);
+                        }
+                        return success;
+                    }}
+                    name={profile.name}
+                    image={profile?.profile_picture_url}
                 />
             )}
         </div>

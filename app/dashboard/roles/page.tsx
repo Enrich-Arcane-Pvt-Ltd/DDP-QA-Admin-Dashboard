@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import SearchBar from "@/app/components/SearchBar";
 import CreateButton from "@/app/components/CreateButton";
@@ -12,6 +12,13 @@ import DeleteRole from "@/app/forms/roles/DeleteRole";
 import { toast } from "@/app/components/ToastContainer";
 
 import { PlusIcon } from "lucide-react";
+
+import { Roles } from "@/app/types/Roles";
+
+import { useRoles } from "@/app/hooks/useRoles";
+import { useAccessToken } from "@/app/hooks/useAccessToken";
+
+import { useRouter } from "next/navigation";
 
 interface UserData {
     role: string,
@@ -25,7 +32,14 @@ export default function UserRolesPage() {
 
     const [selectedRow, setSelectedRow] = useState<UserData | null>(null);
 
-    const openModal = () => setModalVisible(true);
+    const router = useRouter();
+
+    const { token } = useAccessToken();
+    const { isLoading, fetchUserRoles, roles, fetchUserRolesPermissions  } = useRoles();
+
+    const openModal = () => {
+        router.push('/dashboard/roles/create')
+    }
     const closeModal = () => setModalVisible(false);
 
     const openDeleteModal = (row: UserData) => {
@@ -65,6 +79,13 @@ export default function UserRolesPage() {
             closeEditModal();
         }
     }
+    
+    useEffect(() => {
+        if (token) {
+            fetchUserRoles(token);
+            fetchUserRolesPermissions(token);
+        }
+    }, [token, fetchUserRoles, fetchUserRolesPermissions]);
 
     return (
         <div>
@@ -74,12 +95,8 @@ export default function UserRolesPage() {
             </div>
     
             <Table
-                columns={["role", "status"]}
-                data={[
-                    { role: "Admin", status: "Active" },
-                    { role: "User", status: "Inactive" },
-                    { role: "QA", status: "Inactive" },
-                ]}
+                columns={["name", "status"]}
+                data={roles}
                 onEdit={handleEdit} 
                 onDelete={openDeleteModal}
             />

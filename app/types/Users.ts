@@ -69,3 +69,8 @@ export interface UpdatePassword {
     newPassword: string;
     confirmNewPassword: string;
 }
+
+export interface UpdateProfile {
+    username: string,
+    file?: File | null
+}
