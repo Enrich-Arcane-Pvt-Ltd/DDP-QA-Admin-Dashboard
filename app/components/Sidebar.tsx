@@ -4,7 +4,8 @@ import { useState, useCallback, useEffect } from "react";
 import {
   LayoutDashboard,
   Users, Menu, ChevronRight,
-  LogOut, ShoppingCart, Settings, CheckCircle, UserPlus, CircleUser
+  LogOut, ShoppingCart, Settings, CheckCircle, UserPlus, CircleUser,
+  Layers, Package, Ruler
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -22,6 +23,7 @@ export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [openSubMenu, setOpenSubMenu] = useState<string | null>(null);
 
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
@@ -33,14 +35,27 @@ export default function Sidebar() {
   const links = [
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { href: "/dashboard/users", label: "Users", icon: Users },
+    {
+      label: "Master",
+      icon: Layers,
+      subLinks: [
+        { href: "/dashboard/master/product-type", label: "Product Types", icon: Package },
+        { href: "/dashboard/master/product-size", label: "Product Sizes", icon: Ruler },
+      ],
+    },
     { href: "/dashboard/orders", label: "Orders", icon: ShoppingCart },
     { href: "/dashboard/settings", label: "Settings", icon: Settings },
     { href: "/dashboard/quality", label: "Q/A", icon: CheckCircle },
     { href: "/dashboard/roles", label: "User Roles", icon: UserPlus },
     { href: "/dashboard/profile", label: "Profile", icon: CircleUser },
+
   ];
 
   const toggleSidebar = () => setIsOpen(!isOpen);
+
+  const handleSubMenuToggle = (label: string) => {
+    setOpenSubMenu(prev => (prev === label ? null : label));
+  };
 
   const handleUserProfile = useCallback(async (token: string) => {
     setIsLoading(true);
@@ -155,8 +170,56 @@ export default function Sidebar() {
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
           {links.map((link) => {
             const Icon = link.icon;
-            const isActive = pathname === link.href;
 
+            if (link.subLinks) {
+              const isSubMenuOpen = openSubMenu === link.label;
+
+              return (
+                <div key={link.label}>
+                  <button
+                    onClick={() => handleSubMenuToggle(link.label)}
+                    className="w-full flex items-center justify-between gap-3 px-4 py-4 rounded-xl text-primary-200 hover:bg-primary-700 hover:text-white transition-all duration-200"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Icon size={20} />
+                      <span className="font-medium">{link.label}</span>
+                    </div>
+                    <ChevronRight
+                      size={16}
+                      className={`transition-transform duration-200 ${isSubMenuOpen ? "rotate-90" : ""}`}
+                    />
+                  </button>
+
+                  {/* Submenu */}
+                  {isSubMenuOpen && (
+                    <div className="ml-8 mt-1 space-y-1 animate-fadeIn">
+                      {link.subLinks.map((sub) => (
+                        <Link
+                          key={sub.href}
+                          href={sub.href}
+                          onClick={() => {
+                            setPathname(sub.href);
+                            setIsOpen(false);
+                          }}
+                          className={`block px-4 py-2 rounded-lg text-sm transition-all duration-200 ${
+                            pathname === sub.href
+                              ? "bg-accent-600 text-white"
+                              : "text-primary-300 hover:bg-primary-700 hover:text-white"
+                          }`}
+                        >
+                          <div className="flex items-center gap-2">
+                            {sub.icon && <sub.icon size={16} className="text-primary-300" />}
+                            <span>{sub.label}</span>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            }
+
+            const isActive = pathname === link.href;
             return (
               <Link
                 key={link.href}
@@ -165,29 +228,26 @@ export default function Sidebar() {
                   setPathname(link.href);
                   setIsOpen(false);
                 }}
-                className={`
-                  w-full flex items-center justify-between gap-3 px-4 py-4 rounded-xl
-                  transition-all duration-200 group
-                  ${
-                    isActive
-                      ? "bg-accent-600 text-white shadow-lg"
-                      : "text-primary-200 hover:bg-primary-700 hover:text-white"
-                  }
-                `}
+                className={`w-full flex items-center justify-between gap-3 px-4 py-4 rounded-xl transition-all duration-200 group ${
+                  isActive
+                    ? "bg-accent-600 text-white shadow-lg"
+                    : "text-primary-200 hover:bg-primary-700 hover:text-white"
+                }`}
               >
                 <div className="flex items-center gap-3">
-                  <Icon 
-                    size={20} 
-                    className={isActive ? "text-white" : "text-primary-300 group-hover:text-white"}
+                  <Icon
+                    size={20}
+                    className={
+                      isActive ? "text-white" : "text-primary-300 group-hover:text-white"
+                    }
                   />
                   <span className="font-medium">{link.label}</span>
                 </div>
-                <ChevronRight 
-                  size={16} 
-                  className={`
-                    transition-transform duration-200
-                    ${isActive ? "opacity-100" : "opacity-0 group-hover:opacity-100"}
-                  `}
+                <ChevronRight
+                  size={16}
+                  className={`transition-transform duration-200 ${
+                    isActive ? "opacity-100" : "opacity-100"
+                  }`}
                 />
               </Link>
             );

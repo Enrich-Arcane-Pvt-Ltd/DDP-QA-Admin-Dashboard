@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Eye, Pencil, Trash2, ChevronLeft, ChevronRight, XCircle, CheckCircle } from "lucide-react";
+import { Eye, Pencil, Trash2, ChevronLeft, ChevronRight, LockKeyhole, LockKeyholeOpen } from "lucide-react";
 
 type TableProps = {
   columns: string[];
@@ -114,9 +114,9 @@ export default function Table({
                           title={row.status === 'active' ? 'Deactivate' : 'Activate'}
                         >
                           {row.status === 'active' ? (
-                            <XCircle size={16} />
+                            <LockKeyhole size={16} />
                           ) : (
-                            <CheckCircle size={16} />
+                            <LockKeyholeOpen size={16} />
                           )}
                         </button>
                       )}

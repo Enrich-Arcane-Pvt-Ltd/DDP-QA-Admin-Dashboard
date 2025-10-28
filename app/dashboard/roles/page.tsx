@@ -5,11 +5,7 @@ import { useEffect, useState } from "react";
 import SearchBar from "@/app/components/SearchBar";
 import CreateButton from "@/app/components/CreateButton";
 import Table from "@/app/components/Table";
-import CreateRole from "@/app/forms/roles/CreateRole";
-import EditRole from "@/app/forms/roles/EditRole";
 import DeleteRole from "@/app/forms/roles/DeleteRole";
-
-import { toast } from "@/app/components/ToastContainer";
 
 import { PlusIcon } from "lucide-react";
 
@@ -20,66 +16,39 @@ import { useAccessToken } from "@/app/hooks/useAccessToken";
 
 import { useRouter } from "next/navigation";
 
-interface UserData {
-    role: string,
-    status: string
-}
-
 export default function UserRolesPage() {
-    const [modalVisible, setModalVisible] = useState(false);
-    const [editModalVisible, setEditModalVisible] = useState(false);
     const [deleteModalVisible, setDeleteModalVisible] = useState(false);
-
-    const [selectedRow, setSelectedRow] = useState<UserData | null>(null);
+    const [selectedRow, setSelectedRow] = useState<Roles | null>(null);
+    const [searchTerm, setSearchTerm] = useState("");
 
     const router = useRouter();
 
     const { token } = useAccessToken();
-    const { isLoading, fetchUserRoles, roles, fetchUserRolesPermissions  } = useRoles();
+    const { isLoading, fetchUserRoles, roles, fetchUserRolesPermissions, deleteUserRole, isSubmitting  } = useRoles();
 
     const openModal = () => {
         router.push('/dashboard/roles/create')
     }
-    const closeModal = () => setModalVisible(false);
 
-    const openDeleteModal = (row: UserData) => {
+    const openDeleteModal = (row: Roles) => {
         setSelectedRow(row);
         setDeleteModalVisible(true)
     };
+
     const closeDeleteModal = () => setDeleteModalVisible(false);
 
-    const handleEdit = (row: UserData) => {        
-        setSelectedRow(row);
-        setEditModalVisible(true);
+    const handleEdit = (row: Roles) => {
+        router.push(`/dashboard/roles/${row.id}`);
     };
 
-    const closeEditModal = () => setEditModalVisible(false);
 
-    const handleCreateRole = async (data: UserData) => {
-        if (!data.role) {
-            toast.error('Role is required');
-            return;
-        }
+    const filteredUserRoles = roles?.filter((role: Roles) => {
+        const term = searchTerm.toLowerCase();
+        return (
+            role.name.toLowerCase().includes(term)
+        );
+    });
 
-        try {
-            toast.success('Role created successfully');
-            closeModal();
-        } catch (error) {
-            toast.error('Failed to create role');
-            closeModal();
-        }
-    };
-
-    const handleEditRole = async () => {
-        try {
-            toast.success('Role updated successfully');
-            closeEditModal();
-        } catch (error) {
-            toast.error('Failed to edit role');
-            closeEditModal();
-        }
-    }
-    
     useEffect(() => {
         if (token) {
             fetchUserRoles(token);
@@ -90,39 +59,32 @@ export default function UserRolesPage() {
     return (
         <div>
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-4 my-2">
-                <SearchBar placeholder="Search User Role ..." />
+                <SearchBar placeholder="Search User Role ..." onChange={setSearchTerm} />
                 <CreateButton icon={<PlusIcon />} label="Create User Role" onClick={openModal} />
             </div>
     
             <Table
                 columns={["name", "status"]}
-                data={roles}
+                data={filteredUserRoles}
                 onEdit={handleEdit} 
                 onDelete={openDeleteModal}
             />
 
-            {modalVisible && (
-                <CreateRole
-                    onSubmit={handleCreateRole}
-                    onCancel={closeModal}
-                />
-            )}
-
-            {editModalVisible && selectedRow && (
-                <EditRole 
-                    row={selectedRow} 
-                    onCancel={closeEditModal}
-                    onSubmit={handleEditRole}
-                />
-            )}
-
-            {deleteModalVisible && selectedRow && (
+            {deleteModalVisible && selectedRow && token && (
                 <DeleteRole 
                     row={selectedRow}
+                    isSubmitting={isSubmitting}
+                    onConfirm={async () => {      
+                        const success = await deleteUserRole(selectedRow.id, token);
+                        if (success) {
+                            fetchUserRoles(token);
+                            closeDeleteModal()
+                        }
+                    }}
                     onCancel={closeDeleteModal}
-                    onConfirm={openDeleteModal}
                 />
             )}
         </div>
     )
 }
+

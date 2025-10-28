@@ -24,3 +24,10 @@ export interface RoleStatus {
     label: string;
     value: string;
 }
+
+export interface UserRole {
+    id: number;
+    name?: string;
+    status?: string;
+    permissions?: Permission[];
+}

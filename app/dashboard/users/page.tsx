@@ -48,7 +48,6 @@ export default function UsersPage() {
     );
   });
 
-
   const openModal = () => setModalVisible(true);
   const closeModal = () => setModalVisible(false);
 

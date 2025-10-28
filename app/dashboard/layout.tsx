@@ -40,7 +40,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 onClick={() => index !== breadcrumbs.length - 1 && router.push(crumb.href)}
                 className={
                   index === breadcrumbs.length - 1
-                    ? "text-primary-700 font-medium cursor-default"
+                    ? "text-primary-700 font-medium cursor-default capitalize"
                     : "text-accent-700 hover:text-gray-700 cursor-pointer"
                 }
               >

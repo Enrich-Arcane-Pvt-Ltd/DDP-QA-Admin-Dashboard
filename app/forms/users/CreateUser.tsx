@@ -20,11 +20,11 @@ interface ModalProps {
 
 function CreateUser({ onSubmit, onCancel, data, isSubmitting} : ModalProps) {
     const [role, setRole] = useState('');
-    const [name, setName] = useState('Tester');
-    const [email, setEmail] = useState('testing+1@gmail.com');
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
     const [status, setStatus] = useState("");
-    const [password, setPassword] = useState('Test@1234');
-    const [confirmPassword, setConfirmPassword] = useState('Test@1234');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [file, setFile] = useState<File | null>(null);  
 
     const handleClick = async () => {
