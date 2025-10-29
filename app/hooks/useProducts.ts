@@ -352,7 +352,7 @@ export function useProducts() {
         }
     }, []);
 
-    // API Call to Delete a Product Type
+    // API Call to Delete a Product Size
     const deleteProductSizes = useCallback(async (id: number, token: string | null) => {
         if (!token) {
             console.log("Token Not Found");
@@ -388,7 +388,7 @@ export function useProducts() {
         }
     }, []);
 
-    // API Call to Edit Product Type
+    // API Call to Edit Product Size
     const editProductSize = useCallback(async (data: ProductSize, token: string | null, id: number,) => {
         if (!token) {
             console.log("Token Not Found");

@@ -16,6 +16,8 @@ import { useAccessToken } from "@/app/hooks/useAccessToken";
 
 import { useRouter } from "next/navigation";
 
+import Loader from "@/app/components/Loader";
+
 export default function UserRolesPage() {
     const [deleteModalVisible, setDeleteModalVisible] = useState(false);
     const [selectedRow, setSelectedRow] = useState<Roles | null>(null);
@@ -55,6 +57,12 @@ export default function UserRolesPage() {
             fetchUserRolesPermissions(token);
         }
     }, [token, fetchUserRoles, fetchUserRolesPermissions]);
+
+    if (isLoading) {
+        return (
+            <Loader />
+        )
+    }
 
     return (
         <div>
