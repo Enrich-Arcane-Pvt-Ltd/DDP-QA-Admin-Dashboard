@@ -6,7 +6,16 @@ import {
     Package,
     User,
     Mail,
-    FileText, Hash, PlusIcon
+    FileText, 
+    Hash, 
+    Plus,
+    Box,
+    CheckCircle2,
+    Clock,
+    XCircle,
+    Loader2,
+    TrendingUp,
+    Eye
 } from 'lucide-react';
 
 import { useAccessToken } from '@/app/hooks/useAccessToken';
@@ -15,6 +24,7 @@ import { useDesignProducts } from '@/app/hooks/useDesignProducts';
 
 import Loader from '@/app/components/Loader';
 import CreateButton from '@/app/components/CreateButton';
+import DesignProductsSection from "@/app/components/DesignProductsSection";
 
 import CreateDesignProduct from '@/app/forms/designProducts/CreateDesignProduct';
 
@@ -27,7 +37,7 @@ export default function ViewDesignOrderPage() {
     
     const { token } = useAccessToken();
     const { isLoading, fetchDesignOrder, designOrder } = useDesignOrders();
-    const { isSubmitting, fetchDesignProductsMeta, designProductsMeta, createDesignProduct } = useDesignProducts();
+    const { isSubmitting, fetchDesignProductsMeta, designProductsMeta, createDesignProduct, fetchDesignProducts, designProducts } = useDesignProducts();
 
     useEffect(() => {
         if (token) {
@@ -36,6 +46,7 @@ export default function ViewDesignOrderPage() {
 
         if (token && orderId) {
             fetchDesignProductsMeta(orderId, token);
+            fetchDesignProducts(orderId, token);
         }
     }, [fetchDesignOrder, orderId, token]);
 
@@ -67,6 +78,23 @@ export default function ViewDesignOrderPage() {
             return 'bg-accent-100 text-accent-800 border-accent-200';
         }
         return 'bg-light-200 text-light-900 border-light-300';
+    };
+
+    const getQAStatusIcon = (qaStatus: string) => {
+        const statusLower = qaStatus?.toLowerCase();
+        if (statusLower.includes('completed')) {
+            return <CheckCircle2 className="w-5 h-5" />;
+        }
+        if (statusLower.includes('rejected')) {
+            return <XCircle className="w-5 h-5" />;
+        }
+        if (statusLower.includes('progress')) {
+            return <Loader2 className="w-5 h-5 animate-spin" />;
+        }
+        if (statusLower.includes('pending')) {
+            return <Clock className="w-5 h-5" />;
+        }
+        return <Clock className="w-5 h-5" />;
     };
 
     // if (isLoading) {
@@ -184,7 +212,7 @@ export default function ViewDesignOrderPage() {
             </div>
 
             <div className='flex justify-end py-6'>
-                <CreateButton icon={<PlusIcon />} label='Create Design Product' onClick={openModal} />
+                <CreateButton icon={<Plus />} label='Create Design Product' onClick={openModal} />
             </div>
 
             {modalVisible && designProductsMeta && (
@@ -195,6 +223,38 @@ export default function ViewDesignOrderPage() {
                     onCancel={closeModal}
                     onSubmit={(formData) => createDesignProduct(formData, token)}
                 />
+            )}
+
+            {designProducts && designProducts.length > 0 && (
+                <DesignProductsSection
+                    designProducts={designProducts}
+                    getStatusColor={getStatusColor}
+                    getQAStatusColor={getQAStatusColor}
+                    getQAStatusIcon={getQAStatusIcon}
+                    onViewDetails={(p) => console.log("View details:", p)}
+                />
+            )}
+
+            {/* Empty State */}
+            {designProducts && designProducts.length === 0 && (
+                <div className="mt-8 bg-gradient-to-br from-light-100 to-accent-50 rounded-2xl border-2 border-dashed border-light-300 p-12 text-center">
+                    <div className="max-w-md mx-auto">
+                        <div className="w-20 h-20 bg-accent-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <Box className="w-10 h-10 text-accent-600" />
+                        </div>
+                        <h3 className="text-2xl font-bold text-primary-800 mb-3">No Products Yet</h3>
+                        <p className="text-primary-600 mb-6">
+                            Get started by creating your first design product for this order.
+                        </p>
+                        <button
+                            onClick={openModal}
+                            className="px-6 py-3 bg-gradient-to-r from-primary-600 to-accent-600 hover:from-primary-700 hover:to-accent-700 text-white font-semibold rounded-xl shadow-md hover:shadow-xl transition-all duration-300 inline-flex items-center gap-2"
+                        >
+                            <Plus className="w-5 h-5" />
+                            <span>Create Design Product</span>
+                        </button>
+                    </div>
+                </div>
             )}
         </div>
     );

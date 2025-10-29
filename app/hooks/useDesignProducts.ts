@@ -2,12 +2,13 @@ import { useState, useCallback } from "react";
 import { toast } from "../components/ToastContainer";
 import APP_URL from "../constants/Config";
 
-import { DesignProductsMeta, CreateProduct } from "../types/DesignProducts";
+import { DesignProductsMeta, CreateProduct, DesignProducts } from "../types/DesignProducts";
 
 export function useDesignProducts() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [designProductsMeta, setDesignProductsMeta] = useState<DesignProductsMeta | null>(null);
+    const [designProducts, setDesignProducts] = useState<DesignProducts[]>([]);
 
     // API Call to Fetch Design Products Meta Data
     const fetchDesignProductsMeta = useCallback(async (id: number, token: string | null) => {
@@ -55,7 +56,7 @@ export function useDesignProducts() {
 
         setIsLoading(true);
         try {
-            const response = await fetch(`${APP_URL}design-products/?design_order_id=${id}`, {
+            const response = await fetch(`${APP_URL}design-products?design_order_id=${id}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -70,8 +71,17 @@ export function useDesignProducts() {
                 return;
             }
             
-            console.log('responseJson : ', responseJson);
+            const formattedProducts = responseJson.designProducts.map((product: any) => ({
+                id: product.id,
+                product_name: product.product_name,
+                status: product.status,
+                qa_status: product.qa_status,
+                qa_analyst: product.qa_analyst.name,
+                product_type: product.product_type.type_name,
+                created_by: product.created_by.name
+            })).sort((a:any, b:any) => a.id - b.id);;
             
+            setDesignProducts(formattedProducts);
         } catch (error: any) {
             console.log("Error fetching design products meta : ", error.message);
         } finally {
@@ -119,6 +129,6 @@ export function useDesignProducts() {
 
     return {
         isSubmitting, isLoading, fetchDesignProductsMeta, designProductsMeta,
-        createDesignProduct, fetchDesignProducts
+        createDesignProduct, fetchDesignProducts, designProducts
     }
 }
