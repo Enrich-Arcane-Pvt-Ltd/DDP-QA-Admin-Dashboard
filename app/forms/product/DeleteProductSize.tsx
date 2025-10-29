@@ -3,22 +3,18 @@
 import { Trash2, X } from "lucide-react";
 import { useState } from "react";
 
-import { Roles } from "@/app/types/Roles";
-
 interface ModalProps {
-    row: Roles;
-    onConfirm?: (data: Roles) => void;
+    onConfirm?: (id: number) => void;
     onCancel?: () => void;
-    isSubmitting?: boolean;
+    isSubmitting: boolean;
+    id: number;
 }
 
-function DeleteRole({ row, onConfirm, onCancel, isSubmitting }: ModalProps) {
-    const [id, setId] = useState(row.id);
-    const [name, setName] = useState(row.name);
-    const [status, setStatus] = useState(row.status);
+function DeleteProductSize({ onConfirm, onCancel, isSubmitting, id }: ModalProps) {
+    const [rowId, setRowId] = useState(id);
     
     const handleClick = () => {
-        onConfirm?.({ id, name, status });
+        onConfirm?.(rowId);
     }
 
     return (
@@ -40,7 +36,7 @@ function DeleteRole({ row, onConfirm, onCancel, isSubmitting }: ModalProps) {
                                 <Trash2 className="text-white" size={24} />
                             </div>
                             <div>
-                                <h2 className="text-2xl font-bold text-white">Delete Role</h2>
+                                <h2 className="text-2xl font-bold text-white">Delete Product Size</h2>
                                 <p className="text-error-100 text-sm">This action cannot be undone</p>
                             </div>
                         </div>
@@ -55,7 +51,7 @@ function DeleteRole({ row, onConfirm, onCancel, isSubmitting }: ModalProps) {
 
                 <div className="p-6">
                     <p className="text-white text-center font-bold">
-                        Are you sure you want to delete this user role ?
+                        Are you sure you want to delete this product size ?
                     </p>
                 </div>
 
@@ -78,4 +74,4 @@ function DeleteRole({ row, onConfirm, onCancel, isSubmitting }: ModalProps) {
     );
 }
 
-export default DeleteRole;
+export default DeleteProductSize;

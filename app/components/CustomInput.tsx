@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Mail, Lock, Shield, Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 
 interface CustomInputProps {
     type: string;
