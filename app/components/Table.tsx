@@ -70,7 +70,7 @@ export default function Table({
                     className={
                       `px-6 py-4 text-sm font-medium text-primary-800 
                       ${colIdx === 0 ? "text-left" : "text-center"}
-                      ${col == 'status'? 'capitalize' : ''}
+                      ${col == 'status' || 'qa_status' ? 'capitalize' : ''}
                       `}
                   >
                     {row[col] ? row[col] : 'N/A'}

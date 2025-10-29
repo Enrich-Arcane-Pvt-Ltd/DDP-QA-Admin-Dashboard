@@ -3,11 +3,12 @@ import { Search } from "lucide-react";
 interface SearchBarProps {
   placeholder?: string;
   onChange?: (value: string) => void;
+  className?: string;
 }
 
-export default function SearchBar({ placeholder = "Search...", onChange }: SearchBarProps) {
+export default function SearchBar({ placeholder = "Search...", onChange, className = "" }: SearchBarProps) {
   return (
-    <div className="relative w-72">
+    <div className={`relative w-72 ${className}`}>
       <Search size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-primary-500" />
       <input
         type="text"
