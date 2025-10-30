@@ -5,7 +5,7 @@ export interface DesignOrders {
     customer_name: string;
     status: string;
     qa_status: string;
-    name: string;
+    name?: string;
     description?: string;
 }
 

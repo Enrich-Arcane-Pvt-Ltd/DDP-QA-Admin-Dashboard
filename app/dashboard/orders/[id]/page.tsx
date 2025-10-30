@@ -2,21 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import {
-    Package,
-    User,
-    Mail,
-    FileText, 
-    Hash, 
-    Plus,
-    Box,
-    CheckCircle2,
-    Clock,
-    XCircle,
-    Loader2,
-    TrendingUp,
-    Eye
-} from 'lucide-react';
+import { User, Mail, FileText, Hash, Plus, CheckCircle2, Clock, XCircle, Loader2, SquarePen, } from 'lucide-react';
 
 import { useAccessToken } from '@/app/hooks/useAccessToken';
 import { useDesignOrders } from '@/app/hooks/useDesignOrders';
@@ -25,8 +11,16 @@ import { useDesignProducts } from '@/app/hooks/useDesignProducts';
 import Loader from '@/app/components/Loader';
 import CreateButton from '@/app/components/CreateButton';
 import DesignProductsSection from "@/app/components/DesignProductsSection";
+import EmptyState from '@/app/components/EmptyState';
+import DeleteDesignProduct from '@/app/forms/designProducts/DeleteDesignProduct';
+
+import { DesignOrders } from "@/app/types/Orders";
+import { DesignProducts } from '@/app/types/DesignProducts';
 
 import CreateDesignProduct from '@/app/forms/designProducts/CreateDesignProduct';
+import EditDesignOrder from '@/app/forms/orders/EditDesignOrder';
+import EditDesignProduct from '@/app/forms/designProducts/EditDesignProduct';
+import AssignQA from '@/app/forms/designProducts/AssignQA';
 
 export default function ViewDesignOrderPage() {
     const { id } = useParams();
@@ -34,24 +28,64 @@ export default function ViewDesignOrderPage() {
     const router = useRouter();
 
     const [modalVisible, setModalVisible] = useState(false);
+    const [editModalVisible, setEditModalVisible] = useState(false);
+    const [productEditModalVisible, setProductEditModalVisible] = useState(false);
+    const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+    const [assignModalVisible, setAssignModalVisible] = useState(false);
+
+    const [selectedRow, setSelectedRow] = useState<DesignOrders | null>(null);
+    const [selectedProduct, setSelectedProduct] = useState<DesignProducts | null>(null);
+
+    const [selectedProductId, setSelectedProductId] = useState<number>();
     
     const { token } = useAccessToken();
-    const { isLoading, fetchDesignOrder, designOrder } = useDesignOrders();
-    const { isSubmitting, fetchDesignProductsMeta, designProductsMeta, createDesignProduct, fetchDesignProducts, designProducts } = useDesignProducts();
+    const { isLoading, fetchDesignOrder, designOrder, designMetaData, fetchDesignOrdersMetaData, editDesignOrder, updateSubmitting } = useDesignOrders();
+    const { isSubmitting, fetchDesignProductsMeta, deleteDesignProduct, isProductsLoading, designProductsMeta, createDesignProduct, assignDesignQAAnalysts, fetchDesignProducts, designProducts, editDesignProduct, fetchDesignQAAnalysts, analysts } = useDesignProducts();
 
     useEffect(() => {
         if (token) {
             fetchDesignOrder(orderId, token);
+            fetchDesignOrdersMetaData(token);
         }
 
         if (token && orderId) {
             fetchDesignProductsMeta(orderId, token);
             fetchDesignProducts(orderId, token);
         }
-    }, [fetchDesignOrder, orderId, token]);
+    }, [fetchDesignOrder, fetchDesignOrdersMetaData, fetchDesignProductsMeta, fetchDesignProducts, orderId, token]);
+
 
     const openModal = () => setModalVisible(true);
     const closeModal = () => setModalVisible(false);
+
+    const handleEdit = (row: DesignOrders) => {        
+        setSelectedRow(row);
+        setEditModalVisible(true);
+    };
+
+    const closeEditModal = () => setEditModalVisible(false);
+
+    const openDeleteModal = (row: DesignProducts) => {    
+        setSelectedProduct(row);
+        setDeleteModalVisible(true)
+    };
+
+    const openProductEditModal = (product: DesignProducts) => {
+        setSelectedProduct(product);
+        setProductEditModalVisible(true);
+    };
+
+    const openAssignModal = async (id: number) => {
+        setAssignModalVisible(true);
+        await fetchDesignQAAnalysts(id, token);
+        setSelectedProductId(id);
+    }
+
+    const closeAssignModal = () => setAssignModalVisible(false);
+
+    const closeProductEditModal = () => setProductEditModalVisible(false);
+
+    const closeDeleteModal = () => setDeleteModalVisible(false);
 
     const getStatusColor = (status: string) => {        
         const statusLower = status?.toLowerCase();
@@ -97,11 +131,11 @@ export default function ViewDesignOrderPage() {
         return <Clock className="w-5 h-5" />;
     };
 
-    // if (isLoading) {
-    //     return (
-    //         <Loader />
-    //     );
-    // }
+    if (isLoading || isProductsLoading) {
+        return (
+            <Loader />
+        );
+    }
 
     return (
         <div>
@@ -120,7 +154,12 @@ export default function ViewDesignOrderPage() {
                                 <span className="text-sm font-mono">{designOrder?.order_number}</span>
                             </div>
                         </div>
-                        <Package className="w-16 h-16 text-light-300 opacity-80" />
+                        <CreateButton
+                            onClick={() => designOrder && handleEdit(designOrder)}
+                            label="Edit Design Order"
+                            icon={<SquarePen />}
+                        />
+
                     </div>
                 </div>
 
@@ -231,30 +270,77 @@ export default function ViewDesignOrderPage() {
                     getStatusColor={getStatusColor}
                     getQAStatusColor={getQAStatusColor}
                     getQAStatusIcon={getQAStatusIcon}
-                    onViewDetails={(p) => console.log("View details:", p)}
+                    onViewDetails={(p) =>
+                        router.push(
+                            `/dashboard/orders/${orderId}/${p.id}?orderName=${encodeURIComponent(String(designOrder?.name ?? "Product"))}&productName=${encodeURIComponent(p.product_name)}`
+                        )
+                    }
+                    onDelete={(product: DesignProducts) => openDeleteModal(product)}
+                    onEdit={(product: DesignProducts) => openProductEditModal(product)}
+                    onAssign={(pid) => openAssignModal(pid)}
                 />
             )}
 
-            {/* Empty State */}
+            {editModalVisible && designMetaData && selectedRow && token && (
+                <EditDesignOrder
+                    row={selectedRow} 
+                    onCancel={closeEditModal}
+                    onSubmit={async (formData) => {
+                        await editDesignOrder(formData, token, selectedRow.id);
+                        await fetchDesignOrder(orderId, token);
+                        closeEditModal();
+                        return true;
+                    }}
+                    data={designMetaData}
+                    isSubmitting={isSubmitting}
+                    updateSubmitting={updateSubmitting}
+                />
+            )}
+
+            {deleteModalVisible && selectedProduct && token && (
+                <DeleteDesignProduct
+                    row={selectedProduct}
+                    onCancel={closeDeleteModal}
+                    isSubmitting={isSubmitting}
+                    onConfirm={async () => {      
+                        const success = await deleteDesignProduct(selectedProduct.id, token);
+                        if (success) {
+                            closeDeleteModal();
+                            fetchDesignProducts(orderId, token);
+                        }
+                    }}
+                />
+            )}
+
+            {productEditModalVisible && selectedProduct && token && designProductsMeta && (
+                <EditDesignProduct
+                    row={selectedProduct}
+                    onCancel={closeProductEditModal}
+                    isSubmitting={isSubmitting}
+                    onSubmit={(formData) => editDesignProduct(orderId, formData, token)}
+                    data={designProductsMeta}
+                    id={orderId}
+                />
+            )}
+
             {designProducts && designProducts.length === 0 && (
-                <div className="mt-8 bg-gradient-to-br from-light-100 to-accent-50 rounded-2xl border-2 border-dashed border-light-300 p-12 text-center">
-                    <div className="max-w-md mx-auto">
-                        <div className="w-20 h-20 bg-accent-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <Box className="w-10 h-10 text-accent-600" />
-                        </div>
-                        <h3 className="text-2xl font-bold text-primary-800 mb-3">No Products Yet</h3>
-                        <p className="text-primary-600 mb-6">
-                            Get started by creating your first design product for this order.
-                        </p>
-                        <button
-                            onClick={openModal}
-                            className="px-6 py-3 bg-gradient-to-r from-primary-600 to-accent-600 hover:from-primary-700 hover:to-accent-700 text-white font-semibold rounded-xl shadow-md hover:shadow-xl transition-all duration-300 inline-flex items-center gap-2"
-                        >
-                            <Plus className="w-5 h-5" />
-                            <span>Create Design Product</span>
-                        </button>
-                    </div>
-                </div>
+                <EmptyState
+                    title="No Products Yet"
+                    description="Get started by creating your first design product for this order."
+                    buttonText="Create Design Product"
+                    onButtonClick={openModal}
+                />
+            )}
+
+            {assignModalVisible && token && analysts && selectedProductId && (
+                <AssignQA
+                    id={selectedProductId}
+                    analysts={analysts}
+                    onCancel={closeAssignModal}
+                    isSubmitting={isSubmitting}
+                    onSubmit={(qaId: number) => assignDesignQAAnalysts(selectedProductId, token, qaId, orderId)}
+                />
+
             )}
         </div>
     );
