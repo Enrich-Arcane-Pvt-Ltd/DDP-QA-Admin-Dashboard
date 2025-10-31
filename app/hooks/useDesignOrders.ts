@@ -1,8 +1,8 @@
-import { useState, useCallback } from "react";
+import { useCallback, useState } from "react";
 import { toast } from "../components/ToastContainer";
 import APP_URL from "../constants/Config";
 
-import { DesignOrders, DesignOrdersMetaData, DesignOrder, SingleOrder } from "../types/Orders";
+import { DesignOrder, DesignOrders, DesignOrdersMetaData, SingleOrder } from "../types/Orders";
 
 export function useDesignOrders() {
     const [isLoading, setIsLoading] = useState(false);
@@ -36,7 +36,7 @@ export function useDesignOrders() {
                 console.log("Response Error in fetching design orders : ", responseJson.message);
                 return;
             }
-            
+
             const formattedDesignOrders = responseJson.designOrders.map((order: any) => ({
                 id: order.id,
                 order_name: order.order_name,
@@ -49,7 +49,7 @@ export function useDesignOrders() {
             }));
 
             setDesignOrders(formattedDesignOrders);
-        } catch (error : any) {
+        } catch (error: any) {
             console.log('Error fetching design orders : ', error.message);
         } finally {
             setIsLoading(false);
@@ -80,9 +80,9 @@ export function useDesignOrders() {
                 console.log("Response Error in fetching design orders meta data : ", responseJson.message);
                 return;
             }
-        
-            setDesignMetaData(responseJson);            
-        } catch (error : any) {
+
+            setDesignMetaData(responseJson);
+        } catch (error: any) {
             console.log('Error fetching design orders meta data : ', error.message);
         } finally {
             setIsLoading(false);
@@ -94,7 +94,7 @@ export function useDesignOrders() {
         if (!token) {
             console.log("Token Not Found");
             return false;
-        }        
+        }
 
         setIsSubmitting(true);
         try {
@@ -109,7 +109,7 @@ export function useDesignOrders() {
             });
 
             const responseJson = await response.json();
-            
+
             if (!response.ok) {
                 console.log("Response Error in creating design order : ", responseJson.message);
                 toast.error(responseJson.message)
@@ -118,7 +118,7 @@ export function useDesignOrders() {
 
             toast.success(responseJson.message);
             await fetchDesignOrders(token);
-            return true; 
+            return true;
         } catch (error: any) {
             console.log("Error creating design order : ", error.message);
             toast.error(error.message);
@@ -133,7 +133,7 @@ export function useDesignOrders() {
         if (!token) {
             console.log("Token Not Found");
             return;
-        }        
+        }
 
         setIsSubmitting(true);
         try {
@@ -169,7 +169,7 @@ export function useDesignOrders() {
         if (!token) {
             console.log("Token Not Found");
             return;
-        }        
+        }
 
         setIsSubmitting(true);
         setUpdateSubmitting(true);
@@ -209,7 +209,7 @@ export function useDesignOrders() {
         if (!token) {
             console.log("Token Not Found");
             return;
-        }        
+        }
 
         setIsLoading(true);
         try {

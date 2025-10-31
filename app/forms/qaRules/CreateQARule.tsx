@@ -1,41 +1,38 @@
 "use client";
 
-import { useState } from "react";
 import CustomInput from "@/app/components/CustomInput";
-import CustomSelect from "@/app/components/CustomSelect";
-
-import { Shield, User, X, ShoppingCart, Hash, ClipboardCheck, FileText } from "lucide-react";
-import { DesignOrders, DesignOrdersMetaData } from "@/app/types/Orders";
 import CustomTextArea from "@/app/components/CustomTextArea";
+import { useState } from "react";
+
+import { ClipboardCheck, FileText, Shield, ShoppingCart, User, X } from "lucide-react";
+
+import CustomSelect from "@/app/components/CustomSelect";
 import { toast } from "@/app/components/ToastContainer";
 
+import { QARule, QARuleMetaData } from "@/app/types/QaRules";
+
 interface ModalProps {
-    row: DesignOrders;
-    onSubmit?: (data: DesignOrders) => Promise<boolean | undefined>;
-    onCancel?: () => void,
-    data: DesignOrdersMetaData;
+    onSubmit?: (data: QARule) => Promise<boolean>;
+    onCancel?: () => void;
+    data?: QARuleMetaData;
     isSubmitting: boolean;
-    updateSubmitting?: boolean;
 }
 
-function EditDesignOrder({ onSubmit, onCancel, row, data, isSubmitting, updateSubmitting }: ModalProps) {
-    const [name, setName] = useState(row.order_name);
-    const [orderNumber, setOrderNumber] = useState(row.order_number);
-    const [customerName, setCustomerName] = useState(row.customer_name);
-    const [description, setDescription] = useState(row.description);
-    const [status, setStatus] = useState(row.status);
-    const [qaStatus, setQAStatus] = useState(row.qa_status);
-    const [createdBy, setCreatedBy] = useState(row.name);
-    const [id, setId] = useState(row.id);
+function CreateQARule({ onSubmit, onCancel, data, isSubmitting }: ModalProps) {
+    const [ruleName, setRuleName] = useState('');
+    const [description, setDescription] = useState('');
+    const [status, setStatus] = useState('');
+    const [type, setType] = useState('');
+    const [priority, setPriority] = useState('');
 
     const handleClick = async () => {
-        if (!name) {
-            toast.error('Order Name is required');
+        if (!ruleName) {
+            toast.error('Rule Name is required');
             return;
         }
 
-        if (!orderNumber) {
-            toast.error('Order Number is required');
+        if (!type) {
+            toast.error('Type is required');
             return;
         }
 
@@ -44,12 +41,12 @@ function EditDesignOrder({ onSubmit, onCancel, row, data, isSubmitting, updateSu
             return;
         }
 
-        if (!qaStatus) {
-            toast.error('QA Status is required');
+        if (!priority) {
+            toast.error('Priority Status is required');
             return;
         }
 
-        const success = await onSubmit?.({ order_name: name, order_number: orderNumber, customer_name: customerName, status, description, qa_status: qaStatus, name: createdBy, id });
+        const success = await onSubmit?.({ rule_name: ruleName, description: description, type: type, status, priority: priority });
         if (success) onCancel?.();
     };
 
@@ -66,8 +63,8 @@ function EditDesignOrder({ onSubmit, onCancel, row, data, isSubmitting, updateSu
                                 <ShoppingCart className="text-white" size={24} />
                             </div>
                             <div>
-                                <h2 className="text-2xl font-bold text-white">Edit Design Order</h2>
-                                <p className="text-sm text-primary-100">Edit the design order</p>
+                                <h2 className="text-2xl font-bold text-white">Create QA Rule</h2>
+                                <p className="text-sm text-primary-100">Add a new QA Rule</p>
                             </div>
                         </div>
                         <button
@@ -83,42 +80,28 @@ function EditDesignOrder({ onSubmit, onCancel, row, data, isSubmitting, updateSu
                     <div className="space-y-2">
                         <label className="flex items-center gap-2 text-sm font-semibold text-primary-800">
                             <ShoppingCart size={16} className="text-accent-600" />
-                            Order Name <span className="text-error-600">*</span>
+                            Rule Name <span className="text-error-600">*</span>
                         </label>
                         <CustomInput
                             type='text'
-                            placeholder="Enter the Order Name"
+                            placeholder="Enter the Rule Name"
                             icon={<ShoppingCart />}
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                        />
-                    </div>
-
-                    <div className="space-y-2">
-                        <label className="flex items-center gap-2 text-sm font-semibold text-primary-800">
-                            <Hash size={16} className="text-accent-600" />
-                            Order Number <span className="text-error-600">*</span>
-                        </label>
-                        <CustomInput
-                            type='text'
-                            placeholder="Enter the Order Number"
-                            icon={<Hash />}
-                            value={orderNumber}
-                            onChange={(e) => setOrderNumber(e.target.value)}
+                            value={ruleName}
+                            onChange={(e) => setRuleName(e.target.value)}
                         />
                     </div>
 
                     <div className="space-y-2">
                         <label className="flex items-center gap-2 text-sm font-semibold text-primary-800">
                             <User size={16} className="text-accent-600" />
-                            Customer Name
+                            Priority
                         </label>
-                        <CustomInput
-                            type='text'
-                            placeholder="Enter the Customer Name"
-                            icon={<User />}
-                            value={customerName}
-                            onChange={(e) => setCustomerName(e.target.value)}
+                        <CustomSelect
+                            value={priority}
+                            onChange={(e) => setPriority(e.target.value)}
+                            options={data?.priorities ?? []}
+                            icon={<Shield />}
+                            placeholder="Select Priority"
                         />
                     </div>
 
@@ -130,7 +113,7 @@ function EditDesignOrder({ onSubmit, onCancel, row, data, isSubmitting, updateSu
                         <CustomSelect
                             value={status}
                             onChange={(e) => setStatus(e.target.value)}
-                            options={data?.designOrderStatus ?? []}
+                            options={data?.qaRuleStatus ?? []}
                             icon={<Shield />}
                             placeholder="Select Status"
                         />
@@ -139,14 +122,14 @@ function EditDesignOrder({ onSubmit, onCancel, row, data, isSubmitting, updateSu
                     <div className="space-y-2">
                         <label className="flex items-center gap-2 text-sm font-semibold text-primary-800">
                             <ClipboardCheck size={16} className="text-accent-600" />
-                            QA Status <span className="text-error-600">*</span>
+                            QA Rule Types <span className="text-error-600">*</span>
                         </label>
                         <CustomSelect
-                            value={qaStatus}
-                            onChange={(e) => setQAStatus(e.target.value)}
-                            options={data?.qaStatus ?? []}
+                            value={type}
+                            onChange={(e) => setType(e.target.value)}
+                            options={data?.qaRuleTypes ?? []}
                             icon={<ClipboardCheck />}
-                            placeholder="Select QA Status"
+                            placeholder="Select QA Types"
                         />
                     </div>
 
@@ -158,7 +141,7 @@ function EditDesignOrder({ onSubmit, onCancel, row, data, isSubmitting, updateSu
                         <CustomTextArea
                             placeholder="Enter description..."
                             icon={<FileText size={20} />}
-                            value={description ?? ""}
+                            value={description}
                             onChange={(e) => setDescription(e.target.value)}
                             rows={3}
                             maxLength={255}
@@ -177,7 +160,7 @@ function EditDesignOrder({ onSubmit, onCancel, row, data, isSubmitting, updateSu
                         className="flex-1 px-6 py-3 font-semibold text-white transition-all duration-200 shadow-lg rounded-xl bg-gradient-to-r from-accent-600 to-accent-500 hover:from-accent-700 hover:to-accent-600 hover:scale-105 hover:shadow-xl"
                         onClick={handleClick}
                     >
-                        {isSubmitting || updateSubmitting ? 'Updating...' : 'Update Design Order'}
+                        {isSubmitting ? 'Creating QA Rule...' : 'Create QA Rule'}
                     </button>
                 </div>
             </div>
@@ -185,4 +168,4 @@ function EditDesignOrder({ onSubmit, onCancel, row, data, isSubmitting, updateSu
     )
 }
 
-export default EditDesignOrder
+export default CreateQARule

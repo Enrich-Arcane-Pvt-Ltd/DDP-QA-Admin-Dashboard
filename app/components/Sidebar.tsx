@@ -1,19 +1,30 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
 import {
+  ChevronRight,
+  CircleUser,
+  ClipboardCheck,
+  FileBarChart,
+  Gauge,
+  Layers,
   LayoutDashboard,
-  Users, Menu, ChevronRight,
-  LogOut, ShoppingCart, Settings, CheckCircle, UserPlus, CircleUser,
-  Layers, Package, Ruler
+  ListChecks,
+  LogOut,
+  Menu,
+  Package, Repeat, Ruler,
+  Settings,
+  ShoppingCart,
+  UserPlus,
+  Users
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useCallback, useEffect, useState } from "react";
 
-import LogoutModal from "./LogoutModal";
-import { useAccessToken } from "../hooks/useAccessToken";
-import APP_URL from "../constants/Config";
 import { useRouter } from "next/navigation";
+import APP_URL from "../constants/Config";
+import { useAccessToken } from "../hooks/useAccessToken";
+import LogoutModal from "./LogoutModal";
 
 import { toast } from "@/app/components/ToastContainer";
 
@@ -45,7 +56,17 @@ export default function Sidebar() {
     },
     { href: "/dashboard/orders", label: "Orders", icon: ShoppingCart },
     { href: "/dashboard/settings", label: "Settings", icon: Settings },
-    { href: "/dashboard/quality", label: "Q/A", icon: CheckCircle },
+    {
+      label: "Q/A",
+      icon: ClipboardCheck,
+      subLinks: [
+        { href: "/dashboard/quality/qa-rules", label: "QA Rules", icon: ListChecks },
+        { href: "/dashboard/quality/qa-rule-sets", label: "QA Rule Sets", icon: Layers },
+        { href: "/dashboard/quality/qa-reports", label: "QA Reports", icon: FileBarChart },
+        { href: "/dashboard/quality/qa-attempts", label: "QA Attempts", icon: Repeat },
+        { href: "/dashboard/quality", label: "Q/A", icon: Gauge },
+      ]
+    },
     { href: "/dashboard/roles", label: "User Roles", icon: UserPlus },
     { href: "/dashboard/profile", label: "Profile", icon: CircleUser },
 
@@ -75,7 +96,7 @@ export default function Sidebar() {
       if (!response.ok) {
         console.log('Response Error in User Profile : ', responseJson.message);
         return;
-      }      
+      }
 
       setEmail(responseJson?.data?.email || '');
       setName(responseJson?.data?.name || '');
@@ -88,7 +109,7 @@ export default function Sidebar() {
 
   useEffect(() => {
     if (token) {
-      handleUserProfile(token);      
+      handleUserProfile(token);
     }
   }, [token, handleUserProfile]);
 
@@ -97,7 +118,7 @@ export default function Sidebar() {
       console.log('Token Not Found');
       return;
     }
-    
+
     setIsLoading(true);
 
     try {
@@ -116,7 +137,7 @@ export default function Sidebar() {
         console.log('Response Error in User Logout : ', responseJson.message);
         toast.error('Logout Failed');
         return;
-      }      
+      }
 
       toast.success('User Logout Successfully');
       setTimeout(() => {
@@ -145,7 +166,7 @@ export default function Sidebar() {
       {isOpen && (
         <div
           onClick={toggleSidebar}
-          className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-30"
+          className="fixed inset-0 z-30 bg-black bg-opacity-50 lg:hidden"
         />
       )}
 
@@ -178,7 +199,7 @@ export default function Sidebar() {
                 <div key={link.label}>
                   <button
                     onClick={() => handleSubMenuToggle(link.label)}
-                    className="w-full flex items-center justify-between gap-3 px-4 py-4 rounded-xl text-primary-200 hover:bg-primary-700 hover:text-white transition-all duration-200"
+                    className="flex items-center justify-between w-full gap-3 px-4 py-4 transition-all duration-200 rounded-xl text-primary-200 hover:bg-primary-700 hover:text-white"
                   >
                     <div className="flex items-center gap-3">
                       <Icon size={20} />
@@ -192,7 +213,7 @@ export default function Sidebar() {
 
                   {/* Submenu */}
                   {isSubMenuOpen && (
-                    <div className="ml-8 mt-1 space-y-1 animate-fadeIn">
+                    <div className="mt-1 ml-8 space-y-1 animate-fadeIn">
                       {link.subLinks.map((sub) => (
                         <Link
                           key={sub.href}
@@ -201,11 +222,10 @@ export default function Sidebar() {
                             setPathname(sub.href);
                             setIsOpen(false);
                           }}
-                          className={`block px-4 py-2 rounded-lg text-sm transition-all duration-200 ${
-                            pathname === sub.href
-                              ? "bg-accent-600 text-white"
-                              : "text-primary-300 hover:bg-primary-700 hover:text-white"
-                          }`}
+                          className={`block px-4 py-2 rounded-lg text-sm transition-all duration-200 ${pathname === sub.href
+                            ? "bg-accent-600 text-white"
+                            : "text-primary-300 hover:bg-primary-700 hover:text-white"
+                            }`}
                         >
                           <div className="flex items-center gap-2">
                             {sub.icon && <sub.icon size={16} className="text-primary-300" />}
@@ -228,11 +248,10 @@ export default function Sidebar() {
                   setPathname(link.href);
                   setIsOpen(false);
                 }}
-                className={`w-full flex items-center justify-between gap-3 px-4 py-4 rounded-xl transition-all duration-200 group ${
-                  isActive
-                    ? "bg-accent-600 text-white shadow-lg"
-                    : "text-primary-200 hover:bg-primary-700 hover:text-white"
-                }`}
+                className={`w-full flex items-center justify-between gap-3 px-4 py-4 rounded-xl transition-all duration-200 group ${isActive
+                  ? "bg-accent-600 text-white shadow-lg"
+                  : "text-primary-200 hover:bg-primary-700 hover:text-white"
+                  }`}
               >
                 <div className="flex items-center gap-3">
                   <Icon
@@ -245,9 +264,8 @@ export default function Sidebar() {
                 </div>
                 <ChevronRight
                   size={16}
-                  className={`transition-transform duration-200 ${
-                    isActive ? "opacity-100" : "opacity-100"
-                  }`}
+                  className={`transition-transform duration-200 ${isActive ? "opacity-100" : "opacity-100"
+                    }`}
                 />
               </Link>
             );
@@ -255,14 +273,14 @@ export default function Sidebar() {
         </nav>
 
         <div className="p-4 border-t border-primary-700">
-          <div className="flex items-center gap-3 p-3 rounded-xl bg-primary-700 mb-3">
-            <div className="w-10 h-10 bg-accent-600 rounded-full flex items-center justify-center text-white font-semibold">
+          <div className="flex items-center gap-3 p-3 mb-3 rounded-xl bg-primary-700">
+            <div className="flex items-center justify-center w-10 h-10 font-semibold text-white rounded-full bg-accent-600">
               {name
                 ? name
-                    .split(' ')
-                    .map(word => word[0])
-                    .join('')
-                    .toUpperCase()
+                  .split(' ')
+                  .map(word => word[0])
+                  .join('')
+                  .toUpperCase()
                 : ''}
             </div>
 
@@ -271,8 +289,8 @@ export default function Sidebar() {
               <p className="text-xs text-primary-300">{email ? email : ''}</p>
             </div>
           </div>
-          
-          <button onClick={() => setShowModal(true)} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-primary-200 hover:bg-error-800 hover:text-white transition-all duration-200">
+
+          <button onClick={() => setShowModal(true)} className="flex items-center w-full gap-3 px-4 py-3 transition-all duration-200 rounded-xl text-primary-200 hover:bg-error-800 hover:text-white">
             <LogOut size={20} />
             <span className="font-medium">Logout</span>
           </button>
@@ -280,7 +298,7 @@ export default function Sidebar() {
       </aside>
 
       {showModal && (
-        <LogoutModal 
+        <LogoutModal
           onConfirm={handleLogout}
           onCancel={() => setShowModal(false)}
           email={email}

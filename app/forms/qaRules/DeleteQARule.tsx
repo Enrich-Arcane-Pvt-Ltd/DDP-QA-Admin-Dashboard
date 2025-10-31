@@ -3,16 +3,16 @@
 import { Trash2, X } from "lucide-react";
 import { useState } from "react";
 
-import { DesignOrders } from "@/app/types/Orders";
+import { QARules } from "@/app/types/QaRules";
 
 interface ModalProps {
     onConfirm?: (id: number) => void;
     onCancel?: () => void;
     isSubmitting: boolean;
-    row: DesignOrders
+    row: QARules
 }
 
-function DeleteDesignOrder({ onConfirm, onCancel, isSubmitting, row }: ModalProps) {
+function DeleteQARule({ onConfirm, onCancel, isSubmitting, row }: ModalProps) {
     const [rowId, setRowId] = useState(row.id);
 
     const handleClick = () => {
@@ -38,7 +38,7 @@ function DeleteDesignOrder({ onConfirm, onCancel, isSubmitting, row }: ModalProp
                                 <Trash2 className="text-white" size={24} />
                             </div>
                             <div>
-                                <h2 className="text-2xl font-bold text-white">Delete Design Order</h2>
+                                <h2 className="text-2xl font-bold text-white">Delete QA Rule</h2>
                                 <p className="text-sm text-error-100">This action cannot be undone</p>
                             </div>
                         </div>
@@ -53,7 +53,7 @@ function DeleteDesignOrder({ onConfirm, onCancel, isSubmitting, row }: ModalProp
 
                 <div className="p-6">
                     <p className="font-bold text-center text-white">
-                        Are you sure you want to delete this design order ?
+                        Are you sure you want to delete this qa rule?
                     </p>
                 </div>
 
@@ -76,4 +76,4 @@ function DeleteDesignOrder({ onConfirm, onCancel, isSubmitting, row }: ModalProp
     );
 }
 
-export default DeleteDesignOrder;
+export default DeleteQARule;
