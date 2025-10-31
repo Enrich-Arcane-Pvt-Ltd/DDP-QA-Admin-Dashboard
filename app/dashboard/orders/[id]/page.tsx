@@ -2,12 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import {
-    Package,
-    User,
-    Mail,
-    FileText, Hash, PlusIcon
-} from 'lucide-react';
+import { User, Mail, FileText, Hash, Plus, CheckCircle2, Clock, XCircle, Loader2, SquarePen, } from 'lucide-react';
 
 import { useAccessToken } from '@/app/hooks/useAccessToken';
 import { useDesignOrders } from '@/app/hooks/useDesignOrders';
@@ -15,8 +10,17 @@ import { useDesignProducts } from '@/app/hooks/useDesignProducts';
 
 import Loader from '@/app/components/Loader';
 import CreateButton from '@/app/components/CreateButton';
+import DesignProductsSection from "@/app/components/DesignProductsSection";
+import EmptyState from '@/app/components/EmptyState';
+import DeleteDesignProduct from '@/app/forms/designProducts/DeleteDesignProduct';
+
+import { DesignOrders } from "@/app/types/Orders";
+import { DesignProducts } from '@/app/types/DesignProducts';
 
 import CreateDesignProduct from '@/app/forms/designProducts/CreateDesignProduct';
+import EditDesignOrder from '@/app/forms/orders/EditDesignOrder';
+import EditDesignProduct from '@/app/forms/designProducts/EditDesignProduct';
+import AssignQA from '@/app/forms/designProducts/AssignQA';
 
 export default function ViewDesignOrderPage() {
     const { id } = useParams();
@@ -24,23 +28,64 @@ export default function ViewDesignOrderPage() {
     const router = useRouter();
 
     const [modalVisible, setModalVisible] = useState(false);
+    const [editModalVisible, setEditModalVisible] = useState(false);
+    const [productEditModalVisible, setProductEditModalVisible] = useState(false);
+    const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+    const [assignModalVisible, setAssignModalVisible] = useState(false);
+
+    const [selectedRow, setSelectedRow] = useState<DesignOrders | null>(null);
+    const [selectedProduct, setSelectedProduct] = useState<DesignProducts | null>(null);
+
+    const [selectedProductId, setSelectedProductId] = useState<number>();
     
     const { token } = useAccessToken();
-    const { isLoading, fetchDesignOrder, designOrder } = useDesignOrders();
-    const { isSubmitting, fetchDesignProductsMeta, designProductsMeta, createDesignProduct } = useDesignProducts();
+    const { isLoading, fetchDesignOrder, designOrder, designMetaData, fetchDesignOrdersMetaData, editDesignOrder, updateSubmitting } = useDesignOrders();
+    const { isSubmitting, fetchDesignProductsMeta, deleteDesignProduct, isProductsLoading, designProductsMeta, createDesignProduct, assignDesignQAAnalysts, fetchDesignProducts, designProducts, editDesignProduct, fetchDesignQAAnalysts, analysts } = useDesignProducts();
 
     useEffect(() => {
         if (token) {
             fetchDesignOrder(orderId, token);
+            fetchDesignOrdersMetaData(token);
         }
 
         if (token && orderId) {
             fetchDesignProductsMeta(orderId, token);
+            fetchDesignProducts(orderId, token);
         }
-    }, [fetchDesignOrder, orderId, token]);
+    }, [fetchDesignOrder, fetchDesignOrdersMetaData, fetchDesignProductsMeta, fetchDesignProducts, orderId, token]);
+
 
     const openModal = () => setModalVisible(true);
     const closeModal = () => setModalVisible(false);
+
+    const handleEdit = (row: DesignOrders) => {        
+        setSelectedRow(row);
+        setEditModalVisible(true);
+    };
+
+    const closeEditModal = () => setEditModalVisible(false);
+
+    const openDeleteModal = (row: DesignProducts) => {    
+        setSelectedProduct(row);
+        setDeleteModalVisible(true)
+    };
+
+    const openProductEditModal = (product: DesignProducts) => {
+        setSelectedProduct(product);
+        setProductEditModalVisible(true);
+    };
+
+    const openAssignModal = async (id: number) => {
+        setAssignModalVisible(true);
+        await fetchDesignQAAnalysts(id, token);
+        setSelectedProductId(id);
+    }
+
+    const closeAssignModal = () => setAssignModalVisible(false);
+
+    const closeProductEditModal = () => setProductEditModalVisible(false);
+
+    const closeDeleteModal = () => setDeleteModalVisible(false);
 
     const getStatusColor = (status: string) => {        
         const statusLower = status?.toLowerCase();
@@ -69,11 +114,28 @@ export default function ViewDesignOrderPage() {
         return 'bg-light-200 text-light-900 border-light-300';
     };
 
-    // if (isLoading) {
-    //     return (
-    //         <Loader />
-    //     );
-    // }
+    const getQAStatusIcon = (qaStatus: string) => {
+        const statusLower = qaStatus?.toLowerCase();
+        if (statusLower.includes('completed')) {
+            return <CheckCircle2 className="w-5 h-5" />;
+        }
+        if (statusLower.includes('rejected')) {
+            return <XCircle className="w-5 h-5" />;
+        }
+        if (statusLower.includes('progress')) {
+            return <Loader2 className="w-5 h-5 animate-spin" />;
+        }
+        if (statusLower.includes('pending')) {
+            return <Clock className="w-5 h-5" />;
+        }
+        return <Clock className="w-5 h-5" />;
+    };
+
+    if (isLoading || isProductsLoading) {
+        return (
+            <Loader />
+        );
+    }
 
     return (
         <div>
@@ -92,7 +154,12 @@ export default function ViewDesignOrderPage() {
                                 <span className="text-sm font-mono">{designOrder?.order_number}</span>
                             </div>
                         </div>
-                        <Package className="w-16 h-16 text-light-300 opacity-80" />
+                        <CreateButton
+                            onClick={() => designOrder && handleEdit(designOrder)}
+                            label="Edit Design Order"
+                            icon={<SquarePen />}
+                        />
+
                     </div>
                 </div>
 
@@ -184,7 +251,7 @@ export default function ViewDesignOrderPage() {
             </div>
 
             <div className='flex justify-end py-6'>
-                <CreateButton icon={<PlusIcon />} label='Create Design Product' onClick={openModal} />
+                <CreateButton icon={<Plus />} label='Create Design Product' onClick={openModal} />
             </div>
 
             {modalVisible && designProductsMeta && (
@@ -195,6 +262,85 @@ export default function ViewDesignOrderPage() {
                     onCancel={closeModal}
                     onSubmit={(formData) => createDesignProduct(formData, token)}
                 />
+            )}
+
+            {designProducts && designProducts.length > 0 && (
+                <DesignProductsSection
+                    designProducts={designProducts}
+                    getStatusColor={getStatusColor}
+                    getQAStatusColor={getQAStatusColor}
+                    getQAStatusIcon={getQAStatusIcon}
+                    onViewDetails={(p) =>
+                        router.push(
+                            `/dashboard/orders/${orderId}/${p.id}?orderName=${encodeURIComponent(String(designOrder?.name ?? "Product"))}&productName=${encodeURIComponent(p.product_name)}`
+                        )
+                    }
+                    onDelete={(product: DesignProducts) => openDeleteModal(product)}
+                    onEdit={(product: DesignProducts) => openProductEditModal(product)}
+                    onAssign={(pid) => openAssignModal(pid)}
+                />
+            )}
+
+            {editModalVisible && designMetaData && selectedRow && token && (
+                <EditDesignOrder
+                    row={selectedRow} 
+                    onCancel={closeEditModal}
+                    onSubmit={async (formData) => {
+                        await editDesignOrder(formData, token, selectedRow.id);
+                        await fetchDesignOrder(orderId, token);
+                        closeEditModal();
+                        return true;
+                    }}
+                    data={designMetaData}
+                    isSubmitting={isSubmitting}
+                    updateSubmitting={updateSubmitting}
+                />
+            )}
+
+            {deleteModalVisible && selectedProduct && token && (
+                <DeleteDesignProduct
+                    row={selectedProduct}
+                    onCancel={closeDeleteModal}
+                    isSubmitting={isSubmitting}
+                    onConfirm={async () => {      
+                        const success = await deleteDesignProduct(selectedProduct.id, token);
+                        if (success) {
+                            closeDeleteModal();
+                            fetchDesignProducts(orderId, token);
+                        }
+                    }}
+                />
+            )}
+
+            {productEditModalVisible && selectedProduct && token && designProductsMeta && (
+                <EditDesignProduct
+                    row={selectedProduct}
+                    onCancel={closeProductEditModal}
+                    isSubmitting={isSubmitting}
+                    onSubmit={(formData) => editDesignProduct(orderId, formData, token)}
+                    data={designProductsMeta}
+                    id={orderId}
+                />
+            )}
+
+            {designProducts && designProducts.length === 0 && (
+                <EmptyState
+                    title="No Products Yet"
+                    description="Get started by creating your first design product for this order."
+                    buttonText="Create Design Product"
+                    onButtonClick={openModal}
+                />
+            )}
+
+            {assignModalVisible && token && analysts && selectedProductId && (
+                <AssignQA
+                    id={selectedProductId}
+                    analysts={analysts}
+                    onCancel={closeAssignModal}
+                    isSubmitting={isSubmitting}
+                    onSubmit={(qaId: number) => assignDesignQAAnalysts(selectedProductId, token, qaId, orderId)}
+                />
+
             )}
         </div>
     );

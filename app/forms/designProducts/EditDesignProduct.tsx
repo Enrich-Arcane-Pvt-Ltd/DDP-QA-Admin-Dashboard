@@ -4,38 +4,42 @@ import { useState } from "react";
 import CustomInput from "@/app/components/CustomInput";
 import CustomSelect from "@/app/components/CustomSelect";
 
-import { Shield, User, X, ShoppingCart, Hash, ClipboardCheck, FileText } from "lucide-react";
+import { Shield, User, X, ShoppingCart, Hash, ClipboardCheck, FileText, Package, Code } from "lucide-react";
 import { DesignOrders, DesignOrdersMetaData } from "@/app/types/Orders";
 import CustomTextArea from "@/app/components/CustomTextArea";
 import { toast } from "@/app/components/ToastContainer";
+import { DesignProducts, DesignProductsMeta, CreateProduct, EditProduct } from "@/app/types/DesignProducts";
 
 interface ModalProps {
-    row: DesignOrders;
-    onSubmit?: (data: DesignOrders) => Promise<boolean | undefined>;
+    row: DesignProducts;
+    onSubmit?: (data: EditProduct) => Promise<boolean | undefined>;
     onCancel?: () => void,
-    data: DesignOrdersMetaData;
+    data: DesignProductsMeta;
     isSubmitting: boolean;
     updateSubmitting?: boolean;
+    id: number;
 }
 
-function EditDesignOrder({ onSubmit, onCancel, row, data, isSubmitting, updateSubmitting } : ModalProps) {
-    const [name, setName] = useState(row.order_name);
-    const [orderNumber, setOrderNumber] = useState(row.order_number);
-    const [customerName, setCustomerName] = useState(row.customer_name);
-    const [description, setDescription] = useState(row.description);
+function EditDesignProduct({ onSubmit, onCancel, row, data, isSubmitting, updateSubmitting, id } : ModalProps) {
+    const [name, setName] = useState(row.product_name);
+    const [productType, setProductType] = useState(
+        data?.productTypes?.find(pt => pt.label === row.product_type)?.value || ""
+    );
+    const [analyst, setAnalyst] = useState(
+        data?.qaAnalysts?.find(pt => pt.label === row.qa_analyst)?.value || ""
+    );
     const [status, setStatus] = useState(row.status);
     const [qaStatus, setQAStatus] = useState(row.qa_status);
-    const [createdBy, setCreatedBy] = useState(row.name);
-    const [id, setId] = useState(row.id);    
-
+    const [productId, setProductId] = useState(row.id);
+    
     const handleClick = async () => {
         if (!name) {
-            toast.error('Order Name is required');
+            toast.error('Product Name is required');
             return;
         }
 
-        if (!orderNumber) {
-            toast.error('Order Number is required');
+        if (!productType) {
+            toast.error('Product Type is required');
             return;
         }
 
@@ -49,7 +53,7 @@ function EditDesignOrder({ onSubmit, onCancel, row, data, isSubmitting, updateSu
             return;
         }
 
-        const success = await onSubmit?.({ order_name: name, order_number: orderNumber, customer_name: customerName,  status, description, qa_status: qaStatus, name: createdBy, id  });
+        const success = await onSubmit?.({ product_name: name, status, qa_status: qaStatus, id: productId, qa_analyst_id:Number(analyst), product_type_id: Number(productType), design_order_id: id  });
         if (success) onCancel?.();
     };
 
@@ -66,8 +70,8 @@ function EditDesignOrder({ onSubmit, onCancel, row, data, isSubmitting, updateSu
                                 <ShoppingCart className="text-white" size={24} />
                             </div>
                             <div>
-                                <h2 className="text-2xl font-bold text-white">Edit Design Order</h2>
-                                <p className="text-primary-100 text-sm">Edit the design order</p>
+                                <h2 className="text-2xl font-bold text-white">Edit Design Product</h2>
+                                <p className="text-primary-100 text-sm">Edit the design product</p>
                             </div>
                         </div>
                         <button
@@ -82,13 +86,13 @@ function EditDesignOrder({ onSubmit, onCancel, row, data, isSubmitting, updateSu
                 <div className="p-6 space-y-5">
                     <div className="space-y-2">
                         <label className="flex items-center gap-2 text-sm font-semibold text-primary-800">
-                            <ShoppingCart size={16} className="text-accent-600" />
-                            Order Name <span className="text-error-600">*</span>
+                            <Package size={16} className="text-accent-600" />
+                            Product Name <span className="text-error-600">*</span>
                         </label>
                         <CustomInput 
                             type='text'
-                            placeholder="Enter the Order Name"
-                            icon={<ShoppingCart />}
+                            placeholder="Enter the Product Name"
+                            icon={<Package />}
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                         />
@@ -96,29 +100,29 @@ function EditDesignOrder({ onSubmit, onCancel, row, data, isSubmitting, updateSu
 
                     <div className="space-y-2">
                         <label className="flex items-center gap-2 text-sm font-semibold text-primary-800">
-                            <Hash size={16} className="text-accent-600" />
-                            Order Number <span className="text-error-600">*</span>
+                            <Code size={16} className="text-accent-600" />
+                            Product Type <span className="text-error-600">*</span>
                         </label>
-                        <CustomInput 
-                            type='text'
-                            placeholder="Enter the Order Number"
-                            icon={<Hash />}
-                            value={orderNumber}
-                            onChange={(e) => setOrderNumber(e.target.value)}
+                        <CustomSelect
+                            value={productType}
+                            onChange={(e) => setProductType(e.target.value)}
+                            options={data?.productTypes ?? []}
+                            icon={<Code />}
+                            placeholder="Select Product Type"
                         />
                     </div>
 
                     <div className="space-y-2">
                         <label className="flex items-center gap-2 text-sm font-semibold text-primary-800">
                             <User size={16} className="text-accent-600" />
-                            Customer Name
+                            QA Analyst
                         </label>
-                        <CustomInput 
-                            type='text'
-                            placeholder="Enter the Customer Name"
+                        <CustomSelect
+                            value={analyst}
+                            onChange={(e) => setAnalyst(e.target.value)}
+                            options={data?.qaAnalysts ?? []}
                             icon={<User />}
-                            value={customerName}
-                            onChange={(e) => setCustomerName(e.target.value)}
+                            placeholder="Select QA Analyst"
                         />
                     </div>
 
@@ -130,7 +134,7 @@ function EditDesignOrder({ onSubmit, onCancel, row, data, isSubmitting, updateSu
                         <CustomSelect
                             value={status}
                             onChange={(e) => setStatus(e.target.value)}
-                            options={data?.designOrderStatus ?? []}
+                            options={data?.designProductStatus ?? []}
                             icon={<Shield />}
                             placeholder="Select Status"
                         />
@@ -149,21 +153,6 @@ function EditDesignOrder({ onSubmit, onCancel, row, data, isSubmitting, updateSu
                             placeholder="Select QA Status"
                         />
                     </div>
-
-                    <div className="space-y-2">
-                        <label className="flex items-center gap-2 text-sm font-semibold text-primary-800">
-                            <FileText size={16} className="text-accent-600" />
-                            Description
-                        </label>
-                        <CustomTextArea
-                            placeholder="Enter description..."
-                            icon={<FileText size={20} />}
-                            value={description ?? ""}
-                            onChange={(e) => setDescription(e.target.value)}
-                            rows={3}
-                            maxLength={255}
-                        />
-                    </div>
                 </div>
 
                 <div className="p-6 pt-0 flex flex-col sm:flex-row gap-3">
@@ -177,7 +166,7 @@ function EditDesignOrder({ onSubmit, onCancel, row, data, isSubmitting, updateSu
                         className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-accent-600 to-accent-500 text-white font-semibold hover:from-accent-700 hover:to-accent-600 transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl"
                         onClick={handleClick}
                     >
-                        {isSubmitting || updateSubmitting ? 'Updating...' : 'Update Design Order'}
+                        {isSubmitting || updateSubmitting ? 'Updating...' : 'Update Design Product'}
                     </button>
                 </div>
             </div>
@@ -185,4 +174,4 @@ function EditDesignOrder({ onSubmit, onCancel, row, data, isSubmitting, updateSu
     )
 }
 
-export default EditDesignOrder
+export default EditDesignProduct

@@ -7,6 +7,7 @@ import { DesignOrders, DesignOrdersMetaData, DesignOrder, SingleOrder } from "..
 export function useDesignOrders() {
     const [isLoading, setIsLoading] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [updateSubmitting, setUpdateSubmitting] = useState(false);
     const [designOrders, setDesignOrders] = useState<DesignOrders[]>([]);
     const [designMetaData, setDesignMetaData] = useState<DesignOrdersMetaData | null>(null);
     const [designOrder, setDesignOrder] = useState<SingleOrder | null>(null);
@@ -171,6 +172,7 @@ export function useDesignOrders() {
         }        
 
         setIsSubmitting(true);
+        setUpdateSubmitting(true);
         try {
             const response = await fetch(`${APP_URL}design-orders/${id}`, {
                 method: "PATCH",
@@ -198,6 +200,7 @@ export function useDesignOrders() {
             return false;
         } finally {
             setIsSubmitting(false);
+            setUpdateSubmitting(false);
         }
     }, []);
 
@@ -237,6 +240,6 @@ export function useDesignOrders() {
         fetchDesignOrders, isLoading, designOrders,
         designMetaData, fetchDesignOrdersMetaData,
         isSubmitting, createDesignOrder,
-        deleteDesignOrders, editDesignOrder, fetchDesignOrder, designOrder
+        deleteDesignOrders, editDesignOrder, fetchDesignOrder, designOrder, updateSubmitting
     }
 }

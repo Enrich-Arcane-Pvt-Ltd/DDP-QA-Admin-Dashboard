@@ -1,6 +1,6 @@
 export interface DesignProducts {
     id: number;
-    product_name: number;
+    product_name: string;
     status: string;
     qa_status: string;
     qa_analyst: string;
@@ -15,6 +15,16 @@ export interface CreateProduct {
     status: string;
     qa_status: string;
     qa_analyst_id?: number;             
+}
+
+export interface EditProduct {
+    design_order_id: number;
+    product_name: string;
+    product_type_id: number;
+    status: string;
+    qa_status: string;
+    qa_analyst_id?: number;
+    id: number;           
 }
 
 interface DesignProductStatus {
@@ -42,4 +52,14 @@ export interface DesignProductsMeta {
     productTypes: ProductTypes[];
     qaAnalysts: QAAnalyst[];
     qaStatus: QAStatus[];
+}
+
+interface QAAnalysts {
+    value: number;
+    label: string;
+}
+
+export interface AssignQAAnalysts {
+    selectedQaAnalyst?: string;
+    qaAnalysts: QAAnalysts[]
 }

@@ -162,7 +162,7 @@ function CreateDesignProduct({ onSubmit, onCancel, data, isSubmitting, id} : Mod
                         className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-accent-600 to-accent-500 text-white font-semibold hover:from-accent-700 hover:to-accent-600 transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl"
                         onClick={handleClick}
                     >
-                        {isSubmitting ? 'Creating Design Product...' : 'Create Design Product'}
+                        {isSubmitting ? 'Creating...' : 'Create Design Product'}
                     </button>
                 </div>
             </div>
