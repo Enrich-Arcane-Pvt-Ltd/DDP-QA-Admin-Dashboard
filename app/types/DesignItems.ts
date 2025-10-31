@@ -22,3 +22,38 @@ export interface CreateDesignItem {
     status: string;
     qa_status: string;
 }
+
+interface ProductSizes {
+    value: string;
+    label: string;
+}
+
+interface DesignItemStatus {
+    value: string;
+    label: string;
+}
+
+interface QAStatus {
+    value: string;
+    label: string;
+}
+
+export interface DesignItemMetaData {
+    productSizes: ProductSizes[];
+    designItemStatus: DesignItemStatus[];
+    qaStatus: QAStatus[];
+}
+
+export interface DesignItems {
+    id: number;
+    item_name: string;
+    player_name?: string;
+    player_number?: string;
+    notes?: string;
+    status?: string;
+    created_by?: string;
+    qa_status?: string;
+    size_code?: string;
+    file_name?: string;
+    file?: string;
+}

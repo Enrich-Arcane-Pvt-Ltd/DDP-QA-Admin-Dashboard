@@ -31,7 +31,6 @@ export default function ProductDetailsSection({ designProduct }: ProductDetailsS
 
     return (
         <>
-            {/* Hero Header */}
             <div className="bg-gradient-to-br from-primary-600 via-primary-700 to-accent-700 rounded-3xl md:p-10 p-6 mb-8 shadow-2xl relative overflow-hidden">
                 <div className="relative z-10">
                     <div className="flex items-start justify-between flex-wrap gap-4">
@@ -66,9 +65,7 @@ export default function ProductDetailsSection({ designProduct }: ProductDetailsS
                 </div>
             </div>
 
-            {/* Information Cards Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-                {/* Order Information Card */}
                 <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8 border border-light-200 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 group">
                     <div className="flex items-center gap-4 mb-4 md:mb-6">
                         <div className="bg-gradient-to-br from-accent-500 to-accent-600 p-3 md:p-4 rounded-xl shadow-lg group-hover:shadow-accent-500/50 transition-shadow">
@@ -107,7 +104,6 @@ export default function ProductDetailsSection({ designProduct }: ProductDetailsS
                     </div>
                 </div>
 
-                {/* Product Details Card */}
                 <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8 border border-light-200 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 group">
                     <div className="flex items-center gap-4 mb-4 md:mb-6">
                         <div className="bg-gradient-to-br from-primary-600 to-primary-700 p-3 md:p-4 rounded-xl shadow-lg group-hover:shadow-primary-600/50 transition-shadow">
