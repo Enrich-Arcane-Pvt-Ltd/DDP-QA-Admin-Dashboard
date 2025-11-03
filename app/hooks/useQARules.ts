@@ -245,7 +245,7 @@ export function useQARules() {
         try {
             const currentStatus = status === 'active' ? 'block' : 'unblock';
 
-            const response = await fetch(`${APP_URL}qa-rule-sets/${id}/${currentStatus}`, {
+            const response = await fetch(`${APP_URL}qa-rules/${id}/${currentStatus}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",

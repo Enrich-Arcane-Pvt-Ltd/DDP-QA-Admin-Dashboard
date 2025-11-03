@@ -19,6 +19,7 @@ import CreateQARule from "@/app/forms/qaRules/CreateQARule";
 import DeleteQARule from "@/app/forms/qaRules/DeleteQARule";
 
 import EditQARule from "@/app/forms/qaRules/EditQARule";
+import StatusChangeQARule from "@/app/forms/qaRules/StatusChangeQARule";
 import ViewQARule from "@/app/forms/qaRules/ViewQARule";
 import { QARules } from "@/app/types/QaRules";
 
@@ -153,20 +154,20 @@ export default function QARulesPage() {
                 />
             )}
 
-            {/* {statusModalVisible && selectedRow && token && (
-                <StatusChangeProductType
+            {statusModalVisible && selectedRow && token && (
+                <StatusChangeQARule
                     row={selectedRow}
                     onCancel={closeStatusModal}
                     isSubmitting={isSubmitting}
                     onConfirm={async () => {
-                        const success = await activateProductType(selectedRow.id, token, selectedRow.status);
+                        const success = await activateQARule(selectedRow.id, token, selectedRow.status);
                         if (success) {
                             closeStatusModal();
-                            fetchProductTypes(token);
+                            fetchQARules(token);
                         }
                     }}
                 />
-            )} */}
+            )}
         </div>
     )
 }
