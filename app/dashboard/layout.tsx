@@ -17,6 +17,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     roles: "User Roles",
     profile: "Profile",
     create: "Create Roles",
+    sync: 'Sync Orders'
   };
 
   const pathSegments = pathName.split("/").filter((seg) => seg);

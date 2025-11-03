@@ -6,24 +6,26 @@ import CustomSelect from "@/app/components/CustomSelect";
 
 import { toast } from "@/app/components/ToastContainer";
 
-import { Shield, User, X, Sparkles } from "lucide-react";
+import { Shield, User, X, Sparkles, Shirt } from "lucide-react";
 
-interface UserData { 
-    role: string; 
-    status: string 
-}
+import { GetExternal } from "@/app/types/SyncOrders";
 
 interface ModalProps {
-    onSubmit?: (data: UserData) => void;
+    onSubmit?: (data: GetExternal) => void;
     onCancel?: () => void,
+    isSubmitting: boolean;
 }
 
-function CreateRole({ onSubmit, onCancel} : ModalProps) {
-    const [role, setRole] = useState('');
-    const [status, setStatus] = useState("Active");
+function RetrieveOrders({ onSubmit, onCancel, isSubmitting} : ModalProps) {
+    const [orderNumber, setOrderNumber] = useState('');
 
     const handleClick = () => {
-        onSubmit?.({ role, status });
+        if (!orderNumber) {
+            toast.error('Please Enter the Order Number');
+            return;
+        }
+
+        onSubmit?.({ order_number: orderNumber });
     }
 
     return (
@@ -36,11 +38,11 @@ function CreateRole({ onSubmit, onCancel} : ModalProps) {
                     <div className="relative flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-lg">
-                                <Shield className="text-white" size={24} />
+                                <Shirt className="text-white" size={24} />
                             </div>
                             <div>
-                                <h2 className="text-2xl font-bold text-white">Create Role</h2>
-                                <p className="text-primary-100 text-sm">Add a new user role</p>
+                                <h2 className="text-2xl font-bold text-white">Sync Orders</h2>
+                                <p className="text-primary-100 text-sm">Retrieve Order from External System</p>
                             </div>
                         </div>
                         <button
@@ -55,32 +57,15 @@ function CreateRole({ onSubmit, onCancel} : ModalProps) {
                 <div className="p-6 space-y-5">
                     <div className="space-y-2">
                         <label className="flex items-center gap-2 text-sm font-semibold text-primary-800">
-                            <User size={16} className="text-accent-600" />
-                            Role Name <span className="text-error-600">*</span>
+                            <Shirt size={16} className="text-accent-600" />
+                            Order Number <span className="text-error-600">*</span>
                         </label>
                         <CustomInput 
                             type='text'
-                            placeholder="Enter the User Role"
-                            icon={<User />}
-                            value={role}
-                            onChange={(e) => setRole(e.target.value)}
-                        />
-                    </div>
-
-                    <div className="space-y-2">
-                        <label className="flex items-center gap-2 text-sm font-semibold text-primary-800">
-                            <Shield size={16} className="text-accent-600" />
-                            Status <span className="text-error-600">*</span>
-                        </label>
-                        <CustomSelect
-                            value={status}
-                            onChange={(e) => setStatus(e.target.value)}
-                            options={[
-                                { value: "Active", label: "Active" },
-                                { value: "Inactive", label: "Inactive" },
-                            ]}
-                            icon={<Shield />}
-                            placeholder="Select Status"
+                            placeholder="Enter the Order Number"
+                            icon={<Shirt />}
+                            value={orderNumber}
+                            onChange={(e) => setOrderNumber(e.target.value)}
                         />
                     </div>
                 </div>
@@ -96,7 +81,7 @@ function CreateRole({ onSubmit, onCancel} : ModalProps) {
                         className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-accent-600 to-accent-500 text-white font-semibold hover:from-accent-700 hover:to-accent-600 transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl"
                         onClick={handleClick}
                     >
-                        Create Role
+                        {isSubmitting ? 'Syncing...' : 'Sync Orders'}
                     </button>
                 </div>
             </div>
@@ -104,4 +89,4 @@ function CreateRole({ onSubmit, onCancel} : ModalProps) {
     )
 }
 
-export default CreateRole
+export default RetrieveOrders

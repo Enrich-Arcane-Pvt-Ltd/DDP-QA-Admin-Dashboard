@@ -5,7 +5,7 @@ import {
   LayoutDashboard,
   Users, Menu, ChevronRight,
   LogOut, ShoppingCart, Settings, CheckCircle, UserPlus, CircleUser,
-  Layers, Package, Ruler
+  Layers, Package, Ruler, CloudDownload
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -48,6 +48,7 @@ export default function Sidebar() {
     { href: "/dashboard/quality", label: "Q/A", icon: CheckCircle },
     { href: "/dashboard/roles", label: "User Roles", icon: UserPlus },
     { href: "/dashboard/profile", label: "Profile", icon: CircleUser },
+    { href: "/dashboard/sync", label: "Sync Orders", icon: CloudDownload },
 
   ];
 
