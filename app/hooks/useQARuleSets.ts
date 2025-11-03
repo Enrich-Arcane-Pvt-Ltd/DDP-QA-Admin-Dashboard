@@ -1,19 +1,20 @@
 import { useCallback, useState } from "react";
 import { toast } from "../components/ToastContainer";
 import APP_URL from "../constants/Config";
-import { QARule, QARuleMetaData, QARules, SingleQARule } from "../types/QaRules";
+import { QARulesData, QARuleSet, QARuleSetMetaData, QARuleSets, SingleQARuleSet } from "../types/QARuleSets";
 
 
-export function useQARules() {
+export function useQARuleSets() {
     const [isLoading, setIsLoading] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [updateSubmitting, setUpdateSubmitting] = useState(false);
-    const [qaRules, setQaRules] = useState<QARules[]>([]);
-    const [qaRuleMetaData, setQaRuleMetaData] = useState<QARuleMetaData | null>(null);
-    const [qaRule, setQaRule] = useState<SingleQARule | null>(null);
+    const [qaRules, setQARules] = useState<QARulesData[]>([]);
+    const [qaRuleSets, setQaRuleSets] = useState<QARuleSets[]>([]);
+    const [qaRuleSetMetaData, setQaRuleSetMetaData] = useState<QARuleSetMetaData | null>(null);
+    const [qaRuleSet, setQaRuleSet] = useState<SingleQARuleSet | null>(null);
 
     // API Call to Fetch QA Rules
-    const fetchQARules = useCallback(async (token: string | null) => {
+    const fetchQARuleSets = useCallback(async (token: string | null) => {
         if (!token) {
             console.log("Token Not Found");
             return;
@@ -22,7 +23,7 @@ export function useQARules() {
         setIsLoading(true);
 
         try {
-            const response = await fetch(`${APP_URL}qa-rules`, {
+            const response = await fetch(`${APP_URL}qa-rule-sets`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -33,30 +34,29 @@ export function useQARules() {
 
             const responseJson = await response.json();
             if (!response.ok) {
-                console.log("Response Error in fetching qa rules : ", responseJson.message);
+                console.log("Response Error in fetching qa rule sets: ", responseJson.message);
                 return;
             }
 
-            const formattedQARules = responseJson.qaRules.map((rule: any) => ({
+            const formattedQARuleSets = responseJson.qaRuleSets.map((rule: any) => ({
                 id: rule.id,
-                rule_name: rule.rule_name,
-                type: rule.type,
-                priority: rule.priority,
+                qa_rule_set_name: rule.qa_rule_set_name,
                 description: rule?.description,
                 status: rule.status,
                 created_by: rule.created_by?.name,
+                rule_ids: rule.qa_rules ? rule.qa_rules.map((r: any) => r.id) : [],
             }));
 
-            setQaRules(formattedQARules);
+            setQaRuleSets(formattedQARuleSets);
         } catch (error: any) {
-            console.log('Error fetching qa rules : ', error.message);
+            console.log('Error fetching qa rule sets : ', error.message);
         } finally {
             setIsLoading(false);
         }
     }, []);
 
     // API Call to Fetch QA Rules Meta Data
-    const fetchQARulesMetaData = useCallback(async (token: string | null) => {
+    const fetchQARuleSetsMetaData = useCallback(async (token: string | null) => {
         if (!token) {
             console.log("Token Not Found");
             return;
@@ -65,7 +65,7 @@ export function useQARules() {
         setIsLoading(true);
 
         try {
-            const response = await fetch(`${APP_URL}qa-rules/meta`, {
+            const response = await fetch(`${APP_URL}qa-rule-sets/meta`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -76,20 +76,21 @@ export function useQARules() {
 
             const responseJson = await response.json();
             if (!response.ok) {
-                console.log("Response Error in fetching qa rules meta data : ", responseJson.message);
+                console.log("Response Error in fetching qa rules sets meta data : ", responseJson.message);
                 return;
             }
 
-            setQaRuleMetaData(responseJson);
+            setQaRuleSetMetaData(responseJson);
+            setQARules(responseJson.qaRules);
         } catch (error: any) {
-            console.log('Error fetching qa rules meta data : ', error.message);
+            console.log('Error fetching qa rules sets meta data : ', error.message);
         } finally {
             setIsLoading(false);
         }
     }, []);
 
     // API Call to Create a QA Rules
-    const createQARule = useCallback(async (data: QARule, token: string | null) => {
+    const createQARuleSet = useCallback(async (data: QARuleSet, token: string | null) => {
         if (!token) {
             console.log("Token Not Found");
             return false;
@@ -97,29 +98,34 @@ export function useQARules() {
 
         setIsSubmitting(true);
         try {
-            const response = await fetch(`${APP_URL}qa-rules`, {
+            const response = await fetch(`${APP_URL}qa-rule-sets`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     Accept: "application/json",
                     Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify({
+                    qa_rule_set_name: data.qa_rule_set_name,
+                    status: data.status,
+                    description: data.description,
+                    rule_ids: data.qa_rules,
+                })
             });
 
             const responseJson = await response.json();
 
             if (!response.ok) {
-                console.log("Response Error in creating qa rules : ", responseJson.message);
+                console.log("Response Error in creating qa rule sets : ", responseJson.message);
                 toast.error(responseJson.message)
                 return false;
             }
 
             toast.success(responseJson.message);
-            await fetchQARules(token);
+            await fetchQARuleSets(token);
             return true;
         } catch (error: any) {
-            console.log("Error creating qa rules : ", error.message);
+            console.log("Error creating qa rule sets : ", error.message);
             toast.error(error.message);
             return false;
         } finally {
@@ -128,7 +134,7 @@ export function useQARules() {
     }, []);
 
     // API Call to Delete a QA Rule
-    const deleteQARules = useCallback(async (id: number, token: string | null) => {
+    const deleteQARuleSet = useCallback(async (id: number, token: string | null) => {
         if (!token) {
             console.log("Token Not Found");
             return;
@@ -136,7 +142,7 @@ export function useQARules() {
 
         setIsSubmitting(true);
         try {
-            const response = await fetch(`${APP_URL}qa-rules/${id}`, {
+            const response = await fetch(`${APP_URL}qa-rule-sets/${id}`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
@@ -147,24 +153,24 @@ export function useQARules() {
 
             const responseJson = await response.json();
             if (!response.ok) {
-                console.log("Response Error in deleting qa rule : ", responseJson.message);
-                toast.error('Failed to delete the qa rule');
+                console.log("Response Error in deleting qa rule set : ", responseJson.message);
+                toast.error('Failed to delete the qa rule set');
                 return false;
             }
 
-            toast.success('QA Rule deleted successfully !');
+            toast.success('QA Rule Set deleted successfully !');
             return true;
         } catch (error: any) {
-            console.log("Error deleting qa rule : ", error.message);
-            toast.error('Failed to delete the qa rule');
+            console.log("Error deleting qa rule set : ", error.message);
+            toast.error('Failed to delete the qa rule set');
             return false;
         } finally {
             setIsSubmitting(false);
         }
     }, []);
 
-    // API Call to Edit QA Rule
-    const editQARule = useCallback(async (data: QARules, token: string | null, id: number,) => {
+    // API Call to Edit QA Rule Set
+    const editQARuleSet = useCallback(async (data: QARuleSets, token: string | null, id: number,) => {
         if (!token) {
             console.log("Token Not Found");
             return;
@@ -173,29 +179,34 @@ export function useQARules() {
         setIsSubmitting(true);
         setUpdateSubmitting(true);
         try {
-            const response = await fetch(`${APP_URL}qa-rules/${id}`, {
+            const response = await fetch(`${APP_URL}qa-rule-sets/${id}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
                     Accept: "application/json",
                     Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify({
+                    qa_rule_set_name: data.qa_rule_set_name,
+                    status: data.status,
+                    description: data.description,
+                    rule_ids: data.qa_rules,
+                })
             });
 
             const responseJson = await response.json();
             if (!response.ok) {
-                console.log("Response Error in updating qa rule : ", responseJson.message);
+                console.log("Response Error in updating qa rule set : ", responseJson.message);
                 toast.error(responseJson.message);
                 return false;
             }
 
-            toast.success('QA Rule updated successfully !');
-            await fetchQARules(token);
+            toast.success('QA Rule Set updated successfully !');
+            await fetchQARuleSets(token);
             return true;
         } catch (error: any) {
-            console.log("Error updating qa rule : ", error.message);
-            toast.error('Failed to update the qa rule');
+            console.log("Error updating qa rule set : ", error.message);
+            toast.error('Failed to update the qa rule set');
             return false;
         } finally {
             setIsSubmitting(false);
@@ -204,7 +215,7 @@ export function useQARules() {
     }, []);
 
     // API Call to Fetch a QA Rule
-    const fetchQARule = useCallback(async (id: number, token: string | null) => {
+    const fetchQARuleSet = useCallback(async (id: number, token: string | null) => {
         if (!token) {
             console.log("Token Not Found");
             return;
@@ -212,7 +223,7 @@ export function useQARules() {
 
         setIsLoading(true);
         try {
-            const response = await fetch(`${APP_URL}qa-rules/${id}`, {
+            const response = await fetch(`${APP_URL}qa-rule-sets/${id}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -223,19 +234,19 @@ export function useQARules() {
 
             const responseJson = await response.json();
             if (!response.ok) {
-                console.log("Response Error in fetching qa rule : ", responseJson.message);
+                console.log("Response Error in fetching qa rule set: ", responseJson.message);
                 return;
             }
 
-            setQaRule(responseJson.qaRule)
+            setQaRuleSet(responseJson.qaRuleSet)
         } catch (error: any) {
-            console.log("Error fetching qa rules : ", error.message);
+            console.log("Error fetching qa rule sets : ", error.message);
         } finally {
             setIsLoading(false);
         }
     }, []);
 
-    const activateQARule = useCallback(async (id: number, token: string | null, status: string) => {
+    const activateQARuleSet = useCallback(async (id: number, token: string | null, status: string) => {
         if (!token) {
             console.log("Token Not Found");
             return;
@@ -245,7 +256,7 @@ export function useQARules() {
         try {
             const currentStatus = status === 'active' ? 'block' : 'unblock';
 
-            const response = await fetch(`${APP_URL}qa-rules/${id}/${currentStatus}`, {
+            const response = await fetch(`${APP_URL}qa-rule-sets/${id}/${currentStatus}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
@@ -256,7 +267,7 @@ export function useQARules() {
 
             const responseJson = await response.json();
             if (!response.ok) {
-                console.log("Response Error in changing status of the QA Rule : ", responseJson.message);
+                console.log("Response Error in changing status of the QA Rule Set : ", responseJson.message);
                 toast.error(responseJson.message);
                 return false;
             }
@@ -264,7 +275,7 @@ export function useQARules() {
             toast.success(responseJson.message);
             return true;
         } catch (error: any) {
-            console.log("Error in changing the status of the QA Rule : ", error.message);
+            console.log("Error in changing the status of the QA Rule Set : ", error.message);
             toast.error(error.message);
             return false;
         } finally {
@@ -273,9 +284,9 @@ export function useQARules() {
     }, []);
 
     return {
-        fetchQARules, isLoading, qaRules,
-        qaRuleMetaData, fetchQARulesMetaData,
-        isSubmitting, createQARule,
-        deleteQARules, editQARule, fetchQARule, qaRule, updateSubmitting, activateQARule
+        fetchQARuleSets, isLoading, qaRuleSets,
+        qaRuleSetMetaData, fetchQARuleSetsMetaData, qaRules,
+        isSubmitting, createQARuleSet,
+        deleteQARuleSet, editQARuleSet, fetchQARuleSet, qaRuleSet, updateSubmitting, activateQARuleSet
     }
 }
