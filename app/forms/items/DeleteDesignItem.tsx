@@ -9,14 +9,15 @@ interface ModalProps {
     onConfirm?: (id: number) => void;
     onCancel?: () => void;
     isSubmitting: boolean;
-    row: DesignProducts
+    id: number;
 }
 
-function DeleteDesignProduct({ onConfirm, onCancel, isSubmitting, row }: ModalProps) {
-    const [rowId, setRowId] = useState(row.id);
+function DeleteDesignItem({ onConfirm, onCancel, isSubmitting, id }: ModalProps) {
     
     const handleClick = () => {
-        onConfirm?.(rowId);
+        console.log('id : ', id);
+        onConfirm?.(id);
+        
     }
 
     return (
@@ -38,7 +39,7 @@ function DeleteDesignProduct({ onConfirm, onCancel, isSubmitting, row }: ModalPr
                                 <Trash2 className="text-white" size={24} />
                             </div>
                             <div>
-                                <h2 className="text-2xl font-bold text-white">Delete Design Product</h2>
+                                <h2 className="text-2xl font-bold text-white">Delete Design Item</h2>
                                 <p className="text-error-100 text-sm">This action cannot be undone</p>
                             </div>
                         </div>
@@ -53,7 +54,7 @@ function DeleteDesignProduct({ onConfirm, onCancel, isSubmitting, row }: ModalPr
 
                 <div className="p-6">
                     <p className="text-white text-center font-bold">
-                        Are you sure you want to delete this design product?
+                        Are you sure you want to delete this design item ?
                     </p>
                 </div>
 
@@ -76,4 +77,4 @@ function DeleteDesignProduct({ onConfirm, onCancel, isSubmitting, row }: ModalPr
     );
 }
 
-export default DeleteDesignProduct;
+export default DeleteDesignItem;

@@ -19,7 +19,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     create: "Create Roles",
   };
 
-  const pathSegments = pathName.split("/").filter(seg => seg);
+  const pathSegments = pathName.split("/").filter((seg) => seg);
   const breadcrumbs: { name: string; href: string }[] = [];
 
   for (let i = 0; i < pathSegments.length; i++) {
@@ -27,18 +27,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     const href = "/" + pathSegments.slice(0, i + 1).join("/");
     let name = "";
 
-    const isIdSegment = i > 0 && 
-      pageNameMap[pathSegments[i - 1]] && 
-      pathSegments[i - 1] !== "dashboard" &&
-      !pageNameMap[seg] && 
-      !isNaN(Number(seg));
+    const isNumeric = !isNaN(Number(seg));
 
-    if (isIdSegment) {
-      const parentKey = pathSegments[i - 1];
-      if (parentKey === "orders") name = "Order Details";
-      else if (parentKey === "users") name = "User Details";
-      else if (parentKey === "products") name = "Product Details";
-      else name = `${pageNameMap[parentKey]} ID`;
+    if (isNumeric) {
+      if (pathSegments[i - 1] === "orders") name = "Order Details";
+      else if (pathSegments[i - 2] === "orders") name = "Product Details";
+      else if (pathSegments[i - 3] === "orders") name = "Design Item Details";
+      else name = "Details";
     } else {
       name = pageNameMap[seg] || seg.charAt(0).toUpperCase() + seg.slice(1);
     }
@@ -50,7 +45,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     <div className="flex h-screen bg-primary-100">
       <Sidebar />
       <main className="flex-1 p-6 overflow-y-auto pt-16">
-        <div className="flex items-center gap-2 text-sm">
+        {/* Breadcrumbs */}
+        <div className="flex items-center gap-2 text-sm mb-4">
           {breadcrumbs.map((crumb, index) => (
             <div key={index} className="flex items-center gap-2">
               {index > 0 && <ChevronRight className="w-4 h-4 text-gray-400" />}
@@ -67,6 +63,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </div>
           ))}
         </div>
+
         {children}
       </main>
     </div>
