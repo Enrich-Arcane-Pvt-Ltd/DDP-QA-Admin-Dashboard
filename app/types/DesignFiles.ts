@@ -35,16 +35,35 @@ export interface DesignFileQAStatus {
     label: string;
 }
 
+export interface FileTypes {
+    value: string;
+    label: string;
+}
+
 export interface CreateDesignFile {
     design_order_id: number;
     design_products_id: number;
     design_item_id: number;
-    file: string;
+    file: File | null;
     file_name: string;
     file_path?: string;
     file_type: string;
     preserve_ai_editing: boolean;
+    version: string;
+    status: string;
+    qa_status: string;
+}
+
+export interface DesignFiles {
+    id: number,
+    file: string;
+    file_name: string;
+    file_path: string;
+    file_type: string;
+    file_size: number;
+    preserve_ai_editing: boolean;
     version: number;
     status: string;
     qa_status: string;
+    file_url: string;
 }

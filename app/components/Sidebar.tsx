@@ -49,6 +49,7 @@ export default function Sidebar() {
     { href: "/dashboard/roles", label: "User Roles", icon: UserPlus },
     { href: "/dashboard/profile", label: "Profile", icon: CircleUser },
     { href: "/dashboard/sync", label: "Sync Orders", icon: CloudDownload },
+    { href: "/dashboard/test", label: "Test Page", icon: CloudDownload },
 
   ];
 
