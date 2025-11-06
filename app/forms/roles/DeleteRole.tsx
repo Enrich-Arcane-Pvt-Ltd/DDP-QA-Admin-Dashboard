@@ -3,18 +3,22 @@
 import { Trash2, X } from "lucide-react";
 import { useState } from "react";
 
+import { Roles } from "@/app/types/Roles";
+
 interface ModalProps {
-    row: { role: string; status: string };
-    onConfirm?: (data: { role: string; status: string }) => void;
+    row: Roles;
+    onConfirm?: (data: Roles) => void;
     onCancel?: () => void;
+    isSubmitting?: boolean;
 }
 
-function DeleteRole({ row, onConfirm, onCancel }: ModalProps) {
-    const [role, setRole] = useState(row.role);
+function DeleteRole({ row, onConfirm, onCancel, isSubmitting }: ModalProps) {
+    const [id, setId] = useState(row.id);
+    const [name, setName] = useState(row.name);
     const [status, setStatus] = useState(row.status);
     
     const handleClick = () => {
-        onConfirm?.({ role, status });
+        onConfirm?.({ id, name, status });
     }
 
     return (
@@ -51,7 +55,7 @@ function DeleteRole({ row, onConfirm, onCancel }: ModalProps) {
 
                 <div className="p-6">
                     <p className="text-white text-center font-bold">
-                        Are you sure you want to delete the role <span className="font-bold text-error-900">"{row.role}"</span>?
+                        Are you sure you want to delete this user role ?
                     </p>
                 </div>
 
@@ -66,7 +70,7 @@ function DeleteRole({ row, onConfirm, onCancel }: ModalProps) {
                         onClick={handleClick}
                         className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-error-800 to-error-700 text-white font-semibold hover:from-error-900 hover:to-error-800 transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl"
                     >
-                        Delete
+                        {isSubmitting ? 'Deleting...' : 'Delete'}
                     </button>
                 </div>
             </div>

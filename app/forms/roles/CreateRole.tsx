@@ -1,15 +1,19 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import CustomInput from "@/app/components/CustomInput";
 import CustomSelect from "@/app/components/CustomSelect";
 
-import { toast } from "@/app/components/ToastContainer";
 
-import { Shield, User, X, Sparkles } from "lucide-react";
+import { Shield, User, X } from "lucide-react";
+
+interface UserData { 
+    role: string; 
+    status: string 
+}
 
 interface ModalProps {
-    onSubmit?: (data: { role: string; status: string }) => void;
+    onSubmit?: (data: UserData) => void;
     onCancel?: () => void,
 }
 
@@ -23,7 +27,7 @@ function CreateRole({ onSubmit, onCancel} : ModalProps) {
 
     return (
         <div onClick={onCancel} className="fixed inset-0 z-50 flex items-center justify-center bg-primary-900/40 backdrop-blur-sm p-4 animate-fadeIn">
-            <div className="bg-gradient-to-br from-primary-100 to-primary-400 rounded-2xl shadow-2xl w-full max-w-lg transform transition-all duration-300 animate-slideUp">
+            <div onClick={(e) => e.stopPropagation()} className="bg-gradient-to-br from-primary-100 to-primary-400 rounded-2xl shadow-2xl w-full max-w-lg transform transition-all duration-300 animate-slideUp">
                 <div className="relative bg-gradient-to-r from-primary-700 to-primary-600 rounded-t-2xl p-6 overflow-hidden">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-primary-500/20 rounded-full -mr-16 -mt-16"></div>
                     <div className="absolute bottom-0 left-0 w-24 h-24 bg-primary-800/20 rounded-full -ml-12 -mb-12"></div>
@@ -51,7 +55,7 @@ function CreateRole({ onSubmit, onCancel} : ModalProps) {
                     <div className="space-y-2">
                         <label className="flex items-center gap-2 text-sm font-semibold text-primary-800">
                             <User size={16} className="text-accent-600" />
-                            Role Name
+                            Role Name <span className="text-error-600">*</span>
                         </label>
                         <CustomInput 
                             type='text'
@@ -65,7 +69,7 @@ function CreateRole({ onSubmit, onCancel} : ModalProps) {
                     <div className="space-y-2">
                         <label className="flex items-center gap-2 text-sm font-semibold text-primary-800">
                             <Shield size={16} className="text-accent-600" />
-                            Status
+                            Status <span className="text-error-600">*</span>
                         </label>
                         <CustomSelect
                             value={status}

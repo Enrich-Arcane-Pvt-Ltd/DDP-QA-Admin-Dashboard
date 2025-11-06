@@ -29,12 +29,17 @@ function CustomSelect({
                     {icon}
                 </div>
             )}
+
             <select
                 value={value}
                 onChange={onChange}
                 className={`w-full ${
                     icon ? "pl-11" : "pl-3"
-                } pr-3 py-3 border-2 border-light-200 rounded-lg focus:outline-none focus:border-primary-600 focus:ring-2 focus:ring-primary-100 transition-all font-semibold placeholder:text-primary-600 text-primary-700 bg-light-200`}
+                    } pr-3 py-3 border-2 border-light-200 rounded-lg
+                    focus:outline-none focus:border-primary-600 focus:ring-2 focus:ring-primary-100
+                    transition-all font-semibold bg-light-200
+                    ${value ? "text-primary-700" : "text-primary-500"}`
+                }
             >
                 <option value="" disabled>
                     {placeholder}
