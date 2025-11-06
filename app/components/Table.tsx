@@ -4,10 +4,15 @@ import { Eye, Pencil, Trash2, ChevronLeft, ChevronRight, LockKeyhole, LockKeyhol
 
 type TableProps = {
   columns: string[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: Record<string, any>[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onEdit?: (row: any) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onDelete?: (row: any) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onView?: (row: any) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onStatusChange?: (row: any) => void;
   rowsPerPage?: number;
 };

@@ -1,12 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import CustomInput from "@/app/components/CustomInput";
 import CustomSelect from "@/app/components/CustomSelect";
 
-import { toast } from "@/app/components/ToastContainer";
 
-import { Shield, User, X, Sparkles } from "lucide-react";
+import { Shield, User, X } from "lucide-react";
 
 interface UserData { 
     role: string; 

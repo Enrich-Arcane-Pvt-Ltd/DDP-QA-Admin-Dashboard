@@ -11,7 +11,6 @@ export function useSyncOrders() {
     const [customer, setCustomer] = useState<Customer | null>(null);
     const [id, setId] = useState<number | null>(null);
 
-
     // API Call to Retrieve External Orders
     const fetchExternal = useCallback(async (token: string | null, data: GetExternal) => {
         if (!token) {
@@ -51,6 +50,7 @@ export function useSyncOrders() {
             
             toast.success(responseJson.message);
             return true;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error fetching external orders : ", error.message);
             toast.error(error.message);
@@ -91,6 +91,7 @@ export function useSyncOrders() {
             toast.success(responseJson.message);
 
             return newId;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             toast.error(error.message);
             return null;

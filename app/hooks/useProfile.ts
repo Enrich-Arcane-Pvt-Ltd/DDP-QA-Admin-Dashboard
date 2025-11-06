@@ -35,6 +35,7 @@ export function useProfile() {
             }
 
             setProfile(responseJson.data);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error fetching user profile : ", error.message);
         } finally {
@@ -78,7 +79,8 @@ export function useProfile() {
             }
 
             toast.success(responseJson.message);
-            return true; 
+            return true;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error updating user profile : ", error.message);
             toast.error(error.message);
@@ -120,7 +122,8 @@ export function useProfile() {
             }
 
             toast.success(responseJson.message);
-            return true; 
+            return true;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error updating user passwords : ", error.message);
             toast.error(error.message);
@@ -161,7 +164,8 @@ export function useProfile() {
             }
 
             toast.success(responseJson.message);
-            return true; 
+            return true;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error updating user email : ", error.message);
             toast.error(error.message);
@@ -198,7 +202,8 @@ export function useProfile() {
 
             toast.success(responseJson.message);
             localStorage.clear();
-            return true; 
+            return true;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error deleting user profile : ", error.message);
             toast.error(error.message);

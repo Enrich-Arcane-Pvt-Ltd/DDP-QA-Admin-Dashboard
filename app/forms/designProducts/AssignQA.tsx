@@ -1,11 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import CustomInput from "@/app/components/CustomInput";
-import CustomTextArea from "@/app/components/CustomTextArea";
 import CustomSelect from "@/app/components/CustomSelect";
 
-import { Shield, X, FileText, ShoppingCart, Hash, User, ClipboardCheck, Package, Code } from "lucide-react";
+import { X, User } from "lucide-react";
 
 import { toast } from "@/app/components/ToastContainer";
 import { AssignQAAnalysts } from "@/app/types/DesignProducts";

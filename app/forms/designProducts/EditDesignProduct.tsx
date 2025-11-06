@@ -4,11 +4,9 @@ import { useState } from "react";
 import CustomInput from "@/app/components/CustomInput";
 import CustomSelect from "@/app/components/CustomSelect";
 
-import { Shield, User, X, ShoppingCart, Hash, ClipboardCheck, FileText, Package, Code } from "lucide-react";
-import { DesignOrders, DesignOrdersMetaData } from "@/app/types/Orders";
-import CustomTextArea from "@/app/components/CustomTextArea";
+import { Shield, User, X, ShoppingCart, ClipboardCheck, Package, Code } from "lucide-react";
 import { toast } from "@/app/components/ToastContainer";
-import { DesignProducts, DesignProductsMeta, CreateProduct, EditProduct } from "@/app/types/DesignProducts";
+import { DesignProducts, DesignProductsMeta, EditProduct } from "@/app/types/DesignProducts";
 
 interface ModalProps {
     row: DesignProducts;

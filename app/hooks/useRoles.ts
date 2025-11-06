@@ -37,7 +37,7 @@ export function useRoles () {
                 return;
             }
             
-
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const formattedRoles = responseJson.map((role: any) => ({
                 id: role.id,
                 name: role.name,
@@ -45,6 +45,7 @@ export function useRoles () {
             }));
 
             setRoles(formattedRoles);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error : any) {
             console.log('Error fetching user roles : ', error.message);
         } finally {
@@ -77,6 +78,7 @@ export function useRoles () {
             }
 
             setUserRole(responseJson.role);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error fetching user role : ", error.message);
         } finally {
@@ -111,6 +113,7 @@ export function useRoles () {
             
             setPermissions(responseJson.allPermissions);
             setStatus(responseJson.roleStatus);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error : any) {
             console.log('Error fetching user roles permissions : ', error.message);
         } finally {
@@ -151,6 +154,7 @@ export function useRoles () {
 
             toast.success('User Role created successfully');
             return true;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error : any) {
             console.log('Error creating user roles permissions : ', error.message);
             toast.error('Failed to create user role');
@@ -193,6 +197,7 @@ export function useRoles () {
 
             toast.success('User Role updated successfully');
             return true;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error : any) {
             console.log('Error updating user roles permissions : ', error.message);
             toast.error('Failed to update user role');
@@ -229,6 +234,7 @@ export function useRoles () {
 
             toast.success('User Role deleted successfully !');
             return true;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error deleting user role : ", error.message);
             toast.error('Failed to delete the user role');

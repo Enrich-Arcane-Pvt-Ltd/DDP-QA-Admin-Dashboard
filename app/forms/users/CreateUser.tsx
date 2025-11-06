@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import CustomInput from "@/app/components/CustomInput";
 import CustomSelect from "@/app/components/CustomSelect";
 import CustomFileInput from "@/app/components/CustomFileInput";
 
 import { toast } from "@/app/components/ToastContainer";
 
-import { Shield, User, X, Sparkles, Users, Mail, Phone, Lock, LockKeyhole, UserCircle } from "lucide-react";
+import { Shield, User, X, Users, Mail, Lock, LockKeyhole, UserCircle } from "lucide-react";
 
 import { UserInput, UserMeta } from "@/app/types/Users";
 

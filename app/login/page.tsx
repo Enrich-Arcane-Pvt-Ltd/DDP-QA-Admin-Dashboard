@@ -54,6 +54,7 @@ export default function LoginPage() {
       setTimeout(() => {
         router.push("/dashboard");
       }, 1000);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.log('Admin Login Error : ', error.message);
       toast.error(error.message);

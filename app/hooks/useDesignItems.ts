@@ -52,7 +52,8 @@ export function useDesignItems() {
                 qa_analyst: responseJson.designProduct.qa_analyst.name ?? "N/A",
             }
             
-            setDesignProduct(designProduct)
+            setDesignProduct(designProduct);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error fetching design products details : ", error.message);
         } finally {
@@ -90,6 +91,8 @@ export function useDesignItems() {
             await fetchDesignProductsDetails(data.design_product_id, token);
             await fetchDesignItems(token, data.design_order_id, data.design_product_id);
             return true;
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error creating design item : ", error.message);
             toast.error(error.message);
@@ -129,7 +132,8 @@ export function useDesignItems() {
                 qaStatus: responseJson.qaStatus,
             };
             
-            setMetaData(extractedMeta);            
+            setMetaData(extractedMeta);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any            
         } catch (error: any) {
             console.log("Error fetching design items meta data : ", error.message);
         } finally {
@@ -161,6 +165,7 @@ export function useDesignItems() {
                 return;
             }            
 
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const mappedItems: DesignItems[] = responseJson.designItems.map((item: any) => ({
                 id: item.id,
                 item_name: item.item_name,
@@ -175,7 +180,8 @@ export function useDesignItems() {
                 file: item.latest_design_file?.file || '',
             }));
 
-            setDesignItems(mappedItems);            
+            setDesignItems(mappedItems);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error fetching design items : ", error.message);
         } finally {
@@ -210,6 +216,7 @@ export function useDesignItems() {
 
             toast.success(responseJson.message);
             return true;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error deleting design item : ", error.message);
             toast.error(error.message);
@@ -249,6 +256,7 @@ export function useDesignItems() {
             await fetchDesignProductsDetails(data.design_product_id, token);
             await fetchDesignItems(token, data.design_order_id, data.design_product_id);
             return true;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error updating design item : ", error.message);
             toast.error(error.message);

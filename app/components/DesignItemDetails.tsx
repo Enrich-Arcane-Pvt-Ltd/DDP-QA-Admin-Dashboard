@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { Package, User, Hash, FileText, CheckCircle2, XCircle, Clock, ShoppingBag, Ruler } from "lucide-react";
 
 import { DesignItem } from "../types/DesignFiles";

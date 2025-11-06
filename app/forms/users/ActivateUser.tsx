@@ -1,6 +1,6 @@
 "use client";
 
-import { Trash2, X, XCircle, CheckCircle } from "lucide-react";
+import { X, XCircle, CheckCircle } from "lucide-react";
 import { useState } from "react";
 import { UserData } from "@/app/types/Users";
 
@@ -61,7 +61,7 @@ function ActivateUser({ row, onConfirm, onCancel, isSubmitting }: ModalProps) {
 
                 <div className="p-6">
                     <p className="text-white text-center font-bold">
-                        Are you sure you want to {status === 'active' ? 'deactivate' : 'activate'} the user <span className="font-bold text-primary-900">"{row.name}"</span>?
+                        Are you sure you want to {status === 'active' ? 'deactivate' : 'activate'} the user <span className="font-bold text-primary-900">&quot;{row.name}&quot;</span>?
                     </p>
                 </div>
 

@@ -56,7 +56,7 @@ function DeleteUser({ row, onConfirm, onCancel, isSubmitting }: ModalProps) {
 
                 <div className="p-6">
                     <p className="text-white text-center font-bold">
-                        Are you sure you want to delete the user <span className="font-bold text-error-900">"{row.name}"</span>?
+                        Are you sure you want to delete the user <span className="font-bold text-error-900">&quot;{row.name}&quot;</span>?
                     </p>
                 </div>
 

@@ -33,10 +33,10 @@ export function useUsers(APP_URL: string) {
                 return;
             }            
 
-            const filteredUsers = responseJson.filter(
-                (user: any) => user.role_id !== "1"
-            );            
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const filteredUsers = responseJson.filter((user: any) => user.role_id !== "1");            
 
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const formattedUsers = filteredUsers.map((user: any) => ({
                 id: user.id,
                 name: user.name,
@@ -47,7 +47,7 @@ export function useUsers(APP_URL: string) {
             }));
 
             setUsers(formattedUsers);
-            
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any    
         } catch (error: any) {
             console.log("Error fetching users : ", error.message);
         } finally {
@@ -79,7 +79,8 @@ export function useUsers(APP_URL: string) {
                 return;
             }
 
-            setData(responseJson);            
+            setData(responseJson);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error fetching users data : ", error.message);
         } finally {
@@ -124,7 +125,6 @@ export function useUsers(APP_URL: string) {
             toast.success("User created successfully");
             await fetchUsers(token);
             return true;
-
         } catch (error) {
             toast.error("Failed to create user");
             return false;
@@ -205,6 +205,7 @@ export function useUsers(APP_URL: string) {
 
             toast.success('User deleted successfully !');
             return true;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error deleting user : ", error.message);
             toast.error('Failed to delete the user');
@@ -243,6 +244,7 @@ export function useUsers(APP_URL: string) {
 
             toast.success(responseJson.message);
             return true;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error activating user : ", error.message);
             toast.error(error.message);

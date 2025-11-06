@@ -59,10 +59,11 @@ export function useDesignFiles() {
                     status: item.design_product?.status ?? "",
                     qa_status: item.design_product?.qa_status ?? "",
                 },
-                product_size: item.product_size?.size_name ?? "", // extract readable name
+                product_size: item.product_size?.size_name ?? "",
             };
 
             setDesignItem(formattedItem);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error fetching design item details : ", error.message);
         } finally {
@@ -121,6 +122,7 @@ export function useDesignFiles() {
             await fetchDesignFiles(token, data.design_order_id, data.design_products_id, data.design_item_id)
             return true;
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error creating design file:", error.message);
             toast.error(error.message);
@@ -158,6 +160,8 @@ export function useDesignFiles() {
             setDesignFileStatus(responseJson.designFileStatus);
             setQAStatus(responseJson.qaStatus);
             setFileTypes(responseJson.fileType);
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error fetching design items files data : ", error.message);
         } finally {
@@ -189,6 +193,7 @@ export function useDesignFiles() {
                 return;
             }
             
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const formattedFiles: DesignFiles[] = (responseJson.designFiles || []).map((file: any) => ({
                 id: Number(file.id),
                 file: file.file || "",
@@ -204,6 +209,7 @@ export function useDesignFiles() {
             }));
 
             setDesignFiles(formattedFiles);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error fetching design files : ", error.message);
         } finally {
@@ -240,6 +246,8 @@ export function useDesignFiles() {
             toast.success(responseJson.message);
             await fetchDesignFiles(token, orderId, productId, itemId);
             return true;
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error deleting design files : ", error.message);
             toast.error(error.message);
@@ -279,6 +287,8 @@ export function useDesignFiles() {
             toast.success(responseJson.message);
             await fetchDesignFiles(token, orderId, productId, itemId);
             return true;
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error in changing the status of the design file : ", error.message);
             toast.error(error.message);
@@ -339,7 +349,8 @@ export function useDesignFiles() {
             toast.success(responseJson.message || "Design file updated successfully.");
             await fetchDesignFiles(token, data.design_order_id, data.design_products_id, data.design_item_id)
             return true;
-
+            
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error updating design file:", error.message);
             toast.error(error.message);

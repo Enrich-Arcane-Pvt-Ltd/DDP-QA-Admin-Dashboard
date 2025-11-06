@@ -1,11 +1,11 @@
 "use client";
 
-import CreateButton from "@/app/components/CreateButton"
-import { CloudDownload, User, FileText, Hash, Package, CheckSquare, Square } from "lucide-react"
+import CreateButton from "@/app/components/CreateButton";
+import { CloudDownload, User, FileText, Hash, Package, CheckSquare, Square } from "lucide-react";
 
-import { useState, useEffect } from "react"
-import { useAccessToken } from "@/app/hooks/useAccessToken"
-import { useSyncOrders } from "@/app/hooks/useSyncOrders"
+import { useState } from "react";
+import { useAccessToken } from "@/app/hooks/useAccessToken";
+import { useSyncOrders } from "@/app/hooks/useSyncOrders";
 
 import RetrieveOrders from "@/app/forms/sync/RetrieveOrders";
 import { GetExternal, SyncOrders } from "@/app/types/SyncOrders";
@@ -105,7 +105,7 @@ export default function OrderSyncPage() {
                             <div className="flex flex-col sm:flex-row items-center gap-4">
                                 <div className="flex items-center gap-3 px-6 py-3 bg-accent-100 rounded-full border-2 border-accent-300">
                                     <div className="w-3 h-3 bg-accent-600 rounded-full animate-bounce"></div>
-                                    <span className="font-semibold text-accent-800">Click "Retrieve Orders" above</span>
+                                    <span className="font-semibold text-accent-800">Click &quot;Retrieve Orders&quot; above</span>
                                 </div>
                             </div>
                         </div>

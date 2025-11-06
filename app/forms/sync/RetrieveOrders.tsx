@@ -1,12 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import CustomInput from "@/app/components/CustomInput";
-import CustomSelect from "@/app/components/CustomSelect";
 
 import { toast } from "@/app/components/ToastContainer";
 
-import { Shield, User, X, Sparkles, Shirt } from "lucide-react";
+import { X, Shirt } from "lucide-react";
 
 import { GetExternal } from "@/app/types/SyncOrders";
 

@@ -37,6 +37,7 @@ export function useDesignOrders() {
                 return;
             }
             
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const formattedDesignOrders = responseJson.designOrders.map((order: any) => ({
                 id: order.id,
                 order_name: order.order_name,
@@ -49,6 +50,7 @@ export function useDesignOrders() {
             }));
 
             setDesignOrders(formattedDesignOrders);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error : any) {
             console.log('Error fetching design orders : ', error.message);
         } finally {
@@ -81,7 +83,8 @@ export function useDesignOrders() {
                 return;
             }
         
-            setDesignMetaData(responseJson);            
+            setDesignMetaData(responseJson);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any            
         } catch (error : any) {
             console.log('Error fetching design orders meta data : ', error.message);
         } finally {
@@ -118,7 +121,8 @@ export function useDesignOrders() {
 
             toast.success(responseJson.message);
             await fetchDesignOrders(token);
-            return true; 
+            return true;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error creating design order : ", error.message);
             toast.error(error.message);
@@ -155,6 +159,7 @@ export function useDesignOrders() {
 
             toast.success('Design Order deleted successfully !');
             return true;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error deleting design order : ", error.message);
             toast.error('Failed to delete the design order');
@@ -194,6 +199,7 @@ export function useDesignOrders() {
             toast.success('Design Order updated successfully !');
             await fetchDesignOrders(token);
             return true;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error updating design order : ", error.message);
             toast.error('Failed to update the design order');
@@ -228,7 +234,8 @@ export function useDesignOrders() {
                 return;
             }
 
-            setDesignOrder(responseJson.designOrder)
+            setDesignOrder(responseJson.designOrder);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error fetch9ng design order : ", error.message);
         } finally {
