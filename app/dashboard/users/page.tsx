@@ -21,6 +21,8 @@ import APP_URL from "@/app/constants/Config";
 import { UserData } from "@/app/types/Users";
 import ActivateUser from "@/app/forms/users/ActivateUser";
 
+import { usePagination } from "@/app/hooks/usePagination";
+
 export default function UsersPage() {
   const [modalVisible, setModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
@@ -29,6 +31,8 @@ export default function UsersPage() {
   const [statusModalVisible, setStatusModalVisible] = useState(false);
   const [selectedRow, setSelectedRow] = useState<UserData | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+
+  const { currentPage, onPageChange } = usePagination();
 
   const { token } = useAccessToken();
   const { users, isLoading, fetchUsers, createUser, editUser, setUsers, fetchUsersData, data, setData, isSubmitting, deleteUsers, activateUsers } = useUsers(APP_URL);
@@ -98,6 +102,8 @@ export default function UsersPage() {
         onEdit={handleEdit}
         onDelete={openDeleteModal}
         onStatusChange={openStatusModal}
+        currentPage={currentPage}
+        onPageChange={onPageChange}
       />
       
       {modalVisible && data && token &&(

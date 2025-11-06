@@ -18,12 +18,16 @@ import { useRouter } from "next/navigation";
 
 import Loader from "@/app/components/Loader";
 
+import { usePagination } from "@/app/hooks/usePagination";
+
 export default function UserRolesPage() {
     const [deleteModalVisible, setDeleteModalVisible] = useState(false);
     const [selectedRow, setSelectedRow] = useState<Roles | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
 
     const router = useRouter();
+
+    const { currentPage, onPageChange } = usePagination();
 
     const { token } = useAccessToken();
     const { isLoading, fetchUserRoles, roles, fetchUserRolesPermissions, deleteUserRole, isSubmitting  } = useRoles();
@@ -42,7 +46,6 @@ export default function UserRolesPage() {
     const handleEdit = (row: Roles) => {
         router.push(`/dashboard/roles/${row.id}`);
     };
-
 
     const filteredUserRoles = roles?.filter((role: Roles) => {
         const term = searchTerm.toLowerCase();
@@ -76,6 +79,8 @@ export default function UserRolesPage() {
                 data={filteredUserRoles}
                 onEdit={handleEdit} 
                 onDelete={openDeleteModal}
+                currentPage={currentPage}
+                onPageChange={onPageChange}
             />
 
             {deleteModalVisible && selectedRow && token && (

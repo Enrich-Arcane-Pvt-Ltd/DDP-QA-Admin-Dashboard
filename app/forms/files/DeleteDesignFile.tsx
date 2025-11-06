@@ -16,14 +16,14 @@ function DeleteDesignFile({ onConfirm, onCancel, isSubmitting} : ModalProps) {
     return (
         <div
             onClick={onCancel}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-primary-900/40 backdrop-blur-sm p-4 animate-fadeIn"
+            className="fixed inset-0 z-50 flex items-center shadow-xl justify-center backdrop-blur-sm p-4 animate-fadeIn"
         >
             <div
                 onClick={(e) => e.stopPropagation()}
-                className="bg-gradient-to-br from-error-500 to-error-100 rounded-2xl shadow-2xl w-full max-w-md transform transition-all duration-300 animate-slideUp"
+                className="bg-gradient-to-br from-error-500 to-error-200 rounded-2xl w-full max-w-md transform transition-all duration-300 animate-slideUp"
             >
                 <div className="relative bg-gradient-to-r from-error-800 to-error-700 rounded-t-2xl p-6 overflow-hidden">
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-error-600/20 rounded-full -mr-16 -mt-16"></div>
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-error-900/20 rounded-full -mr-16 -mt-16"></div>
                     <div className="absolute bottom-0 left-0 w-24 h-24 bg-error-900/20 rounded-full -ml-12 -mb-12"></div>
 
                     <div className="relative flex items-center justify-between">

@@ -18,6 +18,7 @@ import StatusChangeProductSize from "@/app/forms/product/StatusChangeProductSize
 import DeleteProductSize from "@/app/forms/product/DeleteProductSize";
 import EditProductSize from "@/app/forms/product/EditProductSize";
 import Loader from "@/app/components/Loader";
+import { usePagination } from "@/app/hooks/usePagination";
 
 export default function ProductSizePage() {
     const [searchTerm, setSearchTerm] = useState("");
@@ -26,6 +27,8 @@ export default function ProductSizePage() {
     const [editModalVisible, setEditModalVisible] = useState(false);
     const [statusModalVisible, setStatusModalVisible] = useState(false);
     const [selectedRow, setSelectedRow] = useState<ProductSizes | null>(null);
+
+    const { currentPage, onPageChange } = usePagination();
 
     const { token } = useAccessToken();
     const { isLoading, productSizes, fetchProductSizes, isSubmitting, fetchProductTypesMeta, metaData, createProductSize, deleteProductSizes, editProductSize, activateProductSize, } = useProducts();
@@ -89,6 +92,8 @@ export default function ProductSizePage() {
                 onEdit={handleEdit} 
                 onDelete={openDeleteModal}
                 onStatusChange={openStatusModal}
+                currentPage={currentPage}
+                onPageChange={onPageChange}
             />
 
             {modalVisible && token && metaData && (

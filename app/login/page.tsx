@@ -81,7 +81,7 @@ export default function LoginPage() {
           </div>
 
           <div className="mb-4 animate-[fadeIn_1s_ease-out]">
-            <label className="block mb-1 text-sm font-medium text-primary-800">Email:</label>
+            <label className="block mb-1 text-sm font-medium text-primary-800">Email <span className="text-error-600">*</span></label>
             <CustomInput
               type="email"
               placeholder="Enter your email"
@@ -92,7 +92,7 @@ export default function LoginPage() {
           </div>
 
           <div className="mb-4 animate-[fadeIn_1.2s_ease-out]">
-            <label className="block mb-1 text-sm font-medium text-primary-800">Password:</label>
+            <label className="block mb-1 text-sm font-medium text-primary-800">Password <span className="text-error-600">*</span></label>
             <CustomInput
               type="password"
               placeholder="Enter your password"

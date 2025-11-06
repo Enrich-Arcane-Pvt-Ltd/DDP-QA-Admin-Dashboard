@@ -71,7 +71,7 @@ export default function OrderSyncPage() {
 
             {(!externalChildOrders || externalChildOrders.length === 0) && !isLoading && (
                 <div className="flex justify-center">
-                    <div className="relative w-2/3 bg-light-200 flex justify-center rounded-3xl shadow-2xl overflow-hidden border-2 border-primary-200">
+                    <div className="relative xl:w-2/3 bg-light-200 flex justify-center rounded-3xl shadow-2xl overflow-hidden border-2 border-primary-200">
                         <div className="absolute inset-0 bg-gradient-to-br from-primary-50 via-accent-50 to-light-100"></div>
                     
                         <div className="absolute top-0 right-0 w-96 h-96 opacity-10">

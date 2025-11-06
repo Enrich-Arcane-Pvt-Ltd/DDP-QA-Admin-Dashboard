@@ -40,12 +40,12 @@ export default function ViewDesignItemPage() {
 
     return(
         <div>
-            <div className="mb-6 flex justify-between">
+            <div className="mb-6 flex justify-between items-center">
                 <div>
-                    <h1 className="text-4xl font-bold text-primary-800 mb-2">
+                    <h1 className="text-2xl md:text-4xl font-bold text-primary-800 mb-2">
                         {designItem.item_name}
                     </h1>
-                    <p className="text-primary-600 text-lg">Design Item Details</p>
+                    <p className="text-primary-600 text-base md:text-lg">Design Item Details</p>
                 </div>
                 <div>
                     <CreateButton label='Create Design File' icon={<PlusIcon />} onClick={openModal} />

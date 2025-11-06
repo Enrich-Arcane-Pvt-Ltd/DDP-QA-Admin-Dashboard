@@ -75,7 +75,7 @@ function EditDesignFile({ onConfirm, onCancel, isSubmitting, designFileStatus, q
     };
 
     return (
-        <div onClick={onCancel} className="fixed inset-0 z-50 flex items-center justify-center bg-primary-900/40 backdrop-blur-sm p-4 animate-fadeIn">
+        <div onClick={onCancel} className="fixed inset-0 z-50 flex items-center justify-center  backdrop-blur-sm p-4 animate-fadeIn">
             <div onClick={(e) => e.stopPropagation()} className="bg-gradient-to-br from-primary-100 to-primary-400 rounded-2xl shadow-2xl w-full max-w-lg transform transition-all duration-300 animate-slideUp">
                 <div className="relative bg-gradient-to-r from-primary-700 to-primary-600 rounded-t-2xl p-6 overflow-hidden">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-primary-500/20 rounded-full -mr-16 -mt-16"></div>
