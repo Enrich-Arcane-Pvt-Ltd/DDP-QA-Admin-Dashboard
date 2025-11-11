@@ -1,7 +1,11 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
 import {
+  ChevronRight,
+  CircleUser,
+  ClipboardCheck,
+  FileBarChart,
+  Layers,
   LayoutDashboard,
   Users,
   Menu,
@@ -52,7 +56,17 @@ export default function Sidebar() {
     },
     { href: "/dashboard/orders", label: "Orders", icon: ShoppingCart },
     { href: "/dashboard/settings", label: "Settings", icon: Settings },
-    { href: "/dashboard/quality", label: "Q/A", icon: CheckCircle },
+    {
+      label: "Q/A",
+      icon: ClipboardCheck,
+      subLinks: [
+        { href: "/dashboard/quality/qa-rules", label: "QA Rules", icon: ListChecks },
+        { href: "/dashboard/quality/qa-rule-sets", label: "QA Rule Sets", icon: Layers },
+        { href: "/dashboard/quality/qa-reports", label: "QA Reports", icon: FileBarChart },
+        // { href: "/dashboard/quality/qa-attempts", label: "QA Attempts", icon: Repeat },
+        // { href: "/dashboard/quality", label: "Q/A", icon: Gauge },
+      ]
+    },
     { href: "/dashboard/roles", label: "User Roles", icon: UserPlus },
     { href: "/dashboard/profile", label: "Profile", icon: CircleUser },
     { href: "/dashboard/sync", label: "Sync Orders", icon: CloudDownload },
@@ -143,7 +157,7 @@ export default function Sidebar() {
       {isOpen && (
         <div
           onClick={toggleSidebar}
-          className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-30"
+          className="fixed inset-0 z-30 bg-black bg-opacity-50 lg:hidden"
         />
       )}
 
@@ -167,7 +181,7 @@ export default function Sidebar() {
                 <div key={link.label}>
                   <button
                     onClick={() => handleSubMenuToggle(link.label)}
-                    className="w-full flex items-center justify-between gap-3 px-4 py-4 rounded-xl text-primary-200 hover:bg-primary-700 hover:text-white transition-all duration-200"
+                    className="flex items-center justify-between w-full gap-3 px-4 py-4 transition-all duration-200 rounded-xl text-primary-200 hover:bg-primary-700 hover:text-white"
                   >
                     <div className="flex items-center gap-3">
                       <Icon size={20} />

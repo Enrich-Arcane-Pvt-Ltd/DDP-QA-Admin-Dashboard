@@ -4,80 +4,142 @@ import CustomInput from "@/app/components/CustomInput";
 import CustomSelect from "@/app/components/CustomSelect";
 import { toast } from "@/app/components/ToastContainer";
 import { useAccessToken } from "@/app/hooks/useAccessToken";
-import { useRoles } from "@/app/hooks/useRoles";
-import { CheckCircle2, Lock, Shield, User } from "lucide-react";
-import { useEffect, useState } from "react";
+import { CheckCircle2, List, Lock, Shield, User } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 import Loader from "@/app/components/Loader";
+import { useQARuleSets } from "@/app/hooks/useQARuleSets";
 
-export default function CreateRolePage() {
-    const { token } = useAccessToken();
-    const { fetchUserRolesPermissions, status, permissions, isSubmitting, createUserRole, isLoading } = useRoles();
+interface Rule {
+    id: number;
+    name: string;
+}
 
+export default function EditQARuleSetPage() {
+    const { id } = useParams();
+    const ruleSetId = Number(id);
     const router = useRouter();
 
-    const [roleName, setRoleName] = useState('');
-    const [roleStatus, setRoleStatus] = useState('');
-    const [selectedPermissions, setSelectedPermissions] = useState<number[]>([]);
+    const { token } = useAccessToken();
+    const {
+        isLoading,
+        qaRuleSetMetaData,
+        fetchQARuleSetsMetaData,
+        isSubmitting,
+        fetchQARuleSet,
+        qaRuleSet,
+        editQARuleSet
+    } = useQARuleSets();
+
+    const [ruleSetName, setRuleSetName] = useState(qaRuleSet?.qa_rule_set_name ?? "");
+    const [description, setDescription] = useState(qaRuleSet?.description ?? "");
+    const [status, setStatus] = useState(qaRuleSet?.status ?? "");
+    const [selectedRules, setSelectedRules] = useState<number[]>([]);
+    const [rule_ids, setRuleIds] = useState<number[]>([]);
 
     useEffect(() => {
         if (token) {
-            fetchUserRolesPermissions(token);
+            fetchQARuleSetsMetaData(token);
         }
-    }, [fetchUserRolesPermissions, token]);
+    }, [fetchQARuleSetsMetaData, token]);
 
-    const togglePermission = (id: number) => {
-        setSelectedPermissions(prev =>
+    useEffect(() => {
+        if (!isNaN(ruleSetId) && token) {
+            fetchQARuleSet(ruleSetId, token);
+        }
+    }, [fetchQARuleSet, token, ruleSetId]);
+
+    useEffect(() => {
+        if (qaRuleSet) {
+            setRuleSetName(qaRuleSet.qa_rule_set_name ?? "");
+            setDescription(qaRuleSet.description ?? "");
+            setStatus(qaRuleSet.status ?? "");
+            setSelectedRules(
+                qaRuleSet.qa_rules?.map((rule: any) => rule.id) ?? []
+            );
+        }
+    }, [qaRuleSet]);
+    const statusOptions = qaRuleSetMetaData?.qaRuleSetStatus ?? [];
+
+    const availableRules: Rule[] = useMemo(() => {
+        return qaRuleSetMetaData?.qaRules.map(rule => ({
+            id: rule.value,
+            name: rule.label,
+        })) ?? [];
+    }, [qaRuleSetMetaData]);
+
+
+    const toggleRule = (id: number) => {
+        setSelectedRules(prev =>
             prev.includes(id)
                 ? prev.filter(pid => pid !== id)
                 : [...prev, id]
         );
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const selectAllInCategory = (categoryPermissions: any[]) => {
-        const categoryIds = categoryPermissions.map(p => p.id!);
-        const allSelected = categoryIds.every(id => selectedPermissions.includes(id));
+    const rulesGroupedForUI = useMemo(() => {
+        if (availableRules.length === 0) return [];
+
+        return [{
+            category: "General Rules",
+            permissions: availableRules.map(r => ({ id: r.id, name: r.name })),
+        }];
+    }, [availableRules]);
+
+    const selectAllInCategory = (categoryRules: Rule[]) => {
+        const categoryIds = categoryRules.map(r => r.id);
+        const allSelected = categoryIds.every(id => selectedRules.includes(id));
 
         if (allSelected) {
-            setSelectedPermissions(prev => prev.filter(id => !categoryIds.includes(id)));
+            setSelectedRules(prev => prev.filter(id => !categoryIds.includes(id)));
         } else {
-            setSelectedPermissions(prev => [...new Set([...prev, ...categoryIds])]);
+            setSelectedRules(prev => [...new Set([...prev, ...categoryIds])]);
         }
     };
 
+
     const handleClick = async () => {
-        if (!roleName) {
-            toast.error('Role Name is required');
+        if (!ruleSetName) {
+            toast.error('QA Rule Set Name is required');
             return;
         }
 
-        if (!roleStatus) {
-            toast.error('Role Status is required');
+        if (!status) {
+            toast.error('Status is required');
             return;
         }
+
+        if (selectedRules.length === 0) {
+            toast.error('At least one QA Rule must be selected');
+            return;
+        }
+
 
         const data = {
-            name: roleName,
-            status: roleStatus,
-            permissions: selectedPermissions
+            id: ruleSetId,
+            qa_rule_set_name: ruleSetName,
+            status: status,
+            description: description,
+            qa_rules: selectedRules
         }
 
-        const success = await createUserRole(token, data);
+        const success = await editQARuleSet(data, token, ruleSetId);
+
         if (success) {
-            setRoleName('');
-            setRoleStatus('');
-            setSelectedPermissions([]);
+            setRuleSetName('');
+            setStatus('');
+            setDescription('');
+            setSelectedRules([]);
 
             setTimeout(() => {
-                router.push('/dashboard/roles');
+                router.push('/dashboard/quality/qa-rule-sets');
             }, 2000);
         }
     }
 
-    if (isLoading) {
+    if (isLoading || isSubmitting || !qaRuleSet) {
         return (
             <Loader />
         )
@@ -87,15 +149,16 @@ export default function CreateRolePage() {
         <div>
             <div className="my-4">
                 <h1 className="text-2xl font-bold sm:text-3xl lg:text-4xl text-primary-800">
-                    Create New Role
+                    Edit QA Rule Set: {qaRuleSet.qa_rule_set_name}
                 </h1>
                 <p className="mt-2 text-sm text-primary-600 sm:text-base">
-                    Define role details and assign permissions to control access
+                    Update QA Rule Set details and modify assigned rules
                 </p>
             </div>
 
             <div className="overflow-hidden border shadow-xl bg-light-100 backdrop-blur-sm rounded-2xl border-primary-200/50">
                 <div className="p-6 space-y-8 sm:p-8">
+
                     <div className="space-y-6">
                         <div className="flex items-center gap-2 pb-3 border-b-2 border-accent-600/20">
                             <div className="w-1 h-6 rounded-full bg-gradient-to-b from-accent-600 to-primary-700"></div>
@@ -106,15 +169,15 @@ export default function CreateRolePage() {
                             <div className="space-y-2">
                                 <label className="flex items-center gap-2 text-sm font-semibold text-primary-800">
                                     <User size={16} className="text-accent-600" />
-                                    Role Name
+                                    Rule Set Name
                                     <span className="text-error-600">*</span>
                                 </label>
                                 <CustomInput
                                     type='text'
-                                    placeholder="Enter the Role Name"
+                                    placeholder="Enter the Rule Set Name"
                                     icon={<User />}
-                                    value={roleName}
-                                    onChange={(e) => setRoleName(e.target.value)}
+                                    value={ruleSetName}
+                                    onChange={(e) => setRuleSetName(e.target.value)}
                                 />
                             </div>
 
@@ -125,13 +188,27 @@ export default function CreateRolePage() {
                                     <span className="text-error-600">*</span>
                                 </label>
                                 <CustomSelect
-                                    value={roleStatus}
-                                    onChange={(e) => setRoleStatus(e.target.value)}
-                                    options={status}
+                                    value={status}
+                                    onChange={(e) => setStatus(e.target.value)}
+                                    options={statusOptions}
                                     icon={<Shield />}
                                     placeholder="Select Status"
                                 />
                             </div>
+                        </div>
+
+                        <div className="space-y-2 col-span-full">
+                            <label className="flex items-center gap-2 text-sm font-semibold text-primary-800">
+                                <List size={16} className="text-accent-600" />
+                                Description
+                            </label>
+                            <textarea
+                                placeholder="Enter a detailed description for the QA Rule Set (Optional)"
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                                rows={3}
+                                className="w-full px-4 py-3 text-sm transition-all duration-200 bg-white border-2 rounded-lg shadow-sm resize-none focus:outline-none focus:border-accent-500 border-primary-200 text-primary-800"
+                            />
                         </div>
                     </div>
 
@@ -139,22 +216,21 @@ export default function CreateRolePage() {
                         <div className="flex items-center justify-between pb-3 border-b-2 border-accent-600/20">
                             <div className="flex items-center gap-2">
                                 <div className="w-1 h-6 rounded-full bg-gradient-to-b from-accent-600 to-primary-700"></div>
-                                <h2 className="text-xl font-bold text-primary-800">Permissions</h2> <span className="text-error-600">*</span>
+                                <h2 className="text-xl font-bold text-primary-800">QA Rules</h2> <span className="text-error-600">*</span>
                             </div>
                             <div className="flex items-center gap-2 text-sm text-primary-600">
                                 <CheckCircle2 size={16} className="text-accent-600" />
                                 <span className="font-medium">
-                                    {selectedPermissions.length} selected
+                                    {selectedRules.length} selected
                                 </span>
                             </div>
                         </div>
 
                         <div className="grid grid-cols-1 gap-4">
-                            {permissions?.map((group) => {
-                                const categoryPermissionIds = group.permissions?.map(p => p.id!) || [];
-                                const allSelected = categoryPermissionIds.length > 0 &&
-                                    categoryPermissionIds.every(id => selectedPermissions.includes(id));
-                                const someSelected = categoryPermissionIds.some(id => selectedPermissions.includes(id));
+                            {rulesGroupedForUI?.map((group) => {
+                                const categoryRuleIds = group.permissions?.map(p => p.id!) || [];
+                                const allSelected = categoryRuleIds.length > 0 &&
+                                    categoryRuleIds.every(id => selectedRules.includes(id));
 
                                 return (
                                     <div
@@ -178,11 +254,11 @@ export default function CreateRolePage() {
 
                                         <div className="p-5">
                                             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                                                {group.permissions?.map((perm) => {
-                                                    const isChecked = selectedPermissions.includes(perm.id!);
+                                                {group.permissions?.map((rule) => {
+                                                    const isChecked = selectedRules.includes(rule.id!);
                                                     return (
                                                         <label
-                                                            key={perm.id}
+                                                            key={rule.id}
                                                             className={`
                                                                 flex items-center gap-2.5 p-3 rounded-lg text-sm cursor-pointer
                                                                 transition-all duration-200 border-2
@@ -196,7 +272,7 @@ export default function CreateRolePage() {
                                                                 <input
                                                                     type="checkbox"
                                                                     checked={isChecked}
-                                                                    onChange={() => togglePermission(perm.id!)}
+                                                                    onChange={() => toggleRule(rule.id!)}
                                                                     className="w-5 h-5 transition-all border-2 rounded appearance-none cursor-pointer peer border-primary-300 checked:bg-accent-600 checked:border-accent-600"
                                                                 />
                                                                 <CheckCircle2
@@ -205,7 +281,7 @@ export default function CreateRolePage() {
                                                                 />
                                                             </div>
                                                             <span className={`font-medium ${isChecked ? 'text-primary-800' : 'text-primary-700'}`}>
-                                                                {perm.name}
+                                                                {rule.name}
                                                             </span>
                                                         </label>
                                                     );
@@ -218,11 +294,15 @@ export default function CreateRolePage() {
                         </div>
                     </div>
 
+                    {/* Action Button */}
                     <div className="flex flex-col gap-4 pt-6 border-t sm:flex-row border-primary-200">
-                        <button onClick={handleClick} className="flex-1 px-6 py-3 bg-gradient-to-r from-accent-600 to-primary-700 hover:from-accent-700 hover:to-primary-800 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02]">
-                            {isSubmitting ? 'Creating Role...' : 'Create Role'}
+                        <button
+                            onClick={handleClick}
+                            disabled={isSubmitting}
+                            className="flex-1 px-6 py-3 bg-gradient-to-r from-accent-600 to-primary-700 hover:from-accent-700 hover:to-primary-800 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:pointer-events-none"
+                        >
+                            {isSubmitting ? 'Updating Rule Set...' : 'Update QA Rule Set'}
                         </button>
-
                     </div>
                 </div>
             </div>

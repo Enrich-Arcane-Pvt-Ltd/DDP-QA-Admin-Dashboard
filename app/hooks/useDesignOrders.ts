@@ -1,8 +1,8 @@
-import { useState, useCallback } from "react";
+import { useCallback, useState } from "react";
 import { toast } from "../components/ToastContainer";
 import APP_URL from "../constants/Config";
 
-import { DesignOrders, DesignOrdersMetaData, DesignOrder, SingleOrder } from "../types/Orders";
+import { DesignOrder, DesignOrders, DesignOrdersMetaData, SingleOrder } from "../types/Orders";
 
 export function useDesignOrders() {
     const [isLoading, setIsLoading] = useState(false);
@@ -97,7 +97,7 @@ export function useDesignOrders() {
         if (!token) {
             console.log("Token Not Found");
             return false;
-        }        
+        }
 
         setIsSubmitting(true);
         try {
@@ -112,7 +112,7 @@ export function useDesignOrders() {
             });
 
             const responseJson = await response.json();
-            
+
             if (!response.ok) {
                 console.log("Response Error in creating design order : ", responseJson.message);
                 toast.error(responseJson.message)
@@ -137,7 +137,7 @@ export function useDesignOrders() {
         if (!token) {
             console.log("Token Not Found");
             return;
-        }        
+        }
 
         setIsSubmitting(true);
         try {
@@ -174,7 +174,7 @@ export function useDesignOrders() {
         if (!token) {
             console.log("Token Not Found");
             return;
-        }        
+        }
 
         setIsSubmitting(true);
         setUpdateSubmitting(true);
@@ -215,7 +215,7 @@ export function useDesignOrders() {
         if (!token) {
             console.log("Token Not Found");
             return;
-        }        
+        }
 
         setIsLoading(true);
         try {
