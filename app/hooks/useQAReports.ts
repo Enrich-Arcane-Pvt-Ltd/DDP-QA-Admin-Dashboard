@@ -36,13 +36,13 @@ export function useQAReport() {
             const responseJson: QAReportOrdersResponse = await response.json();
             if (!response.ok) {
                 console.error("Error fetching QA Orders:", responseJson);
-                toast.error("Failed to fetch orders.");
                 return;
             }
             setOrders(responseJson.designOrders || []);
+            console.log('responseJson.designOrders : ', responseJson);
+            
         } catch (error: any) {
             console.error('Error fetching QA Orders:', error.message);
-            toast.error("An unexpected error occurred while fetching orders.");
         } finally {
             setIsLoading(false);
         }

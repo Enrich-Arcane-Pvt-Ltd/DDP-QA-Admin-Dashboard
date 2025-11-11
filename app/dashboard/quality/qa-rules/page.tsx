@@ -86,10 +86,6 @@ export default function QARulesPage() {
         );
     });
 
-    // const handleView = (row: QARules) => {
-    //     router.push(`/dashboard/quality/qa-rules/${row.id}`);
-    // }
-
     if (isLoading) {
         return (
             <Loader />
@@ -99,7 +95,7 @@ export default function QARulesPage() {
     return (
         <div>
             <div className="flex flex-col gap-3 my-2 mb-4 sm:flex-row sm:justify-between sm:items-center">
-                <SearchBar placeholder="Search by QA Name, type or customer..." onChange={setSearchTerm} className="relative w-full xl:w-1/3 md:w-96" />
+                <SearchBar placeholder="Search by Rule name or type..." onChange={setSearchTerm} className="relative w-full xl:w-1/3 md:w-96" />
                 <CreateButton icon={<PlusIcon />} label="Create QA Rule" onClick={openModal} />
             </div>
 
