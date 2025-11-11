@@ -1,31 +1,23 @@
-"use client";
+"use client"
 
-import { X, XCircle, CheckCircle } from "lucide-react";
-import { useState } from "react";
-import { UserData } from "@/app/types/Users";
+import { Trash2, X } from "lucide-react";
 
 interface ModalProps {
-    row: UserData;
-    onConfirm?: (data: UserData) => void;
+    onConfirm?: () => void;
     onCancel?: () => void;
     isSubmitting: boolean;
+    status: string;
 }
 
-function ActivateUser({ row, onConfirm, onCancel, isSubmitting }: ModalProps) {
-    const [role, setRole] = useState(row.role);
-    const [status, setStatus] = useState(row.status);
-    const [name, setName] = useState(row.name);
-    const [email, setEmail] = useState(row.email);
-    const [id, setId] = useState(row.id);
-    
+function StatusDesignFile({ onConfirm, onCancel, isSubmitting, status} : ModalProps) {
     const handleClick = () => {
-        onConfirm?.({ role, status, name, email, id });
+        onConfirm?.();
     }
 
     return (
         <div
             onClick={onCancel}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-primary-900/40 backdrop-blur-sm p-4 animate-fadeIn"
+            className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm p-4 animate-fadeIn"
         >
             <div
                 onClick={(e) => e.stopPropagation()}
@@ -38,16 +30,11 @@ function ActivateUser({ row, onConfirm, onCancel, isSubmitting }: ModalProps) {
                     <div className="relative flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-lg">
-                                {status === 'active' ? (
-                                    <XCircle className="text-white" size={24} />
-                                ) :
-                                    <CheckCircle className="text-white" size={24} />
-                                }
-                                
+                                <Trash2 className="text-white" size={24} />
                             </div>
                             <div>
-                                <h2 className="text-2xl font-bold text-white">{status === 'active' ? 'Deactivate' : 'Activate'} User</h2>
-                                <p className="text-error-100 text-sm">Please confirm the user {status === 'active' ? 'deactivation' : 'activation'}</p>
+                                <h2 className="text-2xl font-bold text-white">{status === 'active' ? 'Deactivate' : 'Activate'} Design File</h2>
+                                <p className="text-error-100 text-sm">Please confirm the design file {status === 'active' ? 'deactivation' : 'activation'}</p>
                             </div>
                         </div>
                         <button
@@ -61,7 +48,7 @@ function ActivateUser({ row, onConfirm, onCancel, isSubmitting }: ModalProps) {
 
                 <div className="p-6">
                     <p className="text-white text-center font-bold">
-                        Are you sure you want to {status === 'active' ? 'deactivate' : 'activate'} the user <span className="font-bold text-primary-900">&quot;{row.name}&quot;</span>?
+                        Are you sure you want to {status === 'active' ? 'deactivate' : 'activate'} this design file?
                     </p>
                 </div>
 
@@ -79,12 +66,11 @@ function ActivateUser({ row, onConfirm, onCancel, isSubmitting }: ModalProps) {
                         {isSubmitting 
                             ? (status === 'active' ? 'Deactivating...' : 'Activating...') 
                             : (status === 'active' ? 'Deactivate' : 'Activate')}
-
                     </button>
                 </div>
             </div>
         </div>
-    );
+    )
 }
 
-export default ActivateUser;
+export default StatusDesignFile;

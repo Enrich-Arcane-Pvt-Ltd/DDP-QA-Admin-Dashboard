@@ -1,34 +1,29 @@
-"use client";
+"use client"
 
 import { Trash2, X } from "lucide-react";
 
-
 interface ModalProps {
-    onConfirm?: (id: number) => void;
+    onConfirm?: () => void;
     onCancel?: () => void;
     isSubmitting: boolean;
-    id: number;
 }
 
-function DeleteDesignItem({ onConfirm, onCancel, isSubmitting, id }: ModalProps) {
-    
+function DeleteDesignFile({ onConfirm, onCancel, isSubmitting} : ModalProps) {
     const handleClick = () => {
-        console.log('id : ', id);
-        onConfirm?.(id);
-        
+        onConfirm?.();
     }
 
     return (
         <div
             onClick={onCancel}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-primary-900/40 backdrop-blur-sm p-4 animate-fadeIn"
+            className="fixed inset-0 z-50 flex items-center shadow-xl justify-center backdrop-blur-sm p-4 animate-fadeIn"
         >
             <div
                 onClick={(e) => e.stopPropagation()}
-                className="bg-gradient-to-br from-error-500 to-error-100 rounded-2xl shadow-2xl w-full max-w-md transform transition-all duration-300 animate-slideUp"
+                className="bg-gradient-to-br from-error-500 to-error-200 rounded-2xl w-full max-w-md transform transition-all duration-300 animate-slideUp"
             >
                 <div className="relative bg-gradient-to-r from-error-800 to-error-700 rounded-t-2xl p-6 overflow-hidden">
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-error-600/20 rounded-full -mr-16 -mt-16"></div>
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-error-900/20 rounded-full -mr-16 -mt-16"></div>
                     <div className="absolute bottom-0 left-0 w-24 h-24 bg-error-900/20 rounded-full -ml-12 -mb-12"></div>
 
                     <div className="relative flex items-center justify-between">
@@ -37,7 +32,7 @@ function DeleteDesignItem({ onConfirm, onCancel, isSubmitting, id }: ModalProps)
                                 <Trash2 className="text-white" size={24} />
                             </div>
                             <div>
-                                <h2 className="text-2xl font-bold text-white">Delete Design Item</h2>
+                                <h2 className="text-2xl font-bold text-white">Delete File</h2>
                                 <p className="text-error-100 text-sm">This action cannot be undone</p>
                             </div>
                         </div>
@@ -52,7 +47,7 @@ function DeleteDesignItem({ onConfirm, onCancel, isSubmitting, id }: ModalProps)
 
                 <div className="p-6">
                     <p className="text-white text-center font-bold">
-                        Are you sure you want to delete this design item ?
+                        Are you sure you want to delete this design file?
                     </p>
                 </div>
 
@@ -72,7 +67,7 @@ function DeleteDesignItem({ onConfirm, onCancel, isSubmitting, id }: ModalProps)
                 </div>
             </div>
         </div>
-    );
+    )
 }
 
-export default DeleteDesignItem;
+export default DeleteDesignFile;

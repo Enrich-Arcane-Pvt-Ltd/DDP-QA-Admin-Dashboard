@@ -36,6 +36,7 @@ export default function CreateRolePage() {
         );
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const selectAllInCategory = (categoryPermissions: any[]) => {
         const categoryIds = categoryPermissions.map(p => p.id!);
         const allSelected = categoryIds.every(id => selectedPermissions.includes(id));

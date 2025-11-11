@@ -4,33 +4,41 @@ import { Eye, Pencil, Trash2, ChevronLeft, ChevronRight, LockKeyhole, LockKeyhol
 
 type TableProps = {
   columns: string[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: Record<string, any>[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onEdit?: (row: any) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onDelete?: (row: any) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onView?: (row: any) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onStatusChange?: (row: any) => void;
   rowsPerPage?: number;
+  currentPage?: number;
+  onPageChange?: (page: number) => void;
 };
 
 export default function Table({
   columns,
-  data,
+  data = [],
   onEdit,
   onDelete,
   onView,
   onStatusChange,
   rowsPerPage = 10,
+  currentPage = 1,
+  onPageChange,
 }: TableProps) {
-  const [currentPage, setCurrentPage] = useState(1);
   const totalPages = Math.ceil(data.length / rowsPerPage);
 
   const indexOfLastRow = currentPage * rowsPerPage;
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
   const currentRows = data.slice(indexOfFirstRow, indexOfLastRow);
 
-  const handlePrevPage = () => currentPage > 1 && setCurrentPage(currentPage - 1);
+  const handlePrevPage = () => currentPage > 1 && onPageChange?.(currentPage - 1);
   const handleNextPage = () =>
-    currentPage < totalPages && setCurrentPage(currentPage + 1);
+    currentPage < totalPages && onPageChange?.(currentPage + 1);
 
   const showActions = onEdit || onDelete || onView || onStatusChange;
 
@@ -154,14 +162,14 @@ export default function Table({
             }`}
           >
             <ChevronLeft size={16} />
-            Previous
+            <span className="hidden sm:inline">Previous</span>
           </button>
 
           <div className="flex items-center gap-1">
             {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
               <button
                 key={page}
-                onClick={() => setCurrentPage(page)}
+                onClick={() => onPageChange?.(page)}
                 className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-200 ${
                   currentPage === page
                     ? "bg-gradient-to-r from-primary-700 to-primary-600 text-white shadow-lg scale-110"
@@ -182,7 +190,7 @@ export default function Table({
                 : "text-white bg-gradient-to-r from-primary-700 to-primary-600 hover:from-primary-800 hover:to-primary-700 shadow-md hover:shadow-lg hover:scale-105"
             }`}
           >
-            Next
+            <span className="hidden sm:inline">Next</span>
             <ChevronRight size={16} />
           </button>
         </div>

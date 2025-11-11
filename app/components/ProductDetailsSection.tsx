@@ -65,7 +65,7 @@ export default function ProductDetailsSection({ designProduct }: ProductDetailsS
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <div className="grid grid-cols-1 lg:grid-cols-1 xl:grid-cols-2 gap-6 mb-8">
                 <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8 border border-light-200 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 group">
                     <div className="flex items-center gap-4 mb-4 md:mb-6">
                         <div className="bg-gradient-to-br from-accent-500 to-accent-600 p-3 md:p-4 rounded-xl shadow-lg group-hover:shadow-accent-500/50 transition-shadow">

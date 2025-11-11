@@ -6,9 +6,9 @@ export function useAccessToken() {
 
     useEffect(() => {
         if (typeof window !== "undefined") {
-        const storedToken = localStorage.getItem("accessToken");
-        setToken(storedToken);
-        setLoaded(true);
+            const storedToken = localStorage.getItem("accessToken");
+            setToken(storedToken);
+            setLoaded(true);
         }
     }, []);
 

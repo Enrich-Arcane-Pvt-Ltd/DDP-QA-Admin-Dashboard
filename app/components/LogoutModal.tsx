@@ -1,6 +1,5 @@
 "use client";
 
-import React, { useState } from "react";
 import { LogOut, X, AlertTriangle, Shield } from "lucide-react";
 
 interface LogoutModalProps {
@@ -52,7 +51,7 @@ export default function LogoutModal({ onConfirm, onCancel, name, email, isLoadin
                             Logout Confirmation
                         </h3>
                         <p className="text-gray-600 text-sm leading-relaxed">
-                            Are you sure you want to logout from your account? You'll need to login again to access the dashboard.
+                            Are you sure you want to logout from your account? You&apos;ll need to login again to access the dashboard.
                         </p>
                     </div>
 

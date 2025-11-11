@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
-import { Shield, User, X, Sparkles, Users, Mail, Phone, CheckCircle2, XCircle } from "lucide-react";
+import { Shield, User, X, Sparkles, Users, Mail } from "lucide-react";
 
 import { UserData } from "@/app/types/Users";
 

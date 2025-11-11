@@ -1,11 +1,9 @@
 import CustomInput from "@/app/components/CustomInput";
-import CustomFileInput from "@/app/components/CustomFileInput";
-import { Lock, Mail, X, CircleUser, User, UserCircle } from "lucide-react";
+import { X, CircleUser, User } from "lucide-react";
 import { useState } from "react";
 
-import { toast } from "@/app/components/ToastContainer";
 
-import { UpdateEmail, UpdateProfile } from "@/app/types/Users";
+import { UpdateProfile } from "@/app/types/Users";
 
 interface ModalProps {
     onSubmit?: (data: UpdateProfile) => Promise<boolean>;

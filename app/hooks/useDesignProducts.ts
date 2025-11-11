@@ -41,7 +41,8 @@ export function useDesignProducts() {
                 productTypes: responseJson.productTypes ?? [],
                 qaAnalysts: responseJson.qaAnalysts ?? [],
                 qaStatus: responseJson.qaStatus ?? [],
-            });            
+            });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error fetching design products meta : ", error.message);
         } finally {
@@ -74,6 +75,7 @@ export function useDesignProducts() {
                 return;
             }
             
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const formattedProducts = responseJson.designProducts.map((product: any) => ({
                 id: product.id,
                 product_name: product.product_name,
@@ -82,9 +84,11 @@ export function useDesignProducts() {
                 qa_analyst: product.qa_analyst.name,
                 product_type: product.product_type.type_name,
                 created_by: product.created_by.name
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
             })).sort((a:any, b:any) => a.id - b.id);;
             
             setDesignProducts(formattedProducts);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error fetching design products meta : ", error.message);
         } finally {
@@ -122,7 +126,8 @@ export function useDesignProducts() {
 
             toast.success('Design Product Created Successfully');
             await fetchDesignProducts(data.design_order_id, token);
-            return true; 
+            return true;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error creating design product : ", error.message);
             toast.error(error.message);
@@ -170,7 +175,8 @@ export function useDesignProducts() {
 
             toast.success('Design Product Updated Successfully');
             await fetchDesignProducts(data.design_order_id, token);
-            return true; 
+            return true;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error updating design product : ", error.message);
             toast.error(error.message);
@@ -207,6 +213,7 @@ export function useDesignProducts() {
 
             toast.success('Design Product deleted successfully !');
             return true;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error deleting design product : ", error.message);
             toast.error('Failed to delete the design product');
@@ -240,6 +247,7 @@ export function useDesignProducts() {
                 return ;
             }            
             setAnalysts(responseJson);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error deleting design product qa analysts : ", error.message);
         } finally {
@@ -278,6 +286,7 @@ export function useDesignProducts() {
             toast.success(responseJson.message);
             fetchDesignProducts(orderId, token);
             return true;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error assigning design QA : ", error.message);
             return false;

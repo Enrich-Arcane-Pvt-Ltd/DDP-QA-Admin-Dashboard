@@ -2,14 +2,12 @@
 
 import { useState } from "react";
 import CustomInput from "@/app/components/CustomInput";
-import CustomTextArea from "@/app/components/CustomTextArea";
 
-import { Shield, X, FileText, ShoppingCart, Hash, User, ClipboardCheck, Package, Code } from "lucide-react";
+import { Shield, X, User, ClipboardCheck, Package, Code } from "lucide-react";
 
 import CustomSelect from "@/app/components/CustomSelect";
 import { toast } from "@/app/components/ToastContainer";
 
-import { DesignOrder, DesignOrdersMetaData } from "@/app/types/Orders";
 
 import { CreateProduct, DesignProductsMeta } from "@/app/types/DesignProducts";
 

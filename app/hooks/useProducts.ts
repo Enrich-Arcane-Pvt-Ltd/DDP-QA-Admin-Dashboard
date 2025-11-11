@@ -36,7 +36,7 @@ export function useProducts() {
                 return;
             }
             
-
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const formattedProductTypes = responseJson.productTypes.map((type: any) => ({
                 id: type.id,
                 type_name: type.type_name,
@@ -45,6 +45,7 @@ export function useProducts() {
             }));
 
             setProductTypes(formattedProductTypes);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error : any) {
             console.log('Error fetching product types : ', error.message);
         } finally {
@@ -76,6 +77,7 @@ export function useProducts() {
                 return;
             }
             setMetaData(responseJson.productTypeStatus);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error fetching products meta data : ", error.message);
         } finally {
@@ -112,7 +114,8 @@ export function useProducts() {
 
             toast.success(responseJson.message);
             await fetchProductTypes(token);
-            return true; 
+            return true;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error creating product type : ", error.message);
             toast.error(error.message);
@@ -149,6 +152,7 @@ export function useProducts() {
 
             toast.success('Product Type deleted successfully !');
             return true;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error deleting product type : ", error.message);
             toast.error('Failed to delete the product type');
@@ -187,6 +191,7 @@ export function useProducts() {
             toast.success('Product Type updated successfully !');
             await fetchProductTypes(token);
             return true;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error updating product type : ", error.message);
             toast.error('Failed to update the product type');
@@ -225,6 +230,7 @@ export function useProducts() {
 
             toast.success(responseJson.message);
             return true;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error in changing the status of the product type : ", error.message);
             toast.error(error.message);
@@ -259,7 +265,7 @@ export function useProducts() {
                 return;
             }
             
-
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const formattedProductSizes = responseJson.productSizes.map((size: any) => ({
                 id: size.id,
                 size_name: size.size_name,
@@ -268,6 +274,7 @@ export function useProducts() {
             }));            
 
             setProductSizes(formattedProductSizes);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error : any) {
             console.log('Error fetching product sizes : ', error.message);
         } finally {
@@ -304,7 +311,8 @@ export function useProducts() {
 
             toast.success(responseJson.message);
             await fetchProductSizes(token);
-            return true; 
+            return true;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error creating product size : ", error.message);
             toast.error(error.message);
@@ -343,6 +351,7 @@ export function useProducts() {
 
             toast.success(responseJson.message);
             return true;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error in changing the status of the product size : ", error.message);
             toast.error(error.message);
@@ -379,6 +388,7 @@ export function useProducts() {
 
             toast.success('Product Size deleted successfully!');
             return true;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error deleting product size : ", error.message);
             toast.error('Failed to delete the product size');
@@ -417,6 +427,7 @@ export function useProducts() {
             toast.success('Product Size updated successfully !');
             await fetchProductSizes(token);
             return true;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error updating product size : ", error.message);
             toast.error('Failed to update the product size');

@@ -1,14 +1,7 @@
 "use client";
 
-import { useState } from "react";
-
 import SearchBar from "@/app/components/SearchBar";
-import CreateButton from "@/app/components/CreateButton";
 import Table from "@/app/components/Table";
-
-import { toast } from "@/app/components/ToastContainer";
-
-import { PlusIcon } from "lucide-react";
 
 export default function QualityPage() {
     return (

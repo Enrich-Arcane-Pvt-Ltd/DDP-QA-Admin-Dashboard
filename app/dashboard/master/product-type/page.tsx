@@ -19,6 +19,7 @@ import EditProductType from "@/app/forms/product/EditProductType";
 import StatusChangeProductType from "@/app/forms/product/StatusChangeProductType";
 
 import Loader from "@/app/components/Loader";
+import { usePagination } from "@/app/hooks/usePagination";
 
 export default function ProductTypePage() {
     const [searchTerm, setSearchTerm] = useState("");
@@ -27,6 +28,8 @@ export default function ProductTypePage() {
     const [editModalVisible, setEditModalVisible] = useState(false);
     const [statusModalVisible, setStatusModalVisible] = useState(false);
     const [selectedRow, setSelectedRow] = useState<ProductTypes | null>(null);
+
+    const { currentPage, onPageChange } = usePagination();
 
     const { token } = useAccessToken();
     const { isLoading, productTypes, fetchProductTypes, isSubmitting, fetchProductTypesMeta, metaData, createProductType, deleteProductTypes, editProductType, activateProductType } = useProducts();
@@ -90,6 +93,8 @@ export default function ProductTypePage() {
                 onEdit={handleEdit}
                 onDelete={openDeleteModal}
                 onStatusChange={openStatusModal}
+                currentPage={currentPage}
+                onPageChange={onPageChange}
             />
 
             {modalVisible && token && metaData && (
