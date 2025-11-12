@@ -8,12 +8,13 @@ export interface DesignOrder {
     status?: string;
     qa_status: string;
     created_by?: string;
+    order_source?: string;
 }
 
 export interface QAAnalyst {
-    id: number;
-    name: string;
-    email: string;
+    id?: number;
+    name?: string;
+    email?: string;
 }
 
 export interface DesignProduct {
@@ -25,7 +26,7 @@ export interface DesignProduct {
     qa_status: string;
     qa_analyst_id: number;
     created_by: number;
-    qaAnalyst: QAAnalyst[];
+    qa_analyst: QAAnalyst;
 }
 
 export interface ProductSize {
@@ -78,7 +79,7 @@ export interface QAReportOrdersResponse {
 
 export interface QAReportProductsResponse {
     designOrder: DesignOrder;
-    designProducts: DesignProduct[];
+    designProducts: DesignProduct;
 }
 
 export interface QAReportItemsResponse {

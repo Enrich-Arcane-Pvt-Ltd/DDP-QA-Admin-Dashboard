@@ -34,6 +34,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       if (pathSegments[i - 1] === "orders") name = "Order Details";
       else if (pathSegments[i - 2] === "orders") name = "Product Details";
       else if (pathSegments[i - 3] === "orders") name = "Design Item Details";
+      else if (pathSegments[i - 2] === "quality") name = "QA Report Details";
       else name = "Details";
     } else {
       name = pageNameMap[seg] || seg.charAt(0).toUpperCase() + seg.slice(1);

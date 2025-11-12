@@ -49,10 +49,6 @@ export default function QAReportOrdersPage() {
 
     return (
         <div>
-            <h1 className="flex items-center gap-3 mb-4 text-3xl font-bold text-primary-800">
-                QA Report: Orders
-            </h1>
-
             <div className="flex flex-col gap-3 my-2 mb-4 sm:flex-row sm:justify-between sm:items-center">
                 <SearchBar
                     placeholder="Search by Order Number, Name, or Customer..."

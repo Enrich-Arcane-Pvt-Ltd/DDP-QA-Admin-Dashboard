@@ -9,8 +9,8 @@ export function useQAReport() {
 
     const [productsData, setProductsData] = useState<{
         order: DesignOrder | null,
-        products: DesignProduct[]
-    }>({ order: null, products: [] });
+        products: DesignProduct | null
+    }>({ order: null, products: null });
 
     const [itemsData, setItemsData] = useState<{
         order: DesignOrder | null,
@@ -37,9 +37,7 @@ export function useQAReport() {
                 console.error("Error fetching QA Orders:", responseJson);
                 return;
             }
-            setOrders(responseJson.designOrders || []);
-            console.log('responseJson.designOrders : ', responseJson);
-            
+            setOrders(responseJson.designOrders || []);            
         } catch (error: any) {
             console.error('Error fetching QA Orders:', error.message);
         } finally {
@@ -64,16 +62,15 @@ export function useQAReport() {
             const responseJson: QAReportProductsResponse = await response.json();
             if (!response.ok) {
                 console.error("Error fetching Order Products:", responseJson);
-                toast.error("Failed to fetch order products.");
                 return;
-            }
+            }            
+            
             setProductsData({
                 order: responseJson.designOrder,
-                products: responseJson.designProducts || []
+                products: responseJson.designProducts as DesignProduct
             });
         } catch (error: any) {
             console.error('Error fetching Order Products:', error.message);
-            toast.error("An unexpected error occurred while fetching products.");
         } finally {
             setIsLoading(false);
         }
@@ -95,18 +92,17 @@ export function useQAReport() {
 
             const responseJson: QAReportItemsResponse = await response.json();
             if (!response.ok) {
-                console.error("Error fetching Order Product Items:", responseJson);
-                toast.error("Failed to fetch order product items.");
+                console.log("Error fetching Order Product Items:", responseJson);
                 return;
             }
+            
             setItemsData({
                 order: responseJson.designOrder,
                 product: responseJson.designProduct,
                 items: responseJson.designItems || []
             });
         } catch (error: any) {
-            console.error('Error fetching Order Product Items:', error.message);
-            toast.error("An unexpected error occurred while fetching items.");
+            console.log('Error fetching Order Product Items:', error.message);
         } finally {
             setIsLoading(false);
         }
