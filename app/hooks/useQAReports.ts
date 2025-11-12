@@ -3,7 +3,6 @@ import { toast } from "../components/ToastContainer";
 import APP_URL from "../constants/Config";
 import { DesignItem, DesignOrder, DesignProduct, QAReportItemsResponse, QAReportOrdersResponse, QAReportProductsResponse } from "../types/QAReports";
 
-
 export function useQAReport() {
     const [isLoading, setIsLoading] = useState(false);
     const [orders, setOrders] = useState<DesignOrder[]>([]);

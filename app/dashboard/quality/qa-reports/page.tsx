@@ -40,7 +40,7 @@ export default function QAReportOrdersPage() {
     }, [orders, searchTerm]);
 
     const handleViewOrder = (row: DesignOrder) => {
-        router.push(`/dashboard/qa-reports/${row.id}`);
+        router.push(`/dashboard/quality/qa-reports/${row.id}`);
     };
 
     if (isLoading) {
@@ -62,12 +62,9 @@ export default function QAReportOrdersPage() {
             </div>
 
             <Table
-                columns={["order_number", "order_name", "customer_name", "qa_status", "created_at_human"]}
+                columns={["order_number", "order_name", "customer_name", "qa_status", "order_source", "status"]}
                 data={filteredOrders}
                 onView={handleViewOrder}
-                onDelete={() => { }}
-                onEdit={() => { }}
-                onStatusChange={() => { }}
             />
         </div>
     );

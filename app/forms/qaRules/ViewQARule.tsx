@@ -11,7 +11,7 @@ interface ModalProps {
 
 function ViewQARule({ onCancel, row, data }: ModalProps) {
     const InfoField = ({ icon: Icon, label, value }: { icon: any, label: string, value: string }) => (
-        <div className="p-4 transition-all duration-200 border rounded-xl bg-white/60 border-primary-200 hover:bg-white/80 hover:shadow-md">
+        <div className="p-4 transition-all duration-200 border shadow-md rounded-xl bg-white/60 border-primary-200 hover:bg-white/80 hover:shadow-md">
             <div className="flex items-center gap-2 mb-2">
                 <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-accent-100">
                     <Icon size={16} className="text-accent-600" />
@@ -76,7 +76,7 @@ function ViewQARule({ onCancel, row, data }: ModalProps) {
 
                 <div className="p-6 space-y-4">
                     {/* Rule Name - Featured */}
-                    <div className="p-5 border-2 shadow-md rounded-xl bg-gradient-to-br from-white to-primary-50 border-accent-200">
+                    <div className="p-5 shadow-md rounded-xl bg-gradient-to-br from-white to-primary-50 border-accent-200">
                         <div className="flex items-start justify-between gap-4">
                             <div className="flex-1">
                                 <div className="flex items-center gap-2 mb-2">
