@@ -1,10 +1,11 @@
 import CustomInput from "@/app/components/CustomInput";
 import CustomSelect from "@/app/components/CustomSelect";
 import CustomTextArea from "@/app/components/CustomTextArea";
-import { Ruler, Shield, X, List, User, Hash, FileText } from "lucide-react";
+import { Ruler, Shield, X, List, User, Hash, FileText, Layers } from "lucide-react";
 import { useState, useEffect } from "react";
 import { DesignItemMetaData, CreateDesignItem as CreateItem } from "../../types/DesignItems";
 import { toast } from "@/app/components/ToastContainer";
+import CreateButton from "@/app/components/CreateButton";
 
 interface ModalProps {
     onCancel?: () => void;
@@ -23,6 +24,7 @@ export default function CreateDesignItem({ onCancel, metaData, isSubmitting, ord
     const [notes, setNotes] = useState('');
     const [status, setStatus] = useState('');
     const [qaStatus, setQAStatus] = useState('');
+    const [layer, setLayer] = useState(false);
 
     useEffect(() => {
         if (metaData?.designItemStatus?.length > 0 && !status) {
@@ -178,7 +180,16 @@ export default function CreateDesignItem({ onCancel, metaData, isSubmitting, ord
                             placeholder="Select QA Status"
                         />
                     </div>
+
+                    <div className="flex justify-end">
+                        <CreateButton 
+                            icon={<Layers />}
+                            label="Add Layer"
+                        />
+                    </div>
                 </div>
+
+
 
                 <div className="p-6 pt-0 flex flex-col sm:flex-row gap-3">
                     <button
