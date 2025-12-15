@@ -1,22 +1,24 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
 import {
+  ChevronRight,
+  ClipboardCheck,
+  FileBarChart,
+  Layers,
   LayoutDashboard,
   Users,
   Menu,
-  ChevronRight,
   LogOut,
   ShoppingCart,
   Settings,
   CheckCircle,
   UserPlus,
   CircleUser,
-  Layers,
   Package,
   Ruler,
   CloudDownload,
   Dot,
+  ListChecks,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -26,6 +28,7 @@ import LogoutModal from "./LogoutModal";
 import { useAccessToken } from "../hooks/useAccessToken";
 import APP_URL from "../constants/Config";
 import { toast } from "@/app/components/ToastContainer";
+import { useCallback, useEffect, useState } from "react";
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -52,7 +55,15 @@ export default function Sidebar() {
     },
     { href: "/dashboard/orders", label: "Orders", icon: ShoppingCart },
     { href: "/dashboard/settings", label: "Settings", icon: Settings },
-    { href: "/dashboard/quality", label: "Q/A", icon: CheckCircle },
+    {
+      label: "Q/A",
+      icon: ClipboardCheck,
+      subLinks: [
+        { href: "/dashboard/quality/qa-rules", label: "QA Rules", icon: ListChecks },
+        { href: "/dashboard/quality/qa-rule-sets", label: "QA Rule Sets", icon: Layers },
+        { href: "/dashboard/quality/qa-reports", label: "QA Reports", icon: FileBarChart },
+      ]
+    },
     { href: "/dashboard/roles", label: "User Roles", icon: UserPlus },
     { href: "/dashboard/profile", label: "Profile", icon: CircleUser },
     { href: "/dashboard/sync", label: "Sync Orders", icon: CloudDownload },
