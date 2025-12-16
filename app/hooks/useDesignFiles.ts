@@ -37,7 +37,7 @@ export function useDesignFiles() {
                 return;
             }
 
-            const item = responseJson.designItem;
+            const item = responseJson.designItem;            
 
             const formattedItem: DesignItem = {
                 id: item.id,
@@ -76,7 +76,7 @@ export function useDesignFiles() {
         if (!token) {
             console.log("Token Not Found");
             return false;
-        }
+        }        
 
         setIsSubmitting(true);
 
@@ -91,7 +91,7 @@ export function useDesignFiles() {
             formData.append("design_products_id", String(data.design_products_id));
             formData.append("design_item_id", String(data.design_item_id));
             formData.append("file_name", data.file_name || "");
-            formData.append("file_type", data.file_type || "");
+            formData.append("file_type", "ai");
             formData.append("file_path", data.file_path || "");
 
             formData.append("version", Math.floor(Number(data.version)).toString());
@@ -159,7 +159,7 @@ export function useDesignFiles() {
             
             setDesignFileStatus(responseJson.designFileStatus);
             setQAStatus(responseJson.qaStatus);
-            setFileTypes(responseJson.fileType);
+            setFileTypes(responseJson.fileType);            
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {

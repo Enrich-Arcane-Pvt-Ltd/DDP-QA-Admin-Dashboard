@@ -71,26 +71,26 @@ export function useDesignProducts() {
 
             const responseJson = await response.json();
             if (!response.ok) {
-                console.log("Response Error in fetching design products meta : ", responseJson.message);
+                console.log("Response Error in fetching design products : ", responseJson.message);
                 return;
-            }
+            }            
             
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const formattedProducts = responseJson.designProducts.map((product: any) => ({
                 id: product.id,
-                product_name: product.product_name,
-                status: product.status,
-                qa_status: product.qa_status,
-                qa_analyst: product.qa_analyst.name,
-                product_type: product.product_type.type_name,
-                created_by: product.created_by.name
+                product_name: product?.product_name,
+                status: product?.status,
+                qa_status: product?.qa_status,
+                qa_analyst: product?.qa_analyst?.name,
+                product_type: product?.product_type?.type_name,
+                created_by: product?.created_by?.name
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
             })).sort((a:any, b:any) => a.id - b.id);;
             
             setDesignProducts(formattedProducts);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
-            console.log("Error fetching design products meta : ", error.message);
+            console.log("Error fetching design products : ", error.message);
         } finally {
             setIsLoading(false);
             setIsProductsLoading(false);

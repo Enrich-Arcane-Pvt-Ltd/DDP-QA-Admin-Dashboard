@@ -11,6 +11,28 @@ export interface DesignProduct {
     qa_analyst: string;
 }
 
+export interface TextDetailsPayload {
+    content?: string;
+    font_name?: string;
+    size_pt?: number;
+    color_fill_name?: string;
+}
+
+export interface ColorDetailsPayload {
+    total_swatches?: number;
+    primary_spot?: string;
+    primary_color?: string;
+}
+
+export interface DesignItemLayerPayload {
+    layer_name: string;
+    layer_type: string;
+    is_text_layer?: boolean;
+    is_logo_layer?: boolean;
+    text_details?: TextDetailsPayload;
+    color_details?: ColorDetailsPayload;
+}
+
 export interface CreateDesignItem {
     design_order_id: number;
     design_product_id: number;
@@ -21,6 +43,7 @@ export interface CreateDesignItem {
     notes?: string;
     status: string;
     qa_status: string;
+    layers?: DesignItemLayerPayload[];
 }
 
 interface ProductSizes {
@@ -56,4 +79,18 @@ export interface DesignItems {
     size_code?: string;
     file_name?: string;
     file?: string;
+}
+
+export interface Layer {
+    id: string;
+    layerName: string;
+    layerType: '';
+    layerCategory: 'text' | 'logo';
+    textContent: string;
+    fontName: string;
+    fontSize: string;
+    fillColorName: string;
+    totalSwatches: string;
+    primarySpot: string;
+    primaryColor: string;
 }

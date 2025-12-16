@@ -3,7 +3,7 @@
 import { useState } from "react";
 import CustomInput from "@/app/components/CustomInput";
 
-import { Shield, X, File, FileUp, FileText, Folder, Tag, History } from "lucide-react";
+import { Shield, X, File, FileUp, FileText, Folder, Tag, History, Code } from "lucide-react";
 
 import CustomSelect from "@/app/components/CustomSelect";
 import { toast } from "@/app/components/ToastContainer";
@@ -25,17 +25,17 @@ interface ModalProps {
 function CreateDesignFile({ onSubmit, onCancel, isSubmitting, designFileStatus, qaStatus, designId, orderId, productId, fileTypes} : ModalProps) {
     const [name, setName] = useState('');
     const [filePath, setFilePath] = useState('');
-    const [fileType, setFileType] = useState('');
+    // const [fileType, setFileType] = useState('ai');
     const [version, setVersion] = useState('');
     const [status, setStatus] = useState('');
     const [qaFileStatus, setQAStatus] = useState('');
     const [file, setFile] = useState<File | null>(null);  
     
     const handleClick = async () => {
-        if (!fileType) {
-            toast.error('Please Select a File Type');
-            return;
-        }
+        // if (!fileType) {
+        //     toast.error('Please Select a File Type');
+        //     return;
+        // }
 
         if (!version) {
             toast.error('Please Enter the Version');
@@ -63,7 +63,7 @@ function CreateDesignFile({ onSubmit, onCancel, isSubmitting, designFileStatus, 
             design_item_id: designId,
             file: file,
             file_name: name,
-            file_type: fileType,
+            file_type: 'ai',
             file_path: filePath,
             version: version,
             status: status,
@@ -130,7 +130,7 @@ function CreateDesignFile({ onSubmit, onCancel, isSubmitting, designFileStatus, 
                         />
                     </div>
 
-                    <div className="space-y-2">
+                    {/* <div className="space-y-2">
                         <label className="flex items-center gap-2 text-sm font-semibold text-primary-800">
                             <Tag size={16} className="text-accent-600" />
                             File Type <span className="text-error-600">*</span>
@@ -142,7 +142,7 @@ function CreateDesignFile({ onSubmit, onCancel, isSubmitting, designFileStatus, 
                             icon={<Tag />}
                             placeholder="Select File Type"
                         />
-                    </div>
+                    </div> */}
                     
                     <div className="space-y-2">
                         <label className="flex items-center gap-2 text-sm font-semibold text-primary-800">
@@ -167,7 +167,20 @@ function CreateDesignFile({ onSubmit, onCancel, isSubmitting, designFileStatus, 
                             placeholder="Choose a document"
                             value={file}
                             onChange={(selected) => setFile(selected)}
-                            accept=".pdf"
+                            accept=".ai"
+                        />
+                    </div>
+
+                    <div className="space-y-2">
+                        <label className="flex items-center gap-2 text-sm font-semibold text-primary-800">
+                            <Code size={16} className="text-accent-600" />
+                            JSON File <span className="text-error-600">*</span>
+                        </label>
+                        <CustomFileInput
+                            placeholder="Choose a document"
+                            value={file}
+                            onChange={(selected) => setFile(selected)}
+                            accept=".json"
                         />
                     </div>
 

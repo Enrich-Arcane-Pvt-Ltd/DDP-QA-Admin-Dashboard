@@ -41,15 +41,15 @@ export function useDesignItems() {
 
             const designProduct = {
                 id: responseJson.designProduct.id,
-                product_name: responseJson.designProduct.product_name ?? "N/A",
-                status: responseJson.designProduct.status ?? "N/A",
-                qa_status: responseJson.designProduct.qa_status ?? "N/A",
-                created_by: responseJson.designProduct.created_by.name ?? "N/A",
-                order_name: responseJson.designProduct.design_order.order_name ?? "N/A",
-                order_number: responseJson.designProduct.design_order.order_number ?? "N/A",
-                customer_name: responseJson.designProduct.design_order.customer_name ?? "N/A",
-                product_type: responseJson.designProduct.product_type.type_name ?? "N/A",
-                qa_analyst: responseJson.designProduct.qa_analyst.name ?? "N/A",
+                product_name: responseJson.designProduct?.product_name ?? "N/A",
+                status: responseJson.designProduct?.status ?? "N/A",
+                qa_status: responseJson.designProduct?.qa_status ?? "N/A",
+                created_by: responseJson.designProduct?.created_by.name ?? "N/A",
+                order_name: responseJson.designProduct?.design_order?.order_name ?? "N/A",
+                order_number: responseJson.designProduct?.design_order?.order_number ?? "N/A",
+                customer_name: responseJson.designProduct?.design_order?.customer_name ?? "N/A",
+                product_type: responseJson.designProduct?.product_type?.type_name ?? "N/A",
+                qa_analyst: responseJson.designProduct?.qa_analyst?.name ?? "N/A",
             }
             
             setDesignProduct(designProduct);
@@ -67,6 +67,8 @@ export function useDesignItems() {
             console.log("Token Not Found");
             return false;
         }
+
+        console.log('data : ', data);
         
         setIsSubmitting(true);
         try {
