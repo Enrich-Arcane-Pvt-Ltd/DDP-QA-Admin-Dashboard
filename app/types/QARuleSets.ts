@@ -32,7 +32,7 @@ export interface QARuleSet {
     description?: string;
     status?: string;
     created_by?: string;
-    qa_rules: number[];
+    rule_ids: number[];
 }
 
 export interface SingleQARuleSet {
