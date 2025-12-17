@@ -67,7 +67,7 @@ export default function CreateQARuleSetPage() {
             qa_rule_set_name: ruleSetName,
             status: status,
             description: description, // **NEW: Including description in the payload**
-            qa_rules: selectedRules
+            rule_ids: selectedRules
         }
 
         const success = await createQARuleSet(data, token);

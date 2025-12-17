@@ -21,14 +21,14 @@ interface ModalProps {
 function EditQARuleSet({ onSubmit, onCancel, row, data, isSubmitting, updateSubmitting }: ModalProps) {
     const [ruleSetName, setRuleSetName] = useState(row.qa_rule_set_name);
     const [description, setDescription] = useState(row.description);
-    const [selectedRules, setSelectedRules] = useState<number[]>(row.rule_ids || []);
+    const [selectedRules, setSelectedRules] = useState<number[]>(row.qa_rules || []);
     const [status, setStatus] = useState(row.status);
     const [createdBy, setCreatedBy] = useState(row.name);
     const [id, setId] = useState(row.id);
 
     useEffect(() => {
-        if (row.rule_ids && Array.isArray(row.rule_ids)) {
-            setSelectedRules(row.rule_ids);
+        if (row.qa_rules && Array.isArray(row.qa_rules)) {
+            setSelectedRules(row.qa_rules);
         }
     }, [row]);
 
@@ -56,7 +56,7 @@ function EditQARuleSet({ onSubmit, onCancel, row, data, isSubmitting, updateSubm
             return;
         }
 
-        const success = await onSubmit?.({ qa_rule_set_name: ruleSetName, status, description, name: createdBy, rule_ids: selectedRules, id });
+        const success = await onSubmit?.({ qa_rule_set_name: ruleSetName, status, description, name: createdBy, qa_rules: selectedRules, id });
         if (success) onCancel?.();
     };
 

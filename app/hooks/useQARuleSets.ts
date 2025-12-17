@@ -113,7 +113,7 @@ export function useQARuleSets() {
                     qa_rule_set_name: data.qa_rule_set_name,
                     status: data.status,
                     description: data.description,
-                    rule_ids: data.qa_rules,
+                    rule_ids: data.rule_ids,
                 })
             });
 
