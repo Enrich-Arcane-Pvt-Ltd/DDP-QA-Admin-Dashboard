@@ -86,6 +86,9 @@ export function useDesignFiles() {
             if (data.file) {
                 formData.append("file", data.file);
             }
+            if (data.json_spec_file) {
+                formData.append("json_spec_file", data.json_spec_file)
+            }
 
             formData.append("design_order_id", String(data.design_order_id));
             formData.append("design_products_id", String(data.design_products_id));
@@ -305,7 +308,7 @@ export function useDesignFiles() {
             return false;
         }
 
-        setIsSubmitting(true);
+        setIsSubmitting(true);        
 
         try {
             const formData = new FormData();

@@ -18,8 +18,6 @@ function StatusChangeQARule({ row, onConfirm, onCancel, isSubmitting }: ModalPro
         onConfirm?.({ status });
     }
 
-    console.log('row', row);
-
     return (
         <div
             onClick={onCancel}

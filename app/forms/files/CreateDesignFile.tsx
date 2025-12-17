@@ -29,7 +29,8 @@ function CreateDesignFile({ onSubmit, onCancel, isSubmitting, designFileStatus, 
     const [version, setVersion] = useState('');
     const [status, setStatus] = useState('');
     const [qaFileStatus, setQAStatus] = useState('');
-    const [file, setFile] = useState<File | null>(null);  
+    const [file, setFile] = useState<File | null>(null);
+    const [jsonFile, setJsonFile] = useState<File | null>(null);
     
     const handleClick = async () => {
         // if (!fileType) {
@@ -44,6 +45,11 @@ function CreateDesignFile({ onSubmit, onCancel, isSubmitting, designFileStatus, 
 
         if (!file) {
             toast.error('Please Select a Design File');
+            return;
+        }
+
+        if (!jsonFile) {
+            toast.error('Please Select the JSON File');
             return;
         }
 
@@ -68,7 +74,8 @@ function CreateDesignFile({ onSubmit, onCancel, isSubmitting, designFileStatus, 
             version: version,
             status: status,
             qa_status: qaFileStatus,
-            preserve_ai_editing: true
+            preserve_ai_editing: true,
+            json_spec_file: jsonFile
         });
         if (success) onCancel?.();
     };
@@ -178,8 +185,8 @@ function CreateDesignFile({ onSubmit, onCancel, isSubmitting, designFileStatus, 
                         </label>
                         <CustomFileInput
                             placeholder="Choose a document"
-                            value={file}
-                            onChange={(selected) => setFile(selected)}
+                            value={jsonFile}
+                            onChange={(selected) => setJsonFile(selected)}
                             accept=".json"
                         />
                     </div>

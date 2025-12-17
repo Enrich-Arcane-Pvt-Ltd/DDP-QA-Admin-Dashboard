@@ -52,9 +52,6 @@ function EditQARule({ onSubmit, onCancel, row, data, isSubmitting, updateSubmitt
         if (success) onCancel?.();
     };
 
-    console.log('data', data);
-    console.log('row', row);
-
 
     return (
         <div onClick={onCancel} className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-primary-900/40 backdrop-blur-sm animate-fadeIn">

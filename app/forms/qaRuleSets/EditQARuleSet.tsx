@@ -60,10 +60,6 @@ function EditQARuleSet({ onSubmit, onCancel, row, data, isSubmitting, updateSubm
         if (success) onCancel?.();
     };
 
-    console.log('data', data);
-    console.log('row', row);
-
-
     return (
         <div onClick={onCancel} className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-primary-900/40 backdrop-blur-sm animate-fadeIn">
             <div onClick={(e) => e.stopPropagation()} className="w-full max-w-lg transition-all duration-300 transform shadow-2xl bg-gradient-to-br from-primary-100 to-primary-400 rounded-2xl animate-slideUp">

@@ -38,7 +38,6 @@ export default function OrderSyncPage() {
         };
 
         const newId = await syncOrders(token, payload);
-        console.log("newId:", newId);
 
         if (newId) {
             router.push(`/dashboard/orders/${newId}`);

@@ -67,8 +67,6 @@ export function useDesignItems() {
             console.log("Token Not Found");
             return false;
         }
-
-        console.log('data : ', data);
         
         setIsSubmitting(true);
         try {
