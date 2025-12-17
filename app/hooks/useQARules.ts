@@ -36,7 +36,7 @@ export function useQARules() {
                 console.log("Response Error in fetching qa rules : ", responseJson.message);
                 return;
             }
-
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const formattedQARules = responseJson.qaRules.map((rule: any) => ({
                 id: rule.id,
                 rule_name: rule.rule_name,
@@ -48,6 +48,7 @@ export function useQARules() {
             }));
 
             setQaRules(formattedQARules);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log('Error fetching qa rules : ', error.message);
         } finally {
@@ -81,6 +82,7 @@ export function useQARules() {
             }
 
             setQaRuleMetaData(responseJson);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log('Error fetching qa rules meta data : ', error.message);
         } finally {
@@ -118,6 +120,7 @@ export function useQARules() {
             toast.success(responseJson.message);
             await fetchQARules(token);
             return true;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error creating qa rules : ", error.message);
             toast.error(error.message);
@@ -154,6 +157,7 @@ export function useQARules() {
 
             toast.success('QA Rule deleted successfully !');
             return true;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error deleting qa rule : ", error.message);
             toast.error('Failed to delete the qa rule');
@@ -193,6 +197,7 @@ export function useQARules() {
             toast.success('QA Rule updated successfully !');
             await fetchQARules(token);
             return true;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error updating qa rule : ", error.message);
             toast.error('Failed to update the qa rule');
@@ -228,6 +233,7 @@ export function useQARules() {
             }
 
             setQaRule(responseJson.qaRule)
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error fetching qa rules : ", error.message);
         } finally {
@@ -263,6 +269,7 @@ export function useQARules() {
 
             toast.success(responseJson.message);
             return true;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error in changing the status of the QA Rule : ", error.message);
             toast.error(error.message);

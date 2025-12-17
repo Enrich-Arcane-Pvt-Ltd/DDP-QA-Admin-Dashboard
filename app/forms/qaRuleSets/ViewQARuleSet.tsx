@@ -10,6 +10,7 @@ interface ModalProps {
 }
 
 function ViewQARuleSet({ onCancel, row, data }: ModalProps) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const InfoField = ({ icon: Icon, label, value }: { icon: any, label: string, value: string }) => (
         <div className="p-4 transition-all duration-200 border rounded-xl bg-white/60 border-primary-200 hover:bg-white/80 hover:shadow-md">
             <div className="flex items-center gap-2 mb-2">

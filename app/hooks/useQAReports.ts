@@ -37,7 +37,8 @@ export function useQAReport() {
                 console.error("Error fetching QA Orders:", responseJson);
                 return;
             }
-            setOrders(responseJson.designOrders || []);            
+            setOrders(responseJson.designOrders || []);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any            
         } catch (error: any) {
             console.error('Error fetching QA Orders:', error.message);
         } finally {
@@ -69,6 +70,7 @@ export function useQAReport() {
                 order: responseJson.designOrder,
                 products: responseJson.designProducts as DesignProduct
             });
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.error('Error fetching Order Products:', error.message);
         } finally {
@@ -101,6 +103,7 @@ export function useQAReport() {
                 product: responseJson.designProduct,
                 items: responseJson.designItems || []
             });
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log('Error fetching Order Product Items:', error.message);
         } finally {

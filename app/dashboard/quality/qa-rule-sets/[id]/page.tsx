@@ -57,6 +57,7 @@ export default function EditQARuleSetPage() {
             setDescription(qaRuleSet.description ?? "");
             setStatus(qaRuleSet.status ?? "");
             setSelectedRules(
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 qaRuleSet.qa_rules?.map((rule: any) => rule.id) ?? []
             );
         }
