@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import { Mail, Lock } from "lucide-react";
+import { Lock, Mail } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import CustomInput from "../components/CustomInput";
 import { toast } from "../components/ToastContainer";
 import APP_URL from "../constants/Config";
@@ -15,7 +15,7 @@ export default function LoginPage() {
   const [rememberMe, setRememberMe] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const date = new Date();  
+  const date = new Date();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,7 +26,7 @@ export default function LoginPage() {
       setIsSubmitting(false);
       return;
     }
-    
+
     try {
       const response = await fetch(APP_URL + 'login', {
         method: 'POST',
@@ -81,7 +81,7 @@ export default function LoginPage() {
           </div>
 
           <div className="mb-4 animate-[fadeIn_1s_ease-out]">
-            <label className="block mb-1 text-sm font-medium text-primary-800">Email:</label>
+            <label className="block mb-1 text-sm font-medium text-primary-800">Email <span className="text-error-600">*</span></label>
             <CustomInput
               type="email"
               placeholder="Enter your email"
@@ -92,7 +92,7 @@ export default function LoginPage() {
           </div>
 
           <div className="mb-4 animate-[fadeIn_1.2s_ease-out]">
-            <label className="block mb-1 text-sm font-medium text-primary-800">Password:</label>
+            <label className="block mb-1 text-sm font-medium text-primary-800">Password <span className="text-error-600">*</span></label>
             <CustomInput
               type="password"
               placeholder="Enter your password"
@@ -134,12 +134,12 @@ export default function LoginPage() {
           <div className="absolute bottom-0 right-0 w-96 h-96 bg-accent-400 rounded-full blur-3xl animate-[pulse_6s_ease-in-out_infinite]"></div>
         </div>
         <div className="text-white text-6xl font-bold z-10 animate-[fadeIn_1s_ease-out]">
-          <Image 
-          src="/images/logo-1.png"
-          alt="Logo"
-          width={600}
-          height={400}
-        />
+          <Image
+            src="/images/logo-1.png"
+            alt="Logo"
+            width={600}
+            height={400}
+          />
         </div>
       </div>
 

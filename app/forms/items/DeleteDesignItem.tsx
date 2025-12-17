@@ -2,7 +2,6 @@
 
 import { Trash2, X } from "lucide-react";
 
-
 interface ModalProps {
     onConfirm?: (id: number) => void;
     onCancel?: () => void;
@@ -11,11 +10,8 @@ interface ModalProps {
 }
 
 function DeleteDesignItem({ onConfirm, onCancel, isSubmitting, id }: ModalProps) {
-    
     const handleClick = () => {
-        console.log('id : ', id);
         onConfirm?.(id);
-        
     }
 
     return (

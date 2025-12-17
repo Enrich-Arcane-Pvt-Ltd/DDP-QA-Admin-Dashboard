@@ -20,6 +20,7 @@ import { useRouter } from "next/navigation";
 import Loader from "@/app/components/Loader";
 
 import { DesignOrders } from "@/app/types/Orders";
+import { usePagination } from "@/app/hooks/usePagination";
 
 export default function OrdersPage() {
   const [modalVisible, setModalVisible] = useState(false);
@@ -27,6 +28,8 @@ export default function OrdersPage() {
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRow, setSelectedRow] = useState<DesignOrders | null>(null);
+
+  const { currentPage, onPageChange } = usePagination();
 
   const { token } = useAccessToken();
   const { isLoading, designOrders, fetchDesignOrders, fetchDesignOrdersMetaData, designMetaData, isSubmitting, createDesignOrder, deleteDesignOrders, editDesignOrder } = useDesignOrders();
@@ -89,6 +92,8 @@ export default function OrdersPage() {
         onDelete={openDeleteModal}
         onEdit={handleEdit}
         onView={handleView}
+        currentPage={currentPage}
+        onPageChange={onPageChange}
       />
 
       {modalVisible && designMetaData && (

@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 
-import SearchBar from "@/app/components/SearchBar";
 import CreateButton from "@/app/components/CreateButton";
+import SearchBar from "@/app/components/SearchBar";
 import Table from "@/app/components/Table";
 
 import { PlusIcon } from "lucide-react";
@@ -19,6 +19,7 @@ import EditProductType from "@/app/forms/product/EditProductType";
 import StatusChangeProductType from "@/app/forms/product/StatusChangeProductType";
 
 import Loader from "@/app/components/Loader";
+import { usePagination } from "@/app/hooks/usePagination";
 
 export default function ProductTypePage() {
     const [searchTerm, setSearchTerm] = useState("");
@@ -27,6 +28,8 @@ export default function ProductTypePage() {
     const [editModalVisible, setEditModalVisible] = useState(false);
     const [statusModalVisible, setStatusModalVisible] = useState(false);
     const [selectedRow, setSelectedRow] = useState<ProductTypes | null>(null);
+
+    const { currentPage, onPageChange } = usePagination();
 
     const { token } = useAccessToken();
     const { isLoading, productTypes, fetchProductTypes, isSubmitting, fetchProductTypesMeta, metaData, createProductType, deleteProductTypes, editProductType, activateProductType } = useProducts();
@@ -79,21 +82,23 @@ export default function ProductTypePage() {
 
     return (
         <div>
-            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-4 my-2">
+            <div className="flex flex-col gap-3 my-2 mb-4 sm:flex-row sm:justify-between sm:items-center">
                 <SearchBar placeholder="Search Product Type by Name ..." onChange={setSearchTerm} />
                 <CreateButton icon={<PlusIcon />} label="Create Product Type" onClick={openModal} />
             </div>
-    
+
             <Table
                 columns={["type_name", "description", "status"]}
                 data={filteredProductTypes}
-                onEdit={handleEdit} 
+                onEdit={handleEdit}
                 onDelete={openDeleteModal}
                 onStatusChange={openStatusModal}
+                currentPage={currentPage}
+                onPageChange={onPageChange}
             />
 
             {modalVisible && token && metaData && (
-                <CreateProductType 
+                <CreateProductType
                     onCancel={closeModal}
                     isSubmitting={isSubmitting}
                     data={metaData}
@@ -106,8 +111,8 @@ export default function ProductTypePage() {
                     id={selectedRow?.id}
                     onCancel={closeDeleteModal}
                     isSubmitting={isSubmitting}
-                    onConfirm={async () => {      
-                        const success = await deleteProductTypes(selectedRow?.id, token);                        
+                    onConfirm={async () => {
+                        const success = await deleteProductTypes(selectedRow?.id, token);
                         if (success) {
                             closeDeleteModal();
                             fetchProductTypes(token);
@@ -118,7 +123,7 @@ export default function ProductTypePage() {
 
             {editModalVisible && metaData && selectedRow && token && (
                 <EditProductType
-                    row={selectedRow} 
+                    row={selectedRow}
                     onCancel={closeEditModal}
                     onSubmit={(formData) => editProductType(formData, token, selectedRow.id)}
                     data={metaData}
@@ -131,7 +136,7 @@ export default function ProductTypePage() {
                     row={selectedRow}
                     onCancel={closeStatusModal}
                     isSubmitting={isSubmitting}
-                    onConfirm={async () => {      
+                    onConfirm={async () => {
                         const success = await activateProductType(selectedRow.id, token, selectedRow.status);
                         if (success) {
                             closeStatusModal();

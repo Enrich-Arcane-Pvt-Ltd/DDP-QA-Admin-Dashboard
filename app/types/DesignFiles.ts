@@ -52,6 +52,7 @@ export interface CreateDesignFile {
     version: string;
     status: string;
     qa_status: string;
+    json_spec_file: File | null;
 }
 
 export interface DesignFiles {

@@ -18,7 +18,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     profile: "Profile",
     create: "Create Roles",
     sync: 'Sync Orders',
-    test: 'Test Page'
   };
 
   const pathSegments = pathName.split("/").filter((seg) => seg);
@@ -35,6 +34,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       if (pathSegments[i - 1] === "orders") name = "Order Details";
       else if (pathSegments[i - 2] === "orders") name = "Product Details";
       else if (pathSegments[i - 3] === "orders") name = "Design Item Details";
+      else if (pathSegments[i - 2] === "quality") name = "QA Report Details";
       else name = "Details";
     } else {
       name = pageNameMap[seg] || seg.charAt(0).toUpperCase() + seg.slice(1);
@@ -56,8 +56,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 onClick={() => index !== breadcrumbs.length - 1 && router.push(crumb.href)}
                 className={
                   index === breadcrumbs.length - 1
-                    ? "text-primary-700 font-medium cursor-default"
-                    : "text-accent-700 hover:text-gray-700 cursor-pointer"
+                    ? "text-primary-700 font-medium cursor-default capitalize"
+                    : "text-accent-700 hover:text-gray-700 cursor-pointer capitalize"
                 }
               >
                 {crumb.name}

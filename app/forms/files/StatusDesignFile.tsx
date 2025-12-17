@@ -17,7 +17,7 @@ function StatusDesignFile({ onConfirm, onCancel, isSubmitting, status} : ModalPr
     return (
         <div
             onClick={onCancel}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-primary-900/40 backdrop-blur-sm p-4 animate-fadeIn"
+            className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm p-4 animate-fadeIn"
         >
             <div
                 onClick={(e) => e.stopPropagation()}

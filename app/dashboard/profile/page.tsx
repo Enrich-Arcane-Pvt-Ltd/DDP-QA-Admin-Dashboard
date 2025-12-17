@@ -57,8 +57,8 @@ export default function ProfilePage() {
 
     return (
         <div>
-            <div className="w-full my-4 flex flex-col lg:flex-row gap-6 relative overflow-hidden">
-                <div className="lg:w-1/3 w-full bg-light-100 p-8 rounded-2xl flex flex-col justify-center items-center text-primary-600 relative shadow-lg z-10">
+            <div className="w-full my-4 flex flex-col xl:flex-row gap-6 relative overflow-hidden">
+                <div className="xl:w-1/3 w-full bg-light-100 p-8 rounded-2xl flex flex-col justify-center items-center text-primary-600 relative shadow-lg z-10">
                     <div className="absolute top-4 right-4">
                         <Sparkles size={24} className="text-primary-400 animate-pulse" />
                     </div>
@@ -90,7 +90,7 @@ export default function ProfilePage() {
                     <CreateButton icon={<UserPen size={20} />} label="Update Profile" onClick={openEditModal} />
                 </div>
                 
-                <div className="lg:w-2/3 w-full bg-light-100 p-6 rounded-2xl grid grid-cols-1 sm:grid-cols-2 gap-2 shadow-lg z-10">
+                <div className="xl:w-2/3 w-full bg-light-100 p-6 rounded-2xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-2 shadow-lg z-10">
                     <InfoCard 
                         icon={CircleUserRound} 
                         label="Full Name" 
