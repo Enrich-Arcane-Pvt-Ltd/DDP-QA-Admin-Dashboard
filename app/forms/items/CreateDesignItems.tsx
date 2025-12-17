@@ -35,6 +35,7 @@ export default function CreateDesignItem({ onCancel, metaData, isSubmitting, ord
 
     const mapLayersForSubmit = (layers: Layer[]) => {
         return layers.map(layer => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const mappedLayer: any = {
                 layer_name: layer.layerName,
                 layer_type: layer.layerType,

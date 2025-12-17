@@ -37,17 +37,20 @@ export function useQARuleSets() {
                 console.log("Response Error in fetching qa rule sets: ", responseJson.message);
                 return;
             }
-
+            
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const formattedQARuleSets = responseJson.qaRuleSets.map((rule: any) => ({
                 id: rule.id,
                 qa_rule_set_name: rule.qa_rule_set_name,
                 description: rule?.description,
                 status: rule.status,
                 created_by: rule.created_by?.name,
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 rule_ids: rule.qa_rules ? rule.qa_rules.map((r: any) => r.id) : [],
             }));
 
             setQaRuleSets(formattedQARuleSets);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log('Error fetching qa rule sets : ', error.message);
         } finally {
@@ -82,6 +85,7 @@ export function useQARuleSets() {
 
             setQaRuleSetMetaData(responseJson);
             setQARules(responseJson.qaRules);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log('Error fetching qa rules sets meta data : ', error.message);
         } finally {
@@ -124,6 +128,7 @@ export function useQARuleSets() {
             toast.success(responseJson.message);
             await fetchQARuleSets(token);
             return true;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error creating qa rule sets : ", error.message);
             toast.error(error.message);
@@ -160,6 +165,7 @@ export function useQARuleSets() {
 
             toast.success('QA Rule Set deleted successfully !');
             return true;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error deleting qa rule set : ", error.message);
             toast.error('Failed to delete the qa rule set');
@@ -204,6 +210,7 @@ export function useQARuleSets() {
             toast.success('QA Rule Set updated successfully !');
             await fetchQARuleSets(token);
             return true;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error updating qa rule set : ", error.message);
             toast.error('Failed to update the qa rule set');
@@ -239,6 +246,7 @@ export function useQARuleSets() {
             }
 
             setQaRuleSet(responseJson.qaRuleSet)
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error fetching qa rule sets : ", error.message);
         } finally {
@@ -274,6 +282,7 @@ export function useQARuleSets() {
 
             toast.success(responseJson.message);
             return true;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.log("Error in changing the status of the QA Rule Set : ", error.message);
             toast.error(error.message);
