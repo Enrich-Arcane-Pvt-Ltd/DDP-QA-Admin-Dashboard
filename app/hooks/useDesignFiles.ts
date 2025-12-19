@@ -196,6 +196,9 @@ export function useDesignFiles() {
                 return;
             }
             
+            console.log('responseJson.designFiles : ', responseJson.designFiles);
+            
+
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const formattedFiles: DesignFiles[] = (responseJson.designFiles || []).map((file: any) => ({
                 id: Number(file.id),
@@ -209,6 +212,8 @@ export function useDesignFiles() {
                 status: file.status || "",
                 qa_status: file.qa_status || "",
                 file_url: file.file_url || "",
+                file_thumbnail_url: file.file_thumbnail_url || "",
+                model_file_url: file.model_file_url || "",
             }));
 
             setDesignFiles(formattedFiles);

@@ -6,7 +6,7 @@ import Model from './Model'
 import { useRef, useEffect } from 'react'
 import { OrbitControls as OrbitControlsImpl } from 'three-stdlib'
 
-export default function SceneClient() {
+export default function SceneClient({ modelUrl }: { modelUrl: string }) {
     const controlsRef = useRef<OrbitControlsImpl>(null)
 
     useEffect(() => {
@@ -23,7 +23,7 @@ export default function SceneClient() {
             <directionalLight position={[5, 5, 5]} intensity={1.5} />
 
             <Bounds fit observe margin={1.2}>
-                <Model />
+                <Model url={modelUrl} />
             </Bounds>
 
             <OrbitControls

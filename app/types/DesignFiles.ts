@@ -67,6 +67,8 @@ export interface DesignFiles {
     status: string;
     qa_status: string;
     file_url: string;
+    file_thumbnail_url?: string;
+    model_file_url?: string;
 }
 
 export interface Error {

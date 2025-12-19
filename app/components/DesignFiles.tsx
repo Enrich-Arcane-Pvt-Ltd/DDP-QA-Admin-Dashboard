@@ -8,6 +8,9 @@ import DeleteDesignFile from "../forms/files/DeleteDesignFile";
 import StatusDesignFile from "../forms/files/StatusDesignFile";
 import EditDesignFile from "../forms/files/EditDesignFile";
 
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+
 interface DesignFilesProps {
     designFiles: DesignFileType[];
     onDelete?: (id: number) => void;
@@ -30,6 +33,8 @@ export default function DesignFiles({ designFiles, onDelete, isSubmitting, onSta
     const [selectedFileId, setSelectedFileId] = useState<number | null>(null);
     const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
     const [selectedFile, setSelectedFile] = useState<DesignFileType | null>(null);
+
+    const router = useRouter();    
 
     const handleOpenDelete = (id: number) => {
         setSelectedFileId(id);
@@ -114,31 +119,35 @@ export default function DesignFiles({ designFiles, onDelete, isSubmitting, onSta
                         <div className='absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-accent-500/20 to-transparent rounded-bl-full'></div>
 
                         <div className='relative p-6 pb-4'>
-                            <div className='relative bg-white rounded-xl shadow-inner p-8 mb-4 border-2 border-dashed border-primary-200 group-hover:border-accent-400 transition-colors duration-300'>
-                                <div className='absolute top-4 left-4 right-4 space-y-2'>
-                                    <div className='h-1 bg-primary-200 rounded w-3/4'></div>
-                                    <div className='h-1 bg-primary-200 rounded w-full'></div>
-                                    <div className='h-1 bg-primary-200 rounded w-5/6'></div>
-                                </div>
-
-                                <div className='flex justify-center items-center h-32'>
-                                    <div className='relative'>
-                                        <FileText className='w-16 h-16 text-error-600' strokeWidth={1.5} />
-                                        <div className='absolute -top-1 -right-1 bg-error-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded'>
-                                            {file.file_type?.toUpperCase()}
-                                        </div>
-                                    </div>
-                                </div>
+                            <div className="relative rounded-xl shadow-inner bg-white mb-4 border-2 border-dashed border-primary-200 group-hover:border-accent-400 transition-colors duration-300 h-96">
+                                {file.file_thumbnail_url && (
+                                    <Image
+                                        src={file.file_thumbnail_url}
+                                        alt="Thumbnail"
+                                        fill
+                                        className="object-contain rounded-xl"
+                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                        unoptimized
+                                    />
+                                )}
                             </div>
 
                             <div className='flex gap-2'>
                                 <button
-                                    onClick={() => window.open(file.file_url, "_blank")}
-                                    className='flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-primary-800 hover:bg-primary-700 text-white rounded-lg transition-colors duration-200 text-sm font-medium'
+                                    onClick={() => {
+                                        if (!file.model_file_url) return
+
+                                        router.push(
+                                        `/dashboard/object?url=${encodeURIComponent(file.model_file_url)}`
+                                        )
+                                    }}
+                                    disabled={!file.model_file_url}
+                                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-primary-800 hover:bg-primary-700 text-white rounded-lg transition-colors duration-200 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
-                                    <Eye className='w-4 h-4' />
+                                    <Eye className="w-4 h-4" />
                                     View
                                 </button>
+
                                 <a
                                     href={file.file_url}
                                     download

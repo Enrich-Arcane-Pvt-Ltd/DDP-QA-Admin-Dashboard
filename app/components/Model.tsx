@@ -2,8 +2,14 @@
 
 import { useGLTF, Center } from '@react-three/drei'
 
-export default function Model() {
-    const { scene } = useGLTF('/models/model.gltf')
+type Props = {
+    url: string
+}
+
+export default function Model({ url }: Props) {    
+    const { scene } = useGLTF(url)
+
+    // const { scene } = useGLTF('/model.gltf')
 
     return (
         <Center top={false}> 
