@@ -44,6 +44,7 @@ export interface CreateDesignItem {
     status: string;
     qa_status: string;
     layers?: DesignItemLayerPayload[];
+    product_id: number
 }
 
 interface ProductSizes {
@@ -61,10 +62,16 @@ interface QAStatus {
     label: string;
 }
 
+interface ProductStyles {
+    value: string;
+    label: string;
+}
+
 export interface DesignItemMetaData {
     productSizes: ProductSizes[];
     designItemStatus: DesignItemStatus[];
     qaStatus: QAStatus[];
+    productStyle: ProductStyles[];
 }
 
 export interface DesignItems {
@@ -79,6 +86,7 @@ export interface DesignItems {
     size_code?: string;
     file_name?: string;
     file?: string;
+    productStyle?: string;
 }
 
 export interface Layer {

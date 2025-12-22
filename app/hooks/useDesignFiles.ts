@@ -194,7 +194,7 @@ export function useDesignFiles() {
             if (!response.ok) {
                 console.log("Response Error in fetching design files : ", responseJson.message);
                 return;
-            }
+            }            
             
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const formattedFiles: DesignFiles[] = (responseJson.designFiles || []).map((file: any) => ({
@@ -209,6 +209,8 @@ export function useDesignFiles() {
                 status: file.status || "",
                 qa_status: file.qa_status || "",
                 file_url: file.file_url || "",
+                file_thumbnail_url: file.file_thumbnail_url || "",
+                model_file_url: file.model_file_url || "",
             }));
 
             setDesignFiles(formattedFiles);
