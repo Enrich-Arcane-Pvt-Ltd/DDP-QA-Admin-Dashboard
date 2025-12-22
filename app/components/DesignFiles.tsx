@@ -34,7 +34,7 @@ export default function DesignFiles({ designFiles, onDelete, isSubmitting, onSta
     const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
     const [selectedFile, setSelectedFile] = useState<DesignFileType | null>(null);
 
-    const router = useRouter();    
+    const router = useRouter();
 
     const handleOpenDelete = (id: number) => {
         setSelectedFileId(id);
@@ -135,11 +135,19 @@ export default function DesignFiles({ designFiles, onDelete, isSubmitting, onSta
                             <div className='flex gap-2'>
                                 <button
                                     onClick={() => {
-                                        if (!file.model_file_url) return
+                                        if (!file.model_file_url) return;
 
-                                        router.push(
-                                        `/dashboard/object?url=${encodeURIComponent(file.model_file_url)}`
-                                        )
+                                        const query = new URLSearchParams({
+                                            url: file.model_file_url,
+                                            file_name: file.file_name,
+                                            file_size: file.file_size.toString(),
+                                            file_type: file.file_type,
+                                            qa_status: file.qa_status,
+                                            status: file.status,
+                                            version: file.version.toString(),
+                                        }).toString();
+
+                                        router.push(`/dashboard/object?${query}`);
                                     }}
                                     disabled={!file.model_file_url}
                                     className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-primary-800 hover:bg-primary-700 text-white rounded-lg transition-colors duration-200 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"

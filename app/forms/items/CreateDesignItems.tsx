@@ -1,7 +1,7 @@
 import CustomInput from "@/app/components/CustomInput";
 import CustomSelect from "@/app/components/CustomSelect";
 import CustomTextArea from "@/app/components/CustomTextArea";
-import { Ruler, Shield, X, List, User, Hash, FileText, Layers, Plus, Trash2, Type, Palette } from "lucide-react";
+import { Ruler, Shield, X, List, User, Hash, FileText, Layers, Plus, Trash2, Type, Palette, Crop } from "lucide-react";
 import { useState, useEffect } from "react";
 import { DesignItemMetaData, CreateDesignItem as CreateItem, Layer } from "../../types/DesignItems";
 import { toast } from "@/app/components/ToastContainer";
@@ -26,6 +26,7 @@ const layerTypeOptions = [
 export default function CreateDesignItem({ onCancel, metaData, isSubmitting, orderId, productId, onSubmit } : ModalProps) {
     const [itemName, setItemName] = useState('');
     const [productSize, setProductSize] = useState('');
+    const [productStyle, setProductStyle] = useState('');
     const [playerName, setPlayerName] = useState('');
     const [playerNumber, setPlayerNumber] = useState('');
     const [notes, setNotes] = useState('');
@@ -130,6 +131,7 @@ export default function CreateDesignItem({ onCancel, metaData, isSubmitting, ord
             status: status, 
             qa_status: qaStatus,
             player_name: playerName,
+            product_id: Number(productStyle),
             ...(productSize ? { product_size_id: Number(productSize) } : {}),
             player_number: playerNumber,
             notes: notes,
@@ -190,6 +192,19 @@ export default function CreateDesignItem({ onCancel, metaData, isSubmitting, ord
                             options={metaData.productSizes ?? []}
                             icon={<Ruler />}
                             placeholder="Select Product Size"
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <label className="flex items-center gap-2 text-sm font-semibold text-primary-800">
+                            <Crop size={16} className="text-accent-600" />
+                            Product Styles
+                        </label>
+                        <CustomSelect
+                            value={productStyle}
+                            onChange={(e) => setProductStyle(e.target.value)}
+                            options={metaData.productStyle ?? []}
+                            icon={<Crop />}
+                            placeholder="Select Product Style"
                         />
                     </div>
 
@@ -469,7 +484,7 @@ export default function CreateDesignItem({ onCancel, metaData, isSubmitting, ord
                     <div className="flex justify-end">
                         <CreateButton 
                             icon={<Plus />}
-                            label="Add Layer"
+                            label="Define Layer"
                             onClick={addLayer}
                         />
                     </div>

@@ -12,6 +12,7 @@ export function useDesignItems() {
         productSizes: [],
         designItemStatus: [],
         qaStatus: [],
+        productStyle: []
     });
     const [designItems, setDesignItems] = useState<DesignItems[]>([]);
 
@@ -130,6 +131,7 @@ export function useDesignItems() {
                 productSizes: responseJson.productSizes,
                 designItemStatus: responseJson.designItemStatus,
                 qaStatus: responseJson.qaStatus,
+                productStyle: responseJson.productStyle
             };
             
             setMetaData(extractedMeta);
@@ -163,8 +165,8 @@ export function useDesignItems() {
             if (!response.ok) {
                 console.log("Response Error in fetching design items : ", responseJson.message);
                 return;
-            }            
-
+            }
+            
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const mappedItems: DesignItems[] = responseJson.designItems.map((item: any) => ({
                 id: item.id,
@@ -178,6 +180,7 @@ export function useDesignItems() {
                 size_code: item.product_size?.size_code || '',
                 file_name: item.latest_design_file?.file_name || '',
                 file: item.latest_design_file?.file || '',
+                productStyle: item?.product_style?.style_number || '',
             }));
 
             setDesignItems(mappedItems);

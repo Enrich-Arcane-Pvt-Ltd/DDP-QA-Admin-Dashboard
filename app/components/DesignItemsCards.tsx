@@ -112,6 +112,17 @@ const DesignItemsCards: React.FC<DesignItemsCardsProps> = ({
                                     </div>
                                 </div>
                             </div>
+
+                            <div className="relative mt-4">
+                                <div className="relative bg-gradient-to-br from-primary-500 to-light-600 p-4 rounded-xl border-2 border-primary-500 shadow-sm">
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-sm font-semibold text-primary-800">Product Style</span>
+                                        <span className="text-2xl font-black text-accent-700 tracking-tight">
+                                            {item.productStyle}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div className="px-6 pb-6 space-y-4 flex-1">

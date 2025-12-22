@@ -194,11 +194,8 @@ export function useDesignFiles() {
             if (!response.ok) {
                 console.log("Response Error in fetching design files : ", responseJson.message);
                 return;
-            }
+            }            
             
-            console.log('responseJson.designFiles : ', responseJson.designFiles);
-            
-
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const formattedFiles: DesignFiles[] = (responseJson.designFiles || []).map((file: any) => ({
                 id: Number(file.id),

@@ -1,10 +1,11 @@
 import CustomInput from "@/app/components/CustomInput";
 import CustomSelect from "@/app/components/CustomSelect";
 import CustomTextArea from "@/app/components/CustomTextArea";
-import { Ruler, Shield, X, List, User, Hash, FileText } from "lucide-react";
+import { Ruler, Shield, X, List, User, Hash, FileText, Crop } from "lucide-react";
 import { useState } from "react";
 import { DesignItemMetaData, CreateDesignItem as CreateItem, DesignItems } from "../../types/DesignItems";
 import { toast } from "@/app/components/ToastContainer";
+
 
 interface ModalProps {
     onCancel?: () => void;
@@ -29,12 +30,22 @@ export default function EditDesignItem({ onCancel, metaData, isSubmitting, order
     const [notes, setNotes] = useState(row.notes ?? "");
     const [status, setStatus] = useState(row.status ?? "");
     const [qaStatus, setQAStatus] = useState(row.qa_status ?? "");
+    const [productStyle, setProductStyle] = useState(row.productStyle ?? "");
 
     const handleClick = async () => {
         if (!itemName) {
             toast.error('Please Enter the Item Name');
             return;
-        }        
+        }
+
+        const selectedProductStyle = metaData.productStyle?.find(
+            (style) => style.label === productStyle
+        );
+
+        if (!selectedProductStyle) {
+            toast.error('Invalid Product Style selected');
+            return;
+        }
 
         const success = await onSubmit?.({ 
             design_order_id: orderId, 
@@ -43,12 +54,14 @@ export default function EditDesignItem({ onCancel, metaData, isSubmitting, order
             status: status, 
             qa_status: qaStatus,
             player_name: playerName,
+            product_id: Number(selectedProductStyle.value),
             ...(productSize ? { product_size_id: Number(productSize) } : {}),
             player_number: playerNumber,
             notes: notes
         });
+
         if (success) onCancel?.();
-    }
+    };
 
     return (
         <div onClick={onCancel} className="fixed inset-0 z-50 flex items-center justify-center bg-primary-900/40 backdrop-blur-sm p-4 animate-fadeIn">
@@ -102,6 +115,20 @@ export default function EditDesignItem({ onCancel, metaData, isSubmitting, order
                             options={metaData.productSizes ?? []}
                             icon={<Ruler />}
                             placeholder="Select Product Size"
+                        />
+                    </div>
+
+                    <div className="space-y-2">
+                        <label className="flex items-center gap-2 text-sm font-semibold text-primary-800">
+                            <Crop size={16} className="text-accent-600" />
+                            Product Style
+                        </label>
+                        <CustomSelect
+                            value={productStyle}
+                            onChange={(e) => setProductStyle(e.target.value)}
+                            options={metaData.productStyle ?? []}
+                            icon={<Crop />}
+                            placeholder="Select Product Style"
                         />
                     </div>
 
