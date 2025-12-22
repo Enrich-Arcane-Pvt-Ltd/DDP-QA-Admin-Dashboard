@@ -2,8 +2,7 @@
 
 import { useSearchParams } from 'next/navigation'
 import SceneClient from '@/app/components/SceneClient'
-import { FileType, HardDrive, Package, CheckCircle2, XCircle, AlertCircle, GitBranch, Calendar, Download } from 'lucide-react'
-import { useMemo } from 'react'
+import { FileType, HardDrive, CheckCircle2, XCircle, AlertCircle, GitBranch, Download } from 'lucide-react'
 
 export default function ObjectsPage() {
     const searchParams = useSearchParams();
@@ -62,8 +61,8 @@ export default function ObjectsPage() {
         }
     };
 
-    const statusConfig = useMemo(() => getStatusConfig(status), [status]);
-    const qaStatusConfig = useMemo(() => getStatusConfig(qaStatus), [qaStatus]);
+    const statusConfig = getStatusConfig(status);
+    const qaStatusConfig = getStatusConfig(qaStatus);
     const StatusIcon = statusConfig.icon;
     const QaStatusIcon = qaStatusConfig.icon;
 
