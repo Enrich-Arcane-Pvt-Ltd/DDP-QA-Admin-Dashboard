@@ -5,6 +5,10 @@ export interface GetExternal {
 export interface ExternalChildOrders {
     id: number;
     order_no: string;
+    player_name: string;
+    player_number: string;
+    product_name: string;
+    size_code: string;
 }
 
 export interface Customer {

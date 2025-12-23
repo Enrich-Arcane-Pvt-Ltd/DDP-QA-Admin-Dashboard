@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
 import CustomInput from "@/app/components/CustomInput";
+import { useState } from "react";
 
 import { toast } from "@/app/components/ToastContainer";
 
-import { X, Shirt } from "lucide-react";
+import { CloudDownload, X } from "lucide-react";
 
 import { GetExternal } from "@/app/types/SyncOrders";
 
@@ -37,7 +37,7 @@ function RetrieveOrders({ onSubmit, onCancel, isSubmitting} : ModalProps) {
                     <div className="relative flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-lg">
-                                <Shirt className="text-white" size={24} />
+                                <CloudDownload className="text-white" size={24} />
                             </div>
                             <div>
                                 <h2 className="text-2xl font-bold text-white">Sync Orders</h2>
@@ -56,13 +56,13 @@ function RetrieveOrders({ onSubmit, onCancel, isSubmitting} : ModalProps) {
                 <div className="p-6 space-y-5">
                     <div className="space-y-2">
                         <label className="flex items-center gap-2 text-sm font-semibold text-primary-800">
-                            <Shirt size={16} className="text-accent-600" />
+                            <CloudDownload size={16} className="text-accent-600" />
                             Order Number <span className="text-error-600">*</span>
                         </label>
                         <CustomInput 
                             type='text'
                             placeholder="Enter the Order Number"
-                            icon={<Shirt />}
+                            icon={<CloudDownload />}
                             value={orderNumber}
                             onChange={(e) => setOrderNumber(e.target.value)}
                         />

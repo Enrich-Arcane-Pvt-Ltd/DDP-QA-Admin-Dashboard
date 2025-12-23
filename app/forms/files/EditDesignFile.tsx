@@ -1,14 +1,14 @@
 "use client";
 
-import { useState } from "react";
 import CustomInput from "@/app/components/CustomInput";
+import { useState } from "react";
 
-import { Shield, X, File, FileUp, FileText, Folder, Tag, History } from "lucide-react";
+import { File, FileText, FileUp, Folder, History, Shield, Tag, X } from "lucide-react";
 
+import CustomFileInput from "@/app/components/CustomFileInput";
 import CustomSelect from "@/app/components/CustomSelect";
 import { toast } from "@/app/components/ToastContainer";
-import CustomFileInput from "@/app/components/CustomFileInput";
-import { DesignFileStatus, DesignFileQAStatus, CreateDesignFile as CreateFile, FileTypes, DesignFiles } from "@/app/types/DesignFiles";
+import { CreateDesignFile as CreateFile, DesignFileQAStatus, DesignFiles, DesignFileStatus, FileTypes } from "@/app/types/DesignFiles";
 
 interface ModalProps {
     onConfirm?: (data: CreateFile) => void;
@@ -60,7 +60,7 @@ function EditDesignFile({ onConfirm, onCancel, isSubmitting, designFileStatus, q
 
         const success = await onConfirm?.({ 
             design_order_id: orderId, 
-            design_products_id: productId, 
+            design_product_id: productId, 
             design_item_id: designId,
             file: file,
             file_name: name ?? "",

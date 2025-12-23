@@ -1,8 +1,8 @@
-import { useState, useCallback } from "react";
+import { useCallback, useState } from "react";
 import { toast } from "../components/ToastContainer";
 import APP_URL from "../constants/Config";
 
-import { DesignProduct, CreateDesignItem, DesignItemMetaData, DesignItems } from "../types/DesignItems";
+import { CreateDesignItem, DesignItemMetaData, DesignItems, DesignProduct } from "../types/DesignItems";
 
 export function useDesignItems() {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -35,6 +35,8 @@ export function useDesignItems() {
             });
 
             const responseJson = await response.json();
+            console.log("responseJson", responseJson);
+            
             if (!response.ok) {
                 console.log("Response Error in fetching design products details : ", responseJson.message);
                 return;
