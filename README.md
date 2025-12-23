@@ -37,3 +37,26 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Environment Configuration
+
+This project uses environment variables managed via `.env.local`.
+
+Unlike Laravel, Next.js does not have a built-in command (like `php artisan`) to generate env files. Instead, you copy the example file:
+
+1. Copy the example file to create your real env file:
+
+   **macOS / Linux:**
+   ```bash
+   cp .env.example .env.local
+   ```
+
+   **Windows (PowerShell):**
+   ```powershell
+   Copy-Item .env.example .env.local
+   ```
+
+2. Edit `.env.local` and update values as needed:
+   - `NEXT_PUBLIC_API_URL` – Base URL of the backend API (must end with `/api/`).
+
+`NEXT_PUBLIC_` variables are exposed to the browser. Do not put secrets (passwords, private keys, etc.) in this file.
