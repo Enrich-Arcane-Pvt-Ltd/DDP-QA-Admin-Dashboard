@@ -39,11 +39,11 @@ export default function EditDesignItem({ onCancel, metaData, isSubmitting, order
         }
 
         const selectedProductStyle = metaData.productStyle?.find(
-            (style) => style.label === productStyle
+            (style) => String(style.value) === String(productStyle)
         );
 
         if (!selectedProductStyle) {
-            toast.error('Invalid Product Style selected');
+            toast.error('Please select a valid Product Style');
             return;
         }
 
