@@ -42,7 +42,7 @@ export interface FileTypes {
 
 export interface CreateDesignFile {
     design_order_id: number;
-    design_products_id: number;
+    design_product_id: number;
     design_item_id: number;
     file: File | null;
     file_name: string;

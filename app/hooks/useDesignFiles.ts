@@ -1,8 +1,8 @@
-import { useState, useCallback } from "react";
+import { useCallback, useState } from "react";
 import { toast } from "../components/ToastContainer";
 import APP_URL from "../constants/Config";
 
-import { DesignItem, CreateDesignFile, DesignFileQAStatus, DesignFileStatus, FileTypes, DesignFiles } from "../types/DesignFiles";
+import { CreateDesignFile, DesignFileQAStatus, DesignFiles, DesignFileStatus, DesignItem, FileTypes } from "../types/DesignFiles";
 
 export function useDesignFiles() {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -91,7 +91,7 @@ export function useDesignFiles() {
             }
 
             formData.append("design_order_id", String(data.design_order_id));
-            formData.append("design_products_id", String(data.design_products_id));
+            formData.append("design_product_id", String(data.design_product_id));
             formData.append("design_item_id", String(data.design_item_id));
             formData.append("file_name", data.file_name || "");
             formData.append("file_type", "ai");
@@ -122,7 +122,7 @@ export function useDesignFiles() {
             }
 
             toast.success(responseJson.message || "Design file uploaded successfully.");
-            await fetchDesignFiles(token, data.design_order_id, data.design_products_id, data.design_item_id)
+            await fetchDesignFiles(token, data.design_order_id, data.design_product_id, data.design_item_id)
             return true;
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -321,7 +321,7 @@ export function useDesignFiles() {
 
             formData.append("_method", "PATCH");
             formData.append("design_order_id", String(data.design_order_id));
-            formData.append("design_products_id", String(data.design_products_id));
+            formData.append("design_product_id", String(data.design_product_id));
             formData.append("design_item_id", String(data.design_item_id));
             formData.append("file_name", data.file_name || "");
             formData.append("file_type", data.file_type || "");
@@ -352,7 +352,7 @@ export function useDesignFiles() {
             }
 
             toast.success(responseJson.message || "Design file updated successfully.");
-            await fetchDesignFiles(token, data.design_order_id, data.design_products_id, data.design_item_id)
+            await fetchDesignFiles(token, data.design_order_id, data.design_product_id, data.design_item_id)
             return true;
             
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
