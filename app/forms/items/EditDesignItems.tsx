@@ -30,12 +30,7 @@ export default function EditDesignItem({ onCancel, metaData, isSubmitting, order
     const [notes, setNotes] = useState(row.notes ?? "");
     const [status, setStatus] = useState(row.status ?? "");
     const [qaStatus, setQAStatus] = useState(row.qa_status ?? "");
-    const [productStyle, setProductStyle] = useState(() => {
-        const match = metaData.productStyle?.find(
-            (s) => s.label === row.productStyle
-        );
-        return match ? String(match.value) : "";
-    });
+    const [productStyle, setProductStyle] = useState(row.productStyle ?? "");
 
     const handleClick = async () => {
         if (!itemName) {
@@ -44,7 +39,7 @@ export default function EditDesignItem({ onCancel, metaData, isSubmitting, order
         }
 
         const selectedProductStyle = metaData.productStyle?.find(
-            (style) => String(style.value) === String(productStyle)
+            (style) => style.label === productStyle
         );
 
         if (!selectedProductStyle) {
@@ -103,6 +98,7 @@ export default function EditDesignItem({ onCancel, metaData, isSubmitting, order
                         <CustomInput 
                             type='text'
                             placeholder="Enter the Item Name"
+                            icon={<List />}
                             value={itemName}
                             onChange={(e) => setItemName(e.target.value)}
                         />
@@ -115,8 +111,9 @@ export default function EditDesignItem({ onCancel, metaData, isSubmitting, order
                         </label>
                         <CustomSelect
                             value={productSize}
-                            onChange={setProductSize}
+                            onChange={(e) => setProductSize(e.target.value)}
                             options={metaData.productSizes ?? []}
+                            icon={<Ruler />}
                             placeholder="Select Product Size"
                         />
                     </div>
@@ -128,8 +125,9 @@ export default function EditDesignItem({ onCancel, metaData, isSubmitting, order
                         </label>
                         <CustomSelect
                             value={productStyle}
-                            onChange={setProductStyle}
+                            onChange={(e) => setProductStyle(e.target.value)}
                             options={metaData.productStyle ?? []}
+                            icon={<Crop />}
                             placeholder="Select Product Style"
                         />
                     </div>
@@ -142,6 +140,7 @@ export default function EditDesignItem({ onCancel, metaData, isSubmitting, order
                         <CustomInput 
                             type='text'
                             placeholder="Enter the Player Name"
+                            icon={<User />}
                             value={playerName}
                             onChange={(e) => setPlayerName(e.target.value)}
                         />
@@ -155,6 +154,7 @@ export default function EditDesignItem({ onCancel, metaData, isSubmitting, order
                         <CustomInput 
                             type='text'
                             placeholder="Enter the Player Number"
+                            icon={<Hash />}
                             value={playerNumber}
                             onChange={(e) => setPlayerNumber(e.target.value)}
                         />
@@ -167,6 +167,7 @@ export default function EditDesignItem({ onCancel, metaData, isSubmitting, order
                         </label>
                         <CustomTextArea 
                             placeholder="Enter Any Special Notes"
+                            icon={<FileText />}
                             value={notes}
                             onChange={(e) => setNotes(e.target.value)}
                             maxLength={255}
@@ -181,8 +182,9 @@ export default function EditDesignItem({ onCancel, metaData, isSubmitting, order
                         </label>
                         <CustomSelect
                             value={status}
-                            onChange={setStatus}
+                            onChange={(e) => setStatus(e.target.value)}
                             options={metaData.designItemStatus ?? []}
+                            icon={<Shield />}
                             placeholder="Select Status"
                         />
                     </div>
@@ -194,8 +196,9 @@ export default function EditDesignItem({ onCancel, metaData, isSubmitting, order
                         </label>
                         <CustomSelect
                             value={qaStatus}
-                            onChange={setQAStatus}
+                            onChange={(e) => setQAStatus(e.target.value)}
                             options={metaData.qaStatus ?? []}
+                            icon={<Shield />}
                             placeholder="Select QA Status"
                         />
                     </div>

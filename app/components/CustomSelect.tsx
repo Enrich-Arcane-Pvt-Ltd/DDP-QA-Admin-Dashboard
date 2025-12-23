@@ -1,6 +1,6 @@
 "use client";
 
-import Select from "react-select";
+import React from "react";
 
 interface Option {
     value: string;
@@ -9,8 +9,9 @@ interface Option {
 
 interface CustomSelectProps {
     value: string;
-    onChange: ((value: string) => void) | ((e: { target: { value: string } }) => void);
+    onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
     options: Option[];
+    icon?: React.ReactNode;
     placeholder?: string;
 }
 
@@ -18,65 +19,38 @@ function CustomSelect({
     value,
     onChange,
     options,
+    icon,
     placeholder = "Select an option",
 }: CustomSelectProps) {
-    // Ensure all option values and the value prop are strings
-    const normalizedOptions = options.map((opt) => ({
-        value: String(opt.value),
-        label: opt.label,
-    }));
-    const normalizedValue = value !== undefined && value !== null ? String(value) : "";
-    const selectedOption = normalizedOptions.find((opt) => opt.value === normalizedValue) || null;
-    if (normalizedValue && !selectedOption) {
-        console.warn(`CustomSelect: value '${normalizedValue}' not found in options`, normalizedOptions);
-    }
     return (
-        <Select
-            classNamePrefix="custom-select"
-            value={selectedOption}
-            onChange={(optionOrEvent) => {
-                let newValue = "";
-                if (typeof optionOrEvent === 'string') {
-                    newValue = optionOrEvent;
-                } else if (optionOrEvent && typeof optionOrEvent === 'object' && 'value' in optionOrEvent) {
-                    newValue = optionOrEvent.value as string;
+        <div className="relative">
+            {icon && (
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-primary-600">
+                    {icon}
+                </div>
+            )}
+
+            <select
+                value={value}
+                onChange={onChange}
+                className={`w-full ${
+                    icon ? "pl-11" : "pl-3"
+                    } pr-3 py-3 border-2 border-light-200 rounded-lg
+                    focus:outline-none focus:border-primary-600 focus:ring-2 focus:ring-primary-100
+                    transition-all font-semibold bg-light-200
+                    ${value ? "text-primary-700" : "text-primary-500"}`
                 }
-                // Support both (value) => void and (e) => void
-                if (typeof onChange === 'function') {
-                    // If the function expects an event, pass a synthetic event
-                    if (onChange.length === 1 && typeof newValue === 'string') {
-                        try {
-                            onChange(newValue);
-                        } catch {
-                            onChange({ target: { value: newValue } } as any);
-                        }
-                    }
-                }
-            }}
-            options={normalizedOptions}
-            placeholder={placeholder}
-            isClearable={false}
-            isSearchable={true}
-            styles={{
-                control: (base, state) => ({
-                    ...base,
-                    minHeight: '48px',
-                    borderColor: state.isFocused ? '#2563eb' : '#e5e7eb',
-                    boxShadow: state.isFocused ? '0 0 0 2px #dbeafe' : undefined,
-                    backgroundColor: '#dcebf9',
-                    fontWeight: 600,
-                    color: normalizedValue ? '#1e293b' : '#64748b',
-                }),
-                placeholder: (base) => ({
-                    ...base,
-                    color: '#64748b',
-                }),
-                singleValue: (base) => ({
-                    ...base,
-                    color: '#1e293b',
-                }),
-            }}
-        />
+            >
+                <option value="" disabled>
+                    {placeholder}
+                </option>
+                {options.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                    </option>
+                ))}
+            </select>
+        </div>
     );
 }
 
